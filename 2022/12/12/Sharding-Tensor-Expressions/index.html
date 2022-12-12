@@ -20,25 +20,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"crutcher.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="hacking around Big Math">
-<meta property="og:type" content="website">
-<meta property="og:title" content="crutcher.github.io">
-<meta property="og:url" content="https://crutcher.github.io/index.html">
+    <meta name="description" content="The distributed tensor expression “problem”:  Given a tensor expression (  ), where the tensors may be arbitrarily large, how do we efficiently schedule the expression over large numbers of GPUs?  Muc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sharding Tensor Expressions">
+<meta property="og:url" content="https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/index.html">
 <meta property="og:site_name" content="crutcher.github.io">
-<meta property="og:description" content="hacking around Big Math">
+<meta property="og:description" content="The distributed tensor expression “problem”:  Given a tensor expression (  ), where the tensors may be arbitrarily large, how do we efficiently schedule the expression over large numbers of GPUs?  Muc">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-12T22:11:00.000Z">
+<meta property="article:modified_time" content="2022-12-12T22:21:58.889Z">
 <meta property="article:author" content="Crutcher Dunnavant">
+<meta property="article:tag" content="tensor expressions">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://crutcher.github.io/">
+<link rel="canonical" href="https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"en","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/","path":"2022/12/12/Sharding-Tensor-Expressions/","title":"Sharding Tensor Expressions"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>crutcher.github.io</title>
+<title>Sharding Tensor Expressions | crutcher.github.io</title>
   
 
 
@@ -189,7 +192,7 @@ mjx-container[display="true"] + br {
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">crutcher.github.io</h1>
+      <p class="site-title">crutcher.github.io</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -215,7 +218,7 @@ mjx-container[display="true"] + br {
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -228,6 +231,7 @@ mjx-container[display="true"] + br {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Expanding-a-Toy-Example"><span class="nav-number">1.</span> <span class="nav-text">Expanding a Toy Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Restricting-Operators-to-Known-Structural-Co-Variance"><span class="nav-number">2.</span> <span class="nav-text">Restricting Operators to Known Structural Co-Variance</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -261,16 +265,17 @@ mjx-container[display="true"] + br {
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -284,13 +289,13 @@ mjx-container[display="true"] + br {
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | crutcher.github.io">
+      <meta itemprop="name" content="Sharding Tensor Expressions | crutcher.github.io">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/12/12/Sharding-Tensor-Expressions/" class="post-title-link" itemprop="url">Sharding Tensor Expressions</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Sharding Tensor Expressions
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -314,7 +319,7 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>The distributed tensor expression “problem”:</p>
+        <p>The distributed tensor expression “problem”:</p>
 <ul>
 <li>Given a tensor expression ( <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="25.326ex" height="2.262ex" role="img" focusable="false" viewBox="0 -750 11194.1 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D44C" d="M66 637Q54 637 49 637T39 638T32 641T30 647T33 664T42 682Q44 683 56 683Q104 680 165 680Q288 680 306 683H316Q322 677 322 674T320 656Q316 643 310 637H298Q242 637 242 624Q242 619 292 477T343 333L346 336Q350 340 358 349T379 373T411 410T454 461Q546 568 561 587T577 618Q577 634 545 637Q528 637 528 647Q528 649 530 661Q533 676 535 679T549 683Q551 683 578 682T657 680Q684 680 713 681T746 682Q763 682 763 673Q763 669 760 657T755 643Q753 637 734 637Q662 632 617 587Q608 578 477 424L348 273L322 169Q295 62 295 57Q295 46 363 46Q379 46 384 45T390 35Q390 33 388 23Q384 6 382 4T366 1Q361 1 324 1T232 2Q170 2 138 2T102 1Q84 1 84 9Q84 14 87 24Q88 27 89 30T90 35T91 39T93 42T96 44T101 45T107 45T116 46T129 46Q168 47 180 50T198 63Q201 68 227 171L252 274L129 623Q128 624 127 625T125 627T122 629T118 631T113 633T105 634T96 635T83 636T66 637Z"></path></g><g data-mml-node="mo" transform="translate(1040.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mi" transform="translate(2096.6,0)"><path data-c="1D453" d="M118 -162Q120 -162 124 -164T135 -167T147 -168Q160 -168 171 -155T187 -126Q197 -99 221 27T267 267T289 382V385H242Q195 385 192 387Q188 390 188 397L195 425Q197 430 203 430T250 431Q298 431 298 432Q298 434 307 482T319 540Q356 705 465 705Q502 703 526 683T550 630Q550 594 529 578T487 561Q443 561 443 603Q443 622 454 636T478 657L487 662Q471 668 457 668Q445 668 434 658T419 630Q412 601 403 552T387 469T380 433Q380 431 435 431Q480 431 487 430T498 424Q499 420 496 407T491 391Q489 386 482 386T428 385H372L349 263Q301 15 282 -47Q255 -132 212 -173Q175 -205 139 -205Q107 -205 81 -186T55 -132Q55 -95 76 -78T118 -61Q162 -61 162 -103Q162 -122 151 -136T127 -157L118 -162Z"></path></g><g data-mml-node="mo" transform="translate(2646.6,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(3035.6,0)"><path data-c="1D434" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path></g><g data-mml-node="mo" transform="translate(3785.6,0)"><path data-c="2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g data-mml-node="mi" transform="translate(4230.2,0)"><path data-c="1D435" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path></g><g data-mml-node="mo" transform="translate(4989.2,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mo" transform="translate(5378.2,0)"><path data-c="3B" d="M78 370Q78 394 95 412T138 430Q162 430 180 414T199 371Q199 346 182 328T139 310T96 327T78 370ZM78 60Q78 85 94 103T137 121Q202 121 202 8Q202 -44 183 -94T144 -169T118 -194Q115 -194 106 -186T95 -174Q94 -171 107 -155T137 -107T160 -38Q161 -32 162 -22T165 -4T165 4Q165 5 161 4T142 0Q110 0 94 18T78 60Z"></path></g><g data-mml-node="mi" transform="translate(5822.9,0)"><path data-c="1D44D" d="M58 8Q58 23 64 35Q64 36 329 334T596 635L586 637Q575 637 512 637H500H476Q442 637 420 635T365 624T311 598T266 548T228 469Q227 466 226 463T224 458T223 453T222 450L221 448Q218 443 202 443Q185 443 182 453L214 561Q228 606 241 651Q249 679 253 681Q256 683 487 683H718Q723 678 723 675Q723 673 717 649Q189 54 188 52L185 49H274Q369 50 377 51Q452 60 500 100T579 247Q587 272 590 277T603 282H607Q628 282 628 271Q547 5 541 2Q538 0 300 0H124Q58 0 58 8Z"></path></g><g data-mml-node="mo" transform="translate(6823.7,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mi" transform="translate(7879.4,0)"><path data-c="1D454" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z"></path></g><g data-mml-node="mo" transform="translate(8356.4,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(8745.4,0)"><path data-c="1D44B" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path></g><g data-mml-node="mo" transform="translate(9597.4,0)"><path data-c="2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g data-mml-node="mi" transform="translate(10042.1,0)"><path data-c="1D44C" d="M66 637Q54 637 49 637T39 638T32 641T30 647T33 664T42 682Q44 683 56 683Q104 680 165 680Q288 680 306 683H316Q322 677 322 674T320 656Q316 643 310 637H298Q242 637 242 624Q242 619 292 477T343 333L346 336Q350 340 358 349T379 373T411 410T454 461Q546 568 561 587T577 618Q577 634 545 637Q528 637 528 647Q528 649 530 661Q533 676 535 679T549 683Q551 683 578 682T657 680Q684 680 713 681T746 682Q763 682 763 673Q763 669 760 657T755 643Q753 637 734 637Q662 632 617 587Q608 578 477 424L348 273L322 169Q295 62 295 57Q295 46 363 46Q379 46 384 45T390 35Q390 33 388 23Q384 6 382 4T366 1Q361 1 324 1T232 2Q170 2 138 2T102 1Q84 1 84 9Q84 14 87 24Q88 27 89 30T90 35T91 39T93 42T96 44T101 45T107 45T116 46T129 46Q168 47 180 50T198 63Q201 68 227 171L252 274L129 623Q128 624 127 625T125 627T122 629T118 631T113 633T105 634T96 635T83 636T66 637Z"></path></g><g data-mml-node="mo" transform="translate(10805.1,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg></mjx-container> ), where the tensors may be
 arbitrarily large, how do we efficiently schedule the expression over large numbers of GPUs?</li>
@@ -417,7 +422,6 @@ and I’ve done a fair amount of background work on large transform environments
 </li>
 </ul>
 
-      
     </div>
 
     
@@ -425,192 +429,25 @@ and I’ve done a fair amount of background work on large transform environments
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/tensor-expressions/" rel="tag"># tensor expressions</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/27/Type-Forwarding-Python-Decorators/" rel="prev" title="Type-Forwarding Python Decorators">
+                  <i class="fa fa-chevron-left"></i> Type-Forwarding Python Decorators
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Crutcher Dunnavant">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="crutcher.github.io">
-      <meta itemprop="description" content="hacking around Big Math">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | crutcher.github.io">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/11/27/Type-Forwarding-Python-Decorators/" class="post-title-link" itemprop="url">Type-Forwarding Python Decorators</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2022-11-27 20:28:26" itemprop="dateCreated datePublished" datetime="2022-11-27T20:28:26-08:00">2022-11-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-11-28 15:15:47" itemprop="dateModified" datetime="2022-11-28T15:15:47-08:00">2022-11-28</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Suppose you wish to define a proper type-forwarding decorator in python, which
-supports both the common default call pattern; and the argument override call
-pattern:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@foo</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_method</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="meta">@foo(<span class="params">a=<span class="string">&quot;xyz&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_other_method</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
-<p>The mechanics of this at call time are relatively straightforward in python:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params"></span></span><br><span class="line"><span class="params">    fn = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    *,</span></span><br><span class="line"><span class="params">    a = <span class="string">&quot;xyz&quot;</span>,</span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decorator</span>(<span class="params">fn</span>):</span><br><span class="line">        <span class="built_in">setattr</span>(fn, <span class="string">&quot;__foo__&quot;</span>, a)</span><br><span class="line">        <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> fn <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> decorator(fn)</span><br><span class="line"></span><br><span class="line"><span class="meta">@foo</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_method</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="meta">@foo</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_other_method</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
-<p>We can ask <code>mypy</code> the type of the resultant decorated method:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mypy -c <span class="string">&#x27;import simple; reveal_type(simple.some_method)&#x27;</span></span><br><span class="line">&lt;string&gt;:1: note: Revealed <span class="built_in">type</span> is <span class="string">&quot;Any&quot;</span></span><br></pre></td></tr></table></figure>
-<p>But establishing appropriate types, such that the types of the decorated method
-are well-formed, is a challenge which requires use of <code>TypeVar</code> and the
-<code>@overload</code> mechanic, and a fair amount of boilerplate:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> (</span><br><span class="line">    <span class="type">Callable</span>,</span><br><span class="line">    <span class="type">Optional</span>,</span><br><span class="line">    overload,</span><br><span class="line">    TypeVar,</span><br><span class="line">    <span class="type">Union</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">C = TypeVar(<span class="string">&quot;C&quot;</span>, bound=<span class="type">Callable</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@overload</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params">fn: C</span>) -&gt; C:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="meta">@overload</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params"></span></span><br><span class="line"><span class="params">    *,</span></span><br><span class="line"><span class="params">    a: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="string">&quot;xyz&quot;</span>,</span></span><br><span class="line"><span class="params"></span>) -&gt; <span class="type">Callable</span>[[C], C]:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params"></span></span><br><span class="line"><span class="params">    fn: <span class="type">Optional</span>[C] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    *,</span></span><br><span class="line"><span class="params">    a: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="string">&quot;xyz&quot;</span>,</span></span><br><span class="line"><span class="params"></span>) -&gt; <span class="type">Union</span>[<span class="type">Callable</span>[[C], C], C]:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decorator</span>(<span class="params">fn: C</span>) -&gt; C:</span><br><span class="line">        <span class="built_in">setattr</span>(fn, <span class="string">&quot;__foo__&quot;</span>, a)</span><br><span class="line">        <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> fn <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> decorator(fn)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@foo</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo_example</span>(<span class="params">x: <span class="built_in">int</span>, *, y: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>(x * y)</span><br></pre></td></tr></table></figure>
-<p>We can ask <code>mypy</code> the type of the decorated value:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mypy -c <span class="string">&#x27;import example; reveal_type(example.foo_example)&#x27;</span></span><br><span class="line">&lt;string&gt;:1: note: Revealed <span class="built_in">type</span> is <span class="string">&quot;def (x: builtins.int, *, y: builtins.int) -&gt; builtins.float&quot;</span></span><br></pre></td></tr></table></figure>
-<p>Of note is that most of the actual core of this is very simple, suppose we
-could say the following:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@typed_decorator</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params">fn: C, *, a: <span class="built_in">str</span> = <span class="string">&quot;xyz&quot;</span></span>) -&gt; C:</span><br><span class="line">    <span class="built_in">setattr</span>(fn, <span class="string">&#x27;__foo__&#x27;</span>, a)</span><br><span class="line">    <span class="keyword">return</span> fn</span><br></pre></td></tr></table></figure>
-<p>What remains an open question to me, and I’ve tried many approaches, is if is
-possible to define <code>@typed_decorator</code> in <code>mypy</code>s current semantics.</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://crutcher.github.io/2022/11/15/Starting-a-Blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Crutcher Dunnavant">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="crutcher.github.io">
-      <meta itemprop="description" content="hacking around Big Math">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | crutcher.github.io">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/11/15/Starting-a-Blog/" class="post-title-link" itemprop="url">Starting a Blog</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2022-11-15 10:11:20 / Modified: 10:21:14" itemprop="dateCreated datePublished" datetime="2022-11-15T10:11:20-08:00">2022-11-15</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>My name is Crutcher Dunnavant, and I’ve been working in the big-comptuers
-industry for some time.</p>
-<p>Though I’ve used and worked with Open Source software for most of my
-career, and contributed to some large projects, most of my work has been
-behind the wall of large companies; with limited visibility outside those
-spaces.</p>
-<p>I’ve generally worked on and in deep compute stacks, building petabyte scale
-systems on deeply nested toolchains, and working at every level of those
-toolchains simultaneously to move the needle forward.</p>
-<p>A challenge I’ve had in getting projects out into the wider world is that
-in many cases, the tools to build the tools to build the tools I’ve
-worked in and focused on are only partially extant outside of shops
-like Google; and the getting-started costs of establishing presence
-and reputation to begin to move the needles on issues important to me
-have been high.</p>
-<p>So my plan is to begin producing small library projects, things useful
-enough to use in other projects; mostly focusing on AI/ML development
-cycle problems; and fleshing out structural utilities in the AI spaces.</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 
