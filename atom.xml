@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>crutcher.github.io</title>
+  <icon>https://crutcher.github.io/icon.png</icon>
+  
+  <link href="https://crutcher.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://crutcher.github.io/"/>
+  <updated>2022-12-19T23:02:02.430Z</updated>
+  <id>https://crutcher.github.io/</id>
+  
+  <author>
+    <name>Crutcher Dunnavant</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>The Tapestry Plan</title>
+    <link href="https://crutcher.github.io/2022/12/19/The-Tapestry-Plan/"/>
+    <id>https://crutcher.github.io/2022/12/19/The-Tapestry-Plan/</id>
+    <published>2022-12-19T23:02:02.000Z</published>
+    <updated>2022-12-19T23:02:02.430Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;This post develops part of this document:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor Expression</summary>
+        
+      
+    
+    
+    
+    
+    <category term="tensor expressions" scheme="https://crutcher.github.io/tags/tensor-expressions/"/>
+    
+    <category term="tapestry" scheme="https://crutcher.github.io/tags/tapestry/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Sharding Linear Operations Over Weight Out Dimensions</title>
+    <link href="https://crutcher.github.io/2022/12/17/Sharding-Linear-Operations-Over-Weight-Out-Dimensions/"/>
+    <id>https://crutcher.github.io/2022/12/17/Sharding-Linear-Operations-Over-Weight-Out-Dimensions/</id>
+    <published>2022-12-17T17:34:34.000Z</published>
+    <updated>2022-12-19T22:21:18.891Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;Series&quot;&gt;Series&lt;/h3&gt;
+&lt;p&gt;This post develops part of this document:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor</summary>
+        
+      
+    
+    
+    
+    
+    <category term="tensor expressions" scheme="https://crutcher.github.io/tags/tensor-expressions/"/>
+    
+    <category term="tapestry" scheme="https://crutcher.github.io/tags/tapestry/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Index Projection Functions</title>
+    <link href="https://crutcher.github.io/2022/12/13/Index-Projection-Functions/"/>
+    <id>https://crutcher.github.io/2022/12/13/Index-Projection-Functions/</id>
+    <published>2022-12-13T16:10:20.000Z</published>
+    <updated>2022-12-17T22:45:33.508Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;Series&quot;&gt;Series&lt;/h3&gt;
+&lt;p&gt;This post develops part of this document:
+* &lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor Expression</summary>
+        
+      
+    
+    
+    
+    
+    <category term="tensor expressions" scheme="https://crutcher.github.io/tags/tensor-expressions/"/>
+    
+    <category term="tapestry" scheme="https://crutcher.github.io/tags/tapestry/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Sharding Tensor Expressions</title>
+    <link href="https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/"/>
+    <id>https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/</id>
+    <published>2022-12-12T22:11:00.000Z</published>
+    <updated>2022-12-18T04:00:04.663Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;Series&quot;&gt;Series&lt;/h3&gt;
+&lt;p&gt;This post develops part of this document:
+* &lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor Expression</summary>
+        
+      
+    
+    
+    
+    
+    <category term="tensor expressions" scheme="https://crutcher.github.io/tags/tensor-expressions/"/>
+    
+    <category term="tapestry" scheme="https://crutcher.github.io/tags/tapestry/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Type-Forwarding Python Decorators</title>
+    <link href="https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/"/>
+    <id>https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/</id>
+    <published>2022-11-28T04:28:26.000Z</published>
+    <updated>2022-11-28T23:15:47.984Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Suppose you wish to define a proper type-forwarding decorator in python, which
+supports both the common default call pattern; and the</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Starting a Blog</title>
+    <link href="https://crutcher.github.io/2022/11/15/Starting-a-Blog/"/>
+    <id>https://crutcher.github.io/2022/11/15/Starting-a-Blog/</id>
+    <published>2022-11-15T18:11:20.000Z</published>
+    <updated>2022-12-16T16:56:12.650Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;My name is Crutcher Dunnavant, and I’ve been working in the big-comptuers
+industry for some time.&lt;/p&gt;
+&lt;p&gt;Though I’ve used and worked</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+</feed>
