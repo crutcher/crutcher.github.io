@@ -28,7 +28,7 @@
 <meta property="og:description" content="Abstract This document represents my living attempt to describe work I’m doing in research on the design and implementation of shardable tensor expression languages. It’s going to take time to fill al">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-12-16T18:32:05.000Z">
-<meta property="article:modified_time" content="2022-12-19T22:21:07.998Z">
+<meta property="article:modified_time" content="2022-12-19T23:01:49.605Z">
 <meta property="article:author" content="Crutcher Dunnavant">
 <meta property="article:tag" content="tensor expressions">
 <meta property="article:tag" content="tapestry">
@@ -236,7 +236,7 @@ mjx-container[display="true"] + br {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">1.1.</span> <span class="nav-text">References</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">The Distributed Tensor Expression Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Expanding-a-Toy-Example"><span class="nav-number">2.1.</span> <span class="nav-text">Expanding a Toy Example</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">Restricting to Shardable Operators</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">Operator Index Counting</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">Affine Projection Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linear-Strides-Over-a-Batch-Dimension"><span class="nav-number">5.0.1.</span> <span class="nav-text">Linear Strides Over a Batch Dimension</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sharding-Linear-over-the-out-dimension"><span class="nav-number">5.0.2.</span> <span class="nav-text">Sharding  over the out dimension</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">Next</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">The Tapestry Plan</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">2.1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stages"><span class="nav-number">2.2.</span> <span class="nav-text">Stages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">2.3.</span> <span class="nav-text">References</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">The Distributed Tensor Expression Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Expanding-a-Toy-Example"><span class="nav-number">3.1.</span> <span class="nav-text">Expanding a Toy Example</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">Restricting to Shardable Operators</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">Operator Index Counting</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">Affine Projection Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linear-Strides-Over-a-Batch-Dimension"><span class="nav-number">6.0.1.</span> <span class="nav-text">Linear Strides Over a Batch Dimension</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sharding-Linear-over-the-out-dimension"><span class="nav-number">6.0.2.</span> <span class="nav-text">Sharding  over the out dimension</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">Next</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -249,7 +249,7 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -308,6 +308,63 @@ mjx-container[display="true"] + br {
 <p>This document represents my living attempt to describe work I’m doing in research
 on the design and implementation of shardable tensor expression languages. It’s going
 to take time to fill all the way in, and this is my roll-up single entry point document.</p>
+<h1>The Tapestry Plan</h1>
+<h2 id="Overview">Overview</h2>
+<p>I’m developing out a project in defining the bottom-up sharding and scheduling of grid-scale
+tensor expression languages; its name is “Tapestry”, for the way expression
+value flow graphs weave between execution contexts.</p>
+<p>I am of the opinion that this is a project which requires no <em>new</em> computer science;
+just the careful and methodical application of pieces from a number of sub-fields.</p>
+<p>As there are many projects exploring how to take existing evaluation environments
+and back-fit sharding machinery too them, and as those projects are continuing to
+make reasonable progress, I feel that there’s no short-term urgency to solve this;
+so I’m take the pure-language design route.</p>
+<ul>
+<li>
+<p>We don’t have users, and won’t have them till the whole stack works. We won’t have
+to worry about maintaining semantics or operational decisions when problems are
+encountered with them.</p>
+</li>
+<li>
+<p>We will have some trouble acquiring people to help; everything is going to
+appear <em>very</em> abstract until the functional machinery is in-place.</p>
+</li>
+</ul>
+<h2 id="Stages">Stages</h2>
+<p><em>Tapestry</em> will be built out in the following stages of work, which correspond to a series
+of technical embeddings going deeper into the stack, and will remain as rewrite layers.</p>
+<ul>
+<li>Tensor Valued Block Operation Graph Language</li>
+<li>Block Operation Index Projection Sharding Graph Language</li>
+<li>Block Operation Substitution Rewrite Graph Language</li>
+<li>Block Operation Fusion Rewrite Graph Language</li>
+<li>Block Operation Rewrite Sharding Optimizer
+<ul>
+<li>Configurable Execution Cost Model</li>
+<li>Pareto-Front Stochastic Search Optimizer</li>
+</ul>
+</li>
+<li>Block Shard Operational Embedding</li>
+<li>Block Shard Grid Host
+<ul>
+<li>Shard Scheduling</li>
+<li>Shard Metric Instrumentation</li>
+</ul>
+</li>
+</ul>
+<p>When this stack is <em>semantically</em> complete, even in a preview form; we can begin to
+preview applications written in the block operation graph language.</p>
+<p>From this stage onward, development will bifurcate:</p>
+<ul>
+<li>Applications and extensions written <em>above</em> the block operation language; and</li>
+<li>Optimization research and operational implementation work done <em>below</em> the block operation language.</li>
+</ul>
+<p>The goal is:</p>
+<blockquote>
+<p>Provide an existence proof that a provably shardable formal language is possible
+(we can prove that it <em>can</em> be made fast); then make it easy to program for to
+get more help; then make it fast.</p>
+</blockquote>
 <h2 id="References">References</h2>
 <p>This is an active field of research for me; I believe that index projection functions are a viable solution to this,
 and I’ve done a fair amount of background work on large transform environments.</p>
