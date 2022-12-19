@@ -4,8 +4,17 @@
 
 
     <url>
+        <loc>https://crutcher.github.io/2022/12/17/Sharding-Linear-Operations-Over-Weight-Out-Dimensions/</loc>
+        <lastmod>2022-12-19T17:06:57.529Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
         <loc>https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/</loc>
-        <lastmod>2022-12-17T22:46:12.426Z</lastmod>
+        <lastmod>2022-12-18T04:00:04.663Z</lastmod>
         <changefreq>always</changefreq>
         <priority>1</priority>
     
