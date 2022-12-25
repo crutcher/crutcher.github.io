@@ -70,7 +70,7 @@
 <meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.cube.png">
 <meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.wood.oil.png">
 <meta property="article:published_time" content="2022-12-25T19:26:25.000Z">
-<meta property="article:modified_time" content="2022-12-25T22:50:32.649Z">
+<meta property="article:modified_time" content="2022-12-25T22:58:47.240Z">
 <meta property="article:author" content="Crutcher Dunnavant">
 <meta property="article:tag" content="explainer">
 <meta name="twitter:card" content="summary">
@@ -368,7 +368,7 @@ mjx-container[display="true"] + br {
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2022-12-25 11:26:25 / Modified: 14:50:32" itemprop="dateCreated datePublished" datetime="2022-12-25T11:26:25-08:00">2022-12-25</time>
+      <time title="Created: 2022-12-25 11:26:25 / Modified: 14:58:47" itemprop="dateCreated datePublished" datetime="2022-12-25T11:26:25-08:00">2022-12-25</time>
     </span>
 
   
@@ -408,14 +408,14 @@ literally, “removing noise”. Denoising models have existed in various
 forms for a long time, but deep learning has made them powerful enough
 to be useful for generating new data.</p>
 <p>Let’s define some basic ideas; this is a picture of my cat, Eliza:</p>
-<img src="eliza.source.png">
+<img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
 <p>If I add some random noise to the picture, I might get this:</p>
-<img src="eliza.noise.1.png">
+<img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
 <p>Seen side-by-side, it’s easy to see the noise:</p>
 <table>
   <tr>
-    <td><img src="eliza.source.png" width="200"></td>
-    <td><img src="eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
     </tr>
   </table>
 <p>The noise I added to mess up the image was random; but if I
@@ -424,9 +424,9 @@ difference between the noisy image and the <em>true</em> image was,
 I’d see something like this, which is clearly not random:</p>
 <table>
   <tr>
-    <td><img src="eliza.source.png" width="200"></td>
-    <td><img src="eliza.noise.1.png" width="200"></td>
-    <td><img src="eliza.diff.0-1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.diff.0-1.png" width="200"></td>
     </tr>
   </table>
 <p>The core idea of a denoising algorithm is, given some data,
@@ -434,16 +434,16 @@ remove the data that looks like it’s noise, leaving the data
 that looks consistent with what we expect things <em>like this</em>
 to look like.</p>
 <p>So, given a picture like this:</p>
-<img src="eliza.noise.1.png">
+<img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
 <p>Can I apply some magic <em>Enhance</em> button to <em>clean up</em> the image,
 and get a picture like this:</p>
-<img src="eliza.source.png">
+<img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
 <p>Or side-by-side, can I go from the left, to the right:</p>
 <table>
   <tr>
-    <td><img src="eliza.noise.1.png" width="200"></td>
-    <td><img src="eliza.diff.0-1.png" width="200"></td>
-    <td><img src="eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.diff.0-1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
     </tr>
   </table>
 <p>Simple, right? Just fix all the bits that <em>don’t look like a cat</em>.</p>
@@ -468,14 +468,14 @@ Eliza, and clean it up, I could now do that.</p>
 and messing them up to various degrees:</p>
 <table>
   <tr>
-    <td><img src="eliza.source.png" width="200"></td>
-    <td><img src="eliza.noise.1.png" width="200"></td>
-    <td><img src="eliza.noise.2.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200"></td>
     </tr>
   <tr>
-    <td><img src="eliza.noise.3.png" width="200"></td>
-    <td><img src="eliza.noise.4.png" width="200"></td>
-    <td><img src="eliza.noise.5.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png" width="200"></td>
     </tr>
   </table>
 <p>And then I’d take the steps in this degeneration, say <em>Step K</em> and <em>Step K+1</em>,
@@ -483,29 +483,29 @@ and I’d train a model to go from <em>Step K+1</em> to <em>Step K</em>.</p>
 <p>Teaching it to remove one step of noise from pictures of my cat:</p>
 <table>
   <tr>
-    <td><img src="eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
     </tr>
   <tr>
-    <td><img src="eliza.noise.2.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200"></td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
     </tr>
   <tr>
-    <td><img src="eliza.noise.3.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png" width="200"></td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.noise.2.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200"></td>
     </tr>
   <tr>
-    <td><img src="eliza.noise.4.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png" width="200"></td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.noise.3.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png" width="200"></td>
     </tr>
   <tr>
-    <td><img src="eliza.noise.5.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png" width="200"></td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.noise.4.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png" width="200"></td>
     </tr>
   </table>
 <p>If I trained this with just one picture, I could build a model
@@ -514,9 +514,9 @@ when applied iteratively, would make it look more and more
 like a picture of my cat:</p>
 <table>
   <tr>
-    <td><img src="eliza.noise.5.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png" width="200"></td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
     </tr>
   </table>
 <p>And if I trained a model on <em>many</em> pictures of my cat
@@ -608,30 +608,30 @@ also show it the embedded description context, as a key.</p>
 <table style="text-align: center;">
   <tr>
     <td>
-      <img src="eliza.noise.1.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200">
         <br>
       "Maine coon Cat laying on a white and black salt and pepper rug."
       </td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
     </tr>
   <tr>
     <td>
-      <img src="eliza.noise.2.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200">
         <br>
       "Maine coon Cat laying on a white and black salt and pepper rug."
       </td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
     </tr>
   <tr>
     <td>
-      <img src="eliza.wood.noise.1.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.noise.1.png" width="200">
         <br>
       "Maine coon Cat laying on a wooden floor."
       </td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
-    <td><img src="eliza.wood.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.png" width="200"></td>
     </tr>
   </table>
 <p>The embedded key lets the model decide which <em>parts</em> of the model
@@ -646,24 +646,24 @@ don’t change the original description.</p>
 <table style="text-align: center;">
   <tr>
     <td>
-      <img src="eliza.source.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200">
       <br>
       "Maine coon Cat laying on a white and black salt and pepper rug."
       </td>
     <td>
-      <img src="eliza.source.flip.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.png" width="200">
       <br>
       "Maine coon Cat laying on a white and black salt and pepper rug."
       </td>
     </tr>
   <tr>
     <td>
-      <img src="eliza.wood.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.png" width="200">
       <br>
       "Maine coon Cat laying on a wooden floor."
       </td>
     <td>
-      <img src="eliza.wood.flip.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.flip.png" width="200">
       <br>
       "Maine coon Cat laying on a wooden floor."
       </td>
@@ -674,12 +674,12 @@ the data <em>and</em> the description:</p>
 <table style="text-align: center;">
   <tr>
     <td>
-      <img src="eliza.source.flip.cube.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.cube.png" width="200">
       <br>
       "Maine coon Cat laying on a white and black salt and pepper rug. <b>Cubism.</b>"
       </td>
     <td>
-      <img src="eliza.wood.oil.png" width="200">
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.oil.png" width="200">
       <br>
       "Maine coon Cat laying on a white and black salt and pepper rug. <b>Oil painting.</b>"
       </td>
