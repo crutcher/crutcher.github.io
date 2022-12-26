@@ -318,9 +318,15 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2022-12-25 11:26:25 / Modified: 17:28:16" itemprop="dateCreated datePublished" datetime="2022-12-25T11:26:25-08:00">2022-12-25</time>
+      <time title="Created: 2022-12-25 11:26:25" itemprop="dateCreated datePublished" datetime="2022-12-25T11:26:25-08:00">2022-12-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-12-26 11:53:07" itemprop="dateModified" datetime="2022-12-26T11:53:07-08:00">2022-12-26</time>
     </span>
 
   
@@ -493,16 +499,16 @@ of lots of things other than pictures of my cat, Eliza;
 the simplest way would be to just <em>train a lot of different models</em>.</p>
 <p>Let’s name the current model:</p>
 <ul>
-<li>“Maine coon Cat laying on a white and black salt and pepper rug.”</li>
+<li>“Maine coon cat laying on a white and black salt and pepper rug.”</li>
 </ul>
 <p>Now, my model of my cat is certainly bigger than one picture, but it’s probably
 a lot smaller than all the pictures I used to train it; probably a <em>lot</em>
 smaller if I’ve used good math to do the job.</p>
 <p>If I want to be able to denoise other things, I could train other models, say:</p>
 <ul>
-<li>“Maine coon Cat sitting on a white and black salt and pepper rug.”</li>
-<li>“Maine coon Cat laying on wooden floor.”</li>
-<li>“Maine coon Cat sitting on a wooden floor.”</li>
+<li>“Maine coon cat sitting on a white and black salt and pepper rug.”</li>
+<li>“Maine coon cat laying on wooden floor.”</li>
+<li>“Maine coon cat sitting on a wooden floor.”</li>
 <li>“Planes on a runway.”</li>
 <li>Etc.</li>
 </ul>
@@ -524,8 +530,8 @@ we’re looking at, and turn it into some kind of key so that models can
 share information.</p>
 <p>It would be nice if these two models could share their <em>cat-related</em> information:</p>
 <ul>
-<li>“Maine coon Cat laying on a white and black salt and pepper rug.”</li>
-<li>“Maine coon Cat laying on wooden floor.”</li>
+<li>“Maine coon cat laying on a white and black salt and pepper rug.”</li>
+<li>“Maine coon cat laying on wooden floor.”</li>
 </ul>
 <p>But how do we translate text into a key that models can use?</p>
 <h1>Description to Key</h1>
@@ -543,16 +549,16 @@ models to get pretty powerful.</p>
 some notion of their original ordering, were invented.</p>
 <p>So, today, we can perform embedding math similar to:</p>
 <ul>
-<li>“Maine coon Cat laying on a white and black salt and pepper rug.”</li>
+<li>“Maine coon cat laying on a white and black salt and pepper rug.”</li>
 <li>- (offset:7)“white and black salt and pepper rug”</li>
 <li>+ (offset:7)“wooden floor”</li>
-<li>=~ “Maine coon Cat laying on wooden floor.”</li>
+<li>=~ “Maine coon cat laying on wooden floor.”</li>
 </ul>
 <h1>Overlapping Diffusion Models</h1>
 <p>Now we can train a bigger model, much bigger than we would have trained for
 just one kind of thing:</p>
 <ul>
-<li>“Maine coon Cat laying on a white and black salt and pepper rug.”</li>
+<li>“Maine coon cat laying on a white and black salt and pepper rug.”</li>
 </ul>
 <p>But trained on many, many kinds of things. But in addition to training
 the model on the noisy image, and the slightly-less noisy image; we’ll
@@ -562,7 +568,7 @@ also show it the embedded description context, as a key.</p>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200">
         <br>
-      "Maine coon Cat laying on a white and black salt and pepper rug."
+      "Maine coon cat laying on a white and black salt and pepper rug."
       </td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
     <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
@@ -571,7 +577,7 @@ also show it the embedded description context, as a key.</p>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200">
         <br>
-      "Maine coon Cat laying on a white and black salt and pepper rug."
+      "Maine coon cat laying on a white and black salt and pepper rug."
       </td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
     <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
@@ -580,7 +586,7 @@ also show it the embedded description context, as a key.</p>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.noise.1.png" width="200">
         <br>
-      "Maine coon Cat laying on a wooden floor."
+      "Maine coon cat laying on a wooden floor."
       </td>
     <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
     <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.png" width="200"></td>
@@ -600,24 +606,24 @@ don’t change the original description.</p>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200">
       <br>
-      "Maine coon Cat laying on a white and black salt and pepper rug."
+      "Maine coon cat laying on a white and black salt and pepper rug."
       </td>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.png" width="200">
       <br>
-      "Maine coon Cat laying on a white and black salt and pepper rug."
+      "Maine coon cat laying on a white and black salt and pepper rug."
       </td>
     </tr>
   <tr>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.png" width="200">
       <br>
-      "Maine coon Cat laying on a wooden floor."
+      "Maine coon cat laying on a wooden floor."
       </td>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.flip.png" width="200">
       <br>
-      "Maine coon Cat laying on a wooden floor."
+      "Maine coon cat laying on a wooden floor."
       </td>
     </tr>
   </table>
@@ -628,15 +634,61 @@ the data <em>and</em> the description:</p>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.cube.png" width="200">
       <br>
-      "Maine coon Cat laying on a white and black salt and pepper rug. <b>Cubism.</b>"
+      "Maine coon cat laying on a white and black salt and pepper rug. <b>Cubism.</b>"
       </td>
     <td>
       <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.oil.png" width="200">
       <br>
-      "Maine coon Cat laying on a white and black salt and pepper rug. <b>Oil painting.</b>"
+      "Maine coon cat laying on a white and black salt and pepper rug. <b>Oil painting.</b>"
       </td>
     </tr>
   </table>
+<h1>Generating New Images</h1>
+<p>We can start by generating some random noise:
+<img src="/2022/12/25/What-Are-AI-Art-Models/noise.png" width="200"></p>
+<p>And giving the model a prompt:</p>
+<ul>
+<li>“Maine coon cat laying on a carpet.”</li>
+</ul>
+<p>Starting from random noise, the denoiser picks local features that are kinda
+plausible from the prompt, and begins moving the image towards something
+that has some of those features.</p>
+<p>As parts of the image come into focus, they are forced to make sense relative
+to their neighbors, and the features refine towards more plausible results.</p>
+<table style="text-align: center;">
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/noise.ear.png" width="200">
+        <br>
+      "Maine coon cat laying on a carpet."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/noise.ear.result.png" width="200"></td>
+   </tr>
+  <tr>
+    <td colspan="3">... many steps later ...</td>
+    </tr>
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/noise.ear.result.png" width="200">
+        <br>
+      "Maine coon cat laying on a carpet."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png" width="200"></td>
+  <tr>
+    <td colspan="3">... many steps later ...</td>
+    </tr>
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200">
+        <br>
+      "Maine coon cat laying on a carpet."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+   </tr>
+  </tr></table>
 <h1>Novel Combinations</h1>
 <p>Once we’ve got this big overlapping model, keyed on embedded descriptions;
 we can start asking it for things we <em>don’t</em> have pictures of:</p>
@@ -685,7 +737,7 @@ claim it had copied the training data, we’d need to argue that we can compress
 pixel; to just 16 numbers; so it seems impossible to argue that the model has copied the data.
 What the model has done is learned how to describe things <em>like</em> each input image, in terms of and relative to other
 images it has seen, conditioned on the embedding contexts it was given.</p>
-<p>It’s pretty compelling to argue that the training data isn’t in the model;
+<p>It’s pretty compelling to <em>me</em> argue that the training data isn’t in the model;
 the models have learned what high level concepts imply; concepts like:</p>
 <ul>
 <li>Cat</li>
@@ -709,6 +761,40 @@ survival, which raise other interesting and important questions:</p>
 </ul>
 </li>
 </ul>
+<h1>Is this just copying by obfuscation?</h1>
+<p>I want to call out a point here.
+The above argument (2 bytes per training example can’t be copying) is extremely compelling to me;
+and I’ve found it to be compelling to others with a formal background in information theory,
+we see it as wildly too small to be anything like a compression or copy of the source data.</p>
+<p>But it isn’t a compelling argument to many people without that background. The feedback
+I’ve received is that they’re concerned this is a form of shell game, copying by obfuscation.
+They’re moving the math around to hide the trick, is the argument.</p>
+<p>And I don’t know how to counter that argument, without saying “learn the math”;
+but it feels like a real crux of one of the issues here.</p>
+<p>In discussion with people, when it feels like some progress is being made on the question
+of, is this <em>copying</em> in some sense, an even more interesting objection arises, that I’ll paraphrase here:</p>
+<blockquote>
+<p><strong>The argument against robotic fair-use:</strong>
+<br>
+While this might not be copying, I object to calling this “learning” and I’m unhappy with
+the idea that this is ok.
+<br>
+Humans have a fair-use right to learn from material, that grants them moral rights to
+observe and consider things which supersede the rights of the creators of art to control
+the use of their material. The right to observe is protected above other rights.
+<br>
+Calling this “learning” implies that right; but the computer isn’t a person, and so can’t
+have that moral right. The information derived from observing art, even if it conclusively
+<em>isn’t</em> a copy, is still violating rights of the author of the training examples which
+take precedence because they are not being superseded by fair-use rights to observe.
+<br>
+Humans should have a legal right to look at things without compensation robots should not have.</p>
+</blockquote>
+<p>I believe that there is a deep cultural divide on this argument, and it’s worth clarifying
+what the actual disagreement is when moving forward with AI training. I think some people
+accept this strongly as deeply and morally true, and some people reject it strongly
+as deeply and morally untrue; and bringing this question forward is more clarifying
+of that disagreement than an argument about the information content of a model.</p>
 <h1>Is it legal to train on copyrighted art?</h1>
 <p>This seems like a simple question, but we can probably break it down into a whole family:</p>
 <ul>
