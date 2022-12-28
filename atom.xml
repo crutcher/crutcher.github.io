@@ -6,7 +6,7 @@
   <link href="https://crutcher.github.io/atom.xml" rel="self"/>
   
   <link href="https://crutcher.github.io/"/>
-  <updated>2022-12-26T21:15:12.675Z</updated>
+  <updated>2022-12-28T16:35:27.657Z</updated>
   <id>https://crutcher.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Tapestry: Sharding Matmul over the in dimension</title>
+    <link href="https://crutcher.github.io/2022/12/28/Tapestry-Sharding-Matmul-over-the-in-dimension/"/>
+    <id>https://crutcher.github.io/2022/12/28/Tapestry-Sharding-Matmul-over-the-in-dimension/</id>
+    <published>2022-12-28T16:35:27.000Z</published>
+    <updated>2022-12-28T16:35:27.657Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;This post develops part of this document:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor Expression</summary>
+        
+      
+    
+    
+    
+    
+    <category term="tensor expressions" scheme="https://crutcher.github.io/tags/tensor-expressions/"/>
+    
+    <category term="tapestry" scheme="https://crutcher.github.io/tags/tapestry/"/>
+    
+  </entry>
   
   <entry>
     <title>What Are AI Art Models?</title>
@@ -72,17 +99,16 @@ and there’s a fair amount of confusion and complex feelings</summary>
     <link href="https://crutcher.github.io/2022/12/17/Sharding-Linear-Operations-Over-Weight-Out-Dimensions/"/>
     <id>https://crutcher.github.io/2022/12/17/Sharding-Linear-Operations-Over-Weight-Out-Dimensions/</id>
     <published>2022-12-17T17:34:34.000Z</published>
-    <updated>2022-12-19T22:21:18.891Z</updated>
+    <updated>2022-12-28T00:53:26.991Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h3 id=&quot;Series&quot;&gt;Series&lt;/h3&gt;
-&lt;p&gt;This post develops part of this document:&lt;/p&gt;
+    <summary type="html">&lt;p&gt;This post develops part of this document:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor</summary>
+&lt;li&gt;&lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor Expression</summary>
         
       
     
