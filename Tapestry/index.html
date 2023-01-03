@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"crutcher.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.14.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"disqus","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1}},"layzload":false,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Abstract This document represents my living attempt to describe work I’m doing in research on the design and implementation of shardable tensor expression languages. It’s going to take time to fill a">
+    <meta name="description" content="Abstract  Note: Document Completion Progress ~&#x3D; 5%  This document represents my living attempt to describe work I’m doing in research on the design and implementation of shardable tensor expression l">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Tapestry: Shardable Tensor Expression Environments">
 <meta property="og:url" content="https://crutcher.github.io/Tapestry/index.html">
 <meta property="og:site_name" content="crutcher.github.io">
-<meta property="og:description" content="Abstract This document represents my living attempt to describe work I’m doing in research on the design and implementation of shardable tensor expression languages. It’s going to take time to fill a">
+<meta property="og:description" content="Abstract  Note: Document Completion Progress ~&#x3D; 5%  This document represents my living attempt to describe work I’m doing in research on the design and implementation of shardable tensor expression l">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.pastel.svg">
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.pastel.svg">
@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.basic.apply.svg">
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.basic.save.svg">
 <meta property="article:published_time" content="2022-12-16T18:32:05.000Z">
-<meta property="article:modified_time" content="2023-01-03T01:45:36.742Z">
+<meta property="article:modified_time" content="2023-01-03T04:51:57.764Z">
 <meta property="article:author" content="Crutcher Dunnavant">
 <meta property="article:tag" content="tensor expressions">
 <meta property="article:tag" content="tapestry">
@@ -314,9 +314,44 @@ mjx-container[display="true"] + br {
       <div class="post-body">
           <img src="/Tapestry/tapestry.pastel.svg" width="200">
 <h1>Abstract</h1>
+<blockquote>
+<p>Note: Document Completion Progress ~= 5%</p>
+</blockquote>
 <p>This document represents my living attempt to describe work I’m doing in research
 on the design and implementation of shardable tensor expression languages. It’s going
 to take time to fill all the way in, and this is my roll-up single entry point document.</p>
+<p>This is work in the same space as existing tensor environments and compilers:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://jax.readthedocs.io/en/latest/jax-101/08-pjit.html">jax pjit</a></li>
+<li><a target="_blank" rel="noopener" href="https://mlir.llvm.org/">MLIR</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/pytorch/tau">pytorch tau</a></li>
+</ul>
+<p>It also extends many ideas from existing environments:</p>
+<ul>
+<li>Data Pipeline Languages
+<ul>
+<li><a target="_blank" rel="noopener" href="https://spark.apache.org/">Apache Spark</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/dataflow">Google Dataflow</a></li>
+</ul>
+</li>
+<li>Graph-rewriting Functional Languages:
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.haskell.org/">Haskell</a></li>
+<li><a target="_blank" rel="noopener" href="https://ocaml.org/">OCaml</a></li>
+</ul>
+</li>
+<li>And of course, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/SQL">SQL</a></li>
+</ul>
+<p>Existing work in the space has focused on making existing languages distribute well,
+or on getting the best performance out of tensor backends.</p>
+<p>This work focuses on a bottom-up, shardable-by-construction approach
+to the distributed tensor expression problem
+(each core operations can be proven to be shardable, each operation
+composition can be proven to be shardable, and each graph-rewrite can
+be proven to be equivalent)
+; deriving and explaining
+a semantic core with the fewest prior operators and constraints, designed
+to enable aggressive stochastic graph rewrite optimizers.</p>
 <h1>The Tapestry Vision</h1>
 <p>To explain the larger vision of Tapestry, we need to explore the uses cases
 of a large system which does not yet exist, which we’ll also call Tapestry.</p>
