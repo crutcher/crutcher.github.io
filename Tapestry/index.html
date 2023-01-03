@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.basic.apply.svg">
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.basic.save.svg">
 <meta property="article:published_time" content="2022-12-16T18:32:05.000Z">
-<meta property="article:modified_time" content="2023-01-03T00:36:34.697Z">
+<meta property="article:modified_time" content="2023-01-03T01:45:36.742Z">
 <meta property="article:author" content="Crutcher Dunnavant">
 <meta property="article:tag" content="tensor expressions">
 <meta property="article:tag" content="tapestry">
@@ -319,7 +319,7 @@ on the design and implementation of shardable tensor expression languages. It’
 to take time to fill all the way in, and this is my roll-up single entry point document.</p>
 <h1>The Tapestry Vision</h1>
 <p>To explain the larger vision of Tapestry, we need to explore the uses cases
-of a large system which does not yet exist, which we’ll also call A Tapestry.</p>
+of a large system which does not yet exist, which we’ll also call Tapestry.</p>
 <blockquote>
 <p>Note: The motivation for the synecdoche here is taken from SQL, where SQL is both
 the language and the environment, as their semantics are formal and shared.</p>
@@ -399,8 +399,10 @@ in lists, arrays, or key/value mapped dictionaries:</p>
 </ul>
 <p>These environments do not model tensor-indexed values, or have effective
 mechanisms for distributing dataflow and functional dependencies across
-polyhedrally typed operations; a new formalism is needed to effectively
+polyhedrally typed operations (operations typed in terms of the shape
+co-variance of their inputs and outputs); a new formalism is needed to effectively
 describe operator injection into distributed tensor environments.</p>
+<!-- TODO: image / explanation for polyhedrally typed functions -->
 <p>Tapestry is an effort to describe such a formalism, focusing on shardable by construction
 operation graph semantics.</p>
 <h2 id="Applications">Applications</h2>
