@@ -6,7 +6,7 @@
   <link href="https://crutcher.github.io/atom.xml" rel="self"/>
   
   <link href="https://crutcher.github.io/"/>
-  <updated>2023-01-04T21:48:03.741Z</updated>
+  <updated>2023-01-04T22:00:18.196Z</updated>
   <id>https://crutcher.github.io/</id>
   
   <author>
@@ -21,15 +21,16 @@
     <link href="https://crutcher.github.io/2023/01/04/Tapestry-Parallel-Stochastic-Optimization/"/>
     <id>https://crutcher.github.io/2023/01/04/Tapestry-Parallel-Stochastic-Optimization/</id>
     <published>2023-01-04T21:48:03.000Z</published>
-    <updated>2023-01-04T21:48:03.741Z</updated>
+    <updated>2023-01-04T22:00:18.196Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h2 id=&quot;Parallel-Stochastic-Optimization&quot;&gt;Parallel Stochastic Optimization&lt;/h2&gt;
-&lt;p&gt;The tapestry work thus far has focused on establishing</summary>
+    <summary type="html">&lt;p&gt;This post develops part of this document:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor Expression</summary>
         
       
     
