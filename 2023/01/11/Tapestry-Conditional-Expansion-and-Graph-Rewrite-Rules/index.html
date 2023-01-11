@@ -28,7 +28,7 @@
 <meta property="og:description" content="This post develops part of this document:  Tapestry: Shardable Tensor Expression Environments  Graph Rewrite Rules Graph rewriting is a common implementation feature of graph evaluation languages; “gr">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-01-11T09:47:28.000Z">
-<meta property="article:modified_time" content="2023-01-11T09:47:28.571Z">
+<meta property="article:modified_time" content="2023-01-11T09:53:02.657Z">
 <meta property="article:author" content="Crutcher Dunnavant">
 <meta property="article:tag" content="tapestry">
 <meta name="twitter:card" content="summary">
@@ -235,7 +235,7 @@ mjx-container[display="true"] + br {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-Rewrite-Rules"><span class="nav-number">1.</span> <span class="nav-text">Graph Rewrite Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Local-Node-Expansion-Rewrite"><span class="nav-number">1.1.</span> <span class="nav-text">Local Node Expansion Rewrite</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Conditional-Rewrites"><span class="nav-number">1.1.1.</span> <span class="nav-text">Conditional Rewrites</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ambiguous-Rewrites"><span class="nav-number">1.1.2.</span> <span class="nav-text">Ambiguous Rewrites</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Global-Pattern-Search-Rewrite"><span class="nav-number">1.2.</span> <span class="nav-text">Global Pattern Search Rewrite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Returning-to-Linear"><span class="nav-number">1.3.</span> <span class="nav-text">Returning to Linear</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linear-under-Local-Expansion"><span class="nav-number">1.3.1.</span> <span class="nav-text">Linear under Local Expansion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Linear-under-Global-Rewrite"><span class="nav-number">1.3.2.</span> <span class="nav-text">Linear under Global Rewrite</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graph-Fusion-Operators"><span class="nav-number">1.4.</span> <span class="nav-text">Graph Fusion Operators</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-Rewrite-Rules"><span class="nav-number">1.</span> <span class="nav-text">Graph Rewrite Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Local-Node-Expansion-Rewrite"><span class="nav-number">1.1.</span> <span class="nav-text">Local Node Expansion Rewrite</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Conditional-Rewrites"><span class="nav-number">1.1.1.</span> <span class="nav-text">Conditional Rewrites</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ambiguous-Rewrites"><span class="nav-number">1.1.2.</span> <span class="nav-text">Ambiguous Rewrites</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Global-Pattern-Search-Rewrite"><span class="nav-number">1.2.</span> <span class="nav-text">Global Pattern Search Rewrite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Returning-to-Linear"><span class="nav-number">1.3.</span> <span class="nav-text">Returning to Linear</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linear-under-Local-Expansion"><span class="nav-number">1.3.1.</span> <span class="nav-text">Linear under Local Expansion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Linear-under-Global-Rewrite"><span class="nav-number">1.3.2.</span> <span class="nav-text">Linear under Global Rewrite</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graph-Fusion-Operators"><span class="nav-number">1.4.</span> <span class="nav-text">Graph Fusion Operators</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Next"><span class="nav-number">2.</span> <span class="nav-text">Next</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -323,8 +323,9 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2023-01-11 01:47:28" itemprop="dateCreated datePublished" datetime="2023-01-11T01:47:28-08:00">2023-01-11</time>
+      <time title="Created: 2023-01-11 01:47:28 / Modified: 01:53:02" itemprop="dateCreated datePublished" datetime="2023-01-11T01:47:28-08:00">2023-01-11</time>
     </span>
 
   
@@ -526,6 +527,11 @@ directly, which significantly improve fusion products.</p>
 api designers in terms of the known family of fusion operators and rewrite
 operations; leading to potentially large wins in fusion optimization search
 results.</p>
+<h2 id="Next">Next</h2>
+<p>The next focus will be on developing the mechanics to show that the
+sharding of convolution operators can be cleanly expressed in index projection functions
+and graph rewrite rules; and beginning to discuss implicit tensor view, shard, and fusion
+operators.</p>
 
     </div>
 
