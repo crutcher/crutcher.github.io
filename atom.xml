@@ -6,7 +6,7 @@
   <link href="https://crutcher.github.io/atom.xml" rel="self"/>
   
   <link href="https://crutcher.github.io/"/>
-  <updated>2023-01-04T22:00:18.196Z</updated>
+  <updated>2023-01-11T09:47:28.571Z</updated>
   <id>https://crutcher.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Tapestry: Conditional Expansion and Graph Rewrite Rules</title>
+    <link href="https://crutcher.github.io/2023/01/11/Tapestry-Conditional-Expansion-and-Graph-Rewrite-Rules/"/>
+    <id>https://crutcher.github.io/2023/01/11/Tapestry-Conditional-Expansion-and-Graph-Rewrite-Rules/</id>
+    <published>2023-01-11T09:47:28.000Z</published>
+    <updated>2023-01-11T09:47:28.571Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;This post develops part of this document:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/Tapestry&quot;&gt;Tapestry: Shardable Tensor Expression</summary>
+        
+      
+    
+    
+    
+    
+    <category term="tapestry" scheme="https://crutcher.github.io/tags/tapestry/"/>
+    
+  </entry>
   
   <entry>
     <title>Tapestry: Parallel Stochastic Optimization</title>
