@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/amp16.png">
+  <link rel="mask-icon" href="/images/amp32.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"crutcher.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.16.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"disqus","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1}},"layzload":false,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="This post is about notes towards an implementable representation of the “Abstract Expression Graph” &#x2F; “Sharded Expression Graph” relationship in Tapestry. Expression languages differ from process lang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Representing Tensor Graphs">
+<meta property="og:url" content="https://crutcher.github.io/2023/05/30/Representing-Tensor-Graphs/index.html">
+<meta property="og:site_name" content="crutcher.github.io">
+<meta property="og:description" content="This post is about notes towards an implementable representation of the “Abstract Expression Graph” &#x2F; “Sharded Expression Graph” relationship in Tapestry. Expression languages differ from process lang">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-30T20:46:33.000Z">
+<meta property="article:modified_time" content="2023-05-30T22:23:36.821Z">
+<meta property="article:author" content="Crutcher Dunnavant">
+<meta property="article:tag" content="tapestry">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://crutcher.github.io/2023/05/30/Representing-Tensor-Graphs/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://crutcher.github.io/2023/05/30/Representing-Tensor-Graphs/","path":"2023/05/30/Representing-Tensor-Graphs/","title":"Representing Tensor Graphs"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Representing Tensor Graphs | crutcher.github.io</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9EX3586LZ"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-R9EX3586LZ","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="crutcher.github.io" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">crutcher.github.io</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-atom"><a href="/atom.xml" rel="section"><i class="fab fa-atom fa-fw"></i>Atom</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-tapestry"><a href="/Tapestry/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>Tapestry</a></li><li class="menu-item menu-item-resume"><a href="/Resume/" rel="section"><i class="fa fa-solid fa-file fa-fw"></i>Resume</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Simple-Expressions"><span class="nav-number">1.</span> <span class="nav-text">Simple Expressions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chained-Expressions"><span class="nav-number">2.</span> <span class="nav-text">Chained Expressions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sharded-Expressions"><span class="nav-number">3.</span> <span class="nav-text">Sharded Expressions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Polyhedral-Type-Information"><span class="nav-number">4.</span> <span class="nav-text">Polyhedral Type Information</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#The-cost-information"><span class="nav-number">4.1.</span> <span class="nav-text">The cost information</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Encapsulation"><span class="nav-number">5.</span> <span class="nav-text">Encapsulation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Previous-Work"><span class="nav-number">6.</span> <span class="nav-text">Previous Work</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Crutcher Dunnavant</p>
+  <div class="site-description" itemprop="description">hacking around big math</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crutcher" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crutcher" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://sigmoid.social/@crutcher" title="Mastodon → https:&#x2F;&#x2F;sigmoid.social&#x2F;@crutcher" rel="noopener me" target="_blank"><i class="fab fa-mastodon fa-fw"></i>Mastodon</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://discordapp.com/users/361021789268344842" title="Discord → https:&#x2F;&#x2F;discordapp.com&#x2F;users&#x2F;361021789268344842" rel="noopener me" target="_blank"><i class="fab fa-discord fa-fw"></i>Discord</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/crutcher-dunnavant-4841ba9/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;crutcher-dunnavant-4841ba9&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://crutcher.github.io/2023/05/30/Representing-Tensor-Graphs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Crutcher Dunnavant">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="crutcher.github.io">
+      <meta itemprop="description" content="hacking around big math">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Representing Tensor Graphs | crutcher.github.io">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Representing Tensor Graphs
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2023-05-30 13:46:33 / Modified: 15:23:36" itemprop="dateCreated datePublished" datetime="2023-05-30T13:46:33-07:00">2023-05-30</time>
+    </span>
+
+  
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2023/05/30/Representing-Tensor-Graphs/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/05/30/Representing-Tensor-Graphs/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>This post is about notes towards an implementable representation of the
+“Abstract Expression Graph” / “Sharded Expression Graph” relationship in
+<a href="/Tapestry">Tapestry</a>.</p>
+<p>Expression languages differ from process languages in that define values in terms of
+transformations on previous values. The simplest outcome of this is that it’s quite
+easy to use a given value more than once; but by adding an observer, we can define
+directly which values are ever observed by the outside world.</p>
+<p>Values which are never observed are free to be inlined (when they contribute to other
+values which transitively are observed), or even eliminated entirely (when they don’t
+contribute to any observed values).</p>
+<h3 id="Simple-Expressions">Simple Expressions</h3>
+<img class="kroki" src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8IS0tIEdlbmVyYXRlZCBieSBncmFwaHZpeiB2ZXJzaW9uIDguMC40ICgyMDIzMDQyMi4yMjA3KQogLS0+CjwhLS0gVGl0bGU6IEcgUGFnZXM6IDEgLS0+Cjxzdmcgd2lkdGg9IjE3MnB0IiBoZWlnaHQ9IjY0cHQiCiB2aWV3Qm94PSIwLjAwIDAuMDAgMTcyLjI4IDY0LjI4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDYwLjI4KSI+Cjx0aXRsZT5HPC90aXRsZT4KPHBvbHlnb24gZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSItNCw0IC00LC02MC4yOCAxNjguMjgsLTYwLjI4IDE2OC4yOCw0IC00LDQiLz4KPCEtLSBBIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkE8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjcyLC00Ni4xNCA0LC00Ni4xNCAwLC00Mi4xNCAwLC0xMC4xNCA2OCwtMTAuMTQgNzIsLTE0LjE0IDcyLC00Ni4xNCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2OCwtNDIuMTQgMCwtNDIuMTQiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjgsLTQyLjE0IDY4LC0xMC4xNCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2OCwtNDIuMTQgNzIsLTQ2LjE0Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjM2IiB5PSItMjMuMjQiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBBPC90ZXh0Pgo8L2c+CjwhLS0gb2JzIC0tPgo8ZyBpZD0ibm9kZTIiIGNsYXNzPSJub2RlIj4KPHRpdGxlPm9iczwvdGl0bGU+CjxlbGxpcHNlIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGN4PSIxMzYuMTQiIGN5PSItMjguMTQiIHJ4PSIyNC4xNCIgcnk9IjI0LjE0Ii8+CjxlbGxpcHNlIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGN4PSIxMzYuMTQiIGN5PSItMjguMTQiIHJ4PSIyOC4xNCIgcnk9IjI4LjE0Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEzNi4xNCIgeT0iLTIzLjI0IiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPm9iczwvdGV4dD4KPC9nPgo8IS0tIG9icyYjNDU7Jmd0O0EgLS0+CjxnIGlkPSJlZGdlMSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+b2JzJiM0NTsmZ3Q7QTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik0xMDcuNTQsLTI4LjE0Qzk5LjM4LC0yOC4xNCA5MC4yMywtMjguMTQgODEuMjksLTI4LjE0Ii8+CjxlbGxpcHNlIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBjeD0iNzYuOTciIGN5PSItMjguMTQiIHJ4PSI0IiByeT0iNCIvPgo8L2c+CjwvZz4KPC9zdmc+Cg=='>
+<p>What does it mean for us to be able to observe a tensor value?</p>
+<ul>
+<li>After the expression is evaluated, we can read the value of the tensor.</li>
+</ul>
+<h3 id="Chained-Expressions">Chained Expressions</h3>
+<p>We’re generally interested in more complex expressions, where transformations are applied to
+tensor values, and then to the results of those transformations, and so on.</p>
+<img class="kroki" src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8IS0tIEdlbmVyYXRlZCBieSBncmFwaHZpeiB2ZXJzaW9uIDguMC40ICgyMDIzMDQyMi4yMjA3KQogLS0+CjwhLS0gVGl0bGU6IEcgUGFnZXM6IDEgLS0+Cjxzdmcgd2lkdGg9IjY0NnB0IiBoZWlnaHQ9IjEyOXB0Igogdmlld0JveD0iMC4wMCAwLjAwIDY0Ni4yOCAxMjkuMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgo8ZyBpZD0iZ3JhcGgwIiBjbGFzcz0iZ3JhcGgiIHRyYW5zZm9ybT0ic2NhbGUoMSAxKSByb3RhdGUoMCkgdHJhbnNsYXRlKDQgMTI1KSI+Cjx0aXRsZT5HPC90aXRsZT4KPHBvbHlnb24gZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSItNCw0IC00LC0xMjUgNjQyLjI4LC0xMjUgNjQyLjI4LDQgLTQsNCIvPgo8IS0tIEEgLS0+CjxnIGlkPSJub2RlMSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZmYiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNzIsLTExOSA0LC0xMTkgMCwtMTE1IDAsLTgzIDY4LC04MyA3MiwtODcgNzIsLTExOSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2OCwtMTE1IDAsLTExNSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2OCwtMTE1IDY4LC04MyIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2OCwtMTE1IDcyLC0xMTkiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzYiIHk9Ii05Ni4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlRlbnNvcjogQTwvdGV4dD4KPC9nPgo8IS0tIEIgLS0+CjxnIGlkPSJub2RlMiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QjwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZmYiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNzEuNSwtNjUgNC41LC02NSAwLjUsLTYxIDAuNSwtMjkgNjcuNSwtMjkgNzEuNSwtMzMgNzEuNSwtNjUiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjcuNSwtNjEgMC41LC02MSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2Ny41LC02MSA2Ny41LC0yOSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2Ny41LC02MSA3MS41LC02NSIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzNiIgeT0iLTQyLjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBCPC90ZXh0Pgo8L2c+CjwhLS0gQyAtLT4KPGcgaWQ9Im5vZGUzIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5DPC90aXRsZT4KPHBvbHlnb24gZmlsbD0iI2QwZDBmZiIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzMDkuNSwtMTE5IDI0Mi41LC0xMTkgMjM4LjUsLTExNSAyMzguNSwtODMgMzA1LjUsLTgzIDMwOS41LC04NyAzMDkuNSwtMTE5Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjMwNS41LC0xMTUgMjM4LjUsLTExNSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzMDUuNSwtMTE1IDMwNS41LC04MyIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzMDUuNSwtMTE1IDMwOS41LC0xMTkiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMjc0IiB5PSItOTYuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEM8L3RleHQ+CjwvZz4KPCEtLSBYIC0tPgo8ZyBpZD0ibm9kZTYiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlg8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBmZmQwIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIwMiwtMTIxIDEwOCwtMTIxIDEwOCwtMjcgMjAyLC0yNyAyMDIsLTEyMSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxMjAsLTEyMSAxMDgsLTEwOSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxMDgsLTM5IDEyMCwtMjciLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTkwLC0yNyAyMDIsLTM5Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIwMiwtMTA5IDE5MCwtMTIxIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1NSIgeT0iLTY5LjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QmxvY2tFeHByOiBYPC90ZXh0Pgo8L2c+CjwhLS0gQyYjNDU7Jmd0O1ggLS0+CjxnIGlkPSJlZGdlMyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+QyYjNDU7Jmd0O1g8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNMjM4LjIxLC05Mi45N0MyMzAuMTcsLTkxLjEyIDIyMS40LC04OS4wOSAyMTIuNjksLTg3LjA4Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIxMy42NywtODMuNDkgMjAzLjE0LC04NC42NSAyMTIuMSwtOTAuMzEgMjEzLjY3LC04My40OSIvPgo8L2c+CjwhLS0gRCAtLT4KPGcgaWQ9Im5vZGU0IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5EPC90aXRsZT4KPHBvbHlnb24gZmlsbD0iI2QwZDBmZiIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzMTAsLTY1IDI0MiwtNjUgMjM4LC02MSAyMzgsLTI5IDMwNiwtMjkgMzEwLC0zMyAzMTAsLTY1Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjMwNiwtNjEgMjM4LC02MSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzMDYsLTYxIDMwNiwtMjkiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMzA2LC02MSAzMTAsLTY1Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjI3NCIgeT0iLTQyLjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBEPC90ZXh0Pgo8L2c+CjwhLS0gRCYjNDU7Jmd0O1ggLS0+CjxnIGlkPSJlZGdlNCIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+RCYjNDU7Jmd0O1g8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNMjM3LjU4LC01NS4xN0MyMjkuNzMsLTU2Ljk5IDIyMS4yMiwtNTguOTUgMjEyLjc2LC02MC45Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIxMi4wNywtNTcuNyAyMDMuMTIsLTYzLjM2IDIxMy42NSwtNjQuNTIgMjEyLjA3LC01Ny43Ii8+CjwvZz4KPCEtLSBFIC0tPgo8ZyBpZD0ibm9kZTUiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkU8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjU0NiwtNjUgNDgwLC02NSA0NzYsLTYxIDQ3NiwtMjkgNTQyLC0yOSA1NDYsLTMzIDU0NiwtNjUiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNTQyLC02MSA0NzYsLTYxIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjU0MiwtNjEgNTQyLC0yOSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI1NDIsLTYxIDU0NiwtNjUiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNTExIiB5PSItNDIuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEU8L3RleHQ+CjwvZz4KPCEtLSBZIC0tPgo8ZyBpZD0ibm9kZTciIGNsYXNzPSJub2RlIj4KPHRpdGxlPlk8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBmZmQwIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQ0MCwtOTQgMzQ2LC05NCAzNDYsMCA0NDAsMCA0NDAsLTk0Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM1OCwtOTQgMzQ2LC04MiIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzNDYsLTEyIDM1OCwwIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQyOCwwIDQ0MCwtMTIiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDQwLC04MiA0MjgsLTk0Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjM5MyIgeT0iLTQyLjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QmxvY2tFeHByOiBZPC90ZXh0Pgo8L2c+CjwhLS0gRSYjNDU7Jmd0O1kgLS0+CjxnIGlkPSJlZGdlNiIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+RSYjNDU7Jmd0O1k8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNNDc1LjUxLC00N0M0NjcuOCwtNDcgNDU5LjQzLC00NyA0NTEuMDgsLTQ3Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQ1MS4xNywtNDMuNSA0NDEuMTcsLTQ3IDQ1MS4xNywtNTAuNSA0NTEuMTcsLTQzLjUiLz4KPC9nPgo8IS0tIFgmIzQ1OyZndDtBIC0tPgo8ZyBpZD0iZWRnZTEiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlgmIzQ1OyZndDtBPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTEwNy43NiwtODQuNjdDOTkuNTksLTg2LjU2IDkxLjA4LC04OC41MiA4Mi45MiwtOTAuNCIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI4Mi40LC04Ny4xNiA3My40NCwtOTIuODIgODMuOTcsLTkzLjk4IDgyLjQsLTg3LjE2Ii8+CjwvZz4KPCEtLSBYJiM0NTsmZ3Q7QiAtLT4KPGcgaWQ9ImVkZ2UyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5YJiM0NTsmZ3Q7QjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik0xMDcuNzYsLTYzLjMzQzk5LjQxLC02MS40IDkwLjcxLC01OS4zOSA4Mi4zOSwtNTcuNDciLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iODMuMjUsLTUzLjg1IDcyLjcyLC01NS4wMSA4MS42NywtNjAuNjcgODMuMjUsLTUzLjg1Ii8+CjwvZz4KPCEtLSBZJiM0NTsmZ3Q7RCAtLT4KPGcgaWQ9ImVkZ2U1IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5ZJiM0NTsmZ3Q7RDwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik0zNDUuNzYsLTQ3QzMzNy42OCwtNDcgMzI5LjI3LC00NyAzMjEuMTksLTQ3Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjMyMS40NCwtNDMuNSAzMTEuNDQsLTQ3IDMyMS40NCwtNTAuNSAzMjEuNDQsLTQzLjUiLz4KPC9nPgo8IS0tIG9icyAtLT4KPGcgaWQ9Im5vZGU4IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5vYnM8L3RpdGxlPgo8ZWxsaXBzZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBjeD0iNjEwLjE0IiBjeT0iLTQ3IiByeD0iMjQuMTQiIHJ5PSIyNC4xNCIvPgo8ZWxsaXBzZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBjeD0iNjEwLjE0IiBjeT0iLTQ3IiByeD0iMjguMTQiIHJ5PSIyOC4xNCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI2MTAuMTQiIHk9Ii00Mi4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPm9iczwvdGV4dD4KPC9nPgo8IS0tIG9icyYjNDU7Jmd0O0UgLS0+CjxnIGlkPSJlZGdlNyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+b2JzJiM0NTsmZ3Q7RTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik01ODEuNTcsLTQ3QzU3My4zMiwtNDcgNTY0LjA3LC00NyA1NTUuMDgsLTQ3Ii8+CjxlbGxpcHNlIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBjeD0iNTUwLjcyIiBjeT0iLTQ3IiByeD0iNCIgcnk9IjQiLz4KPC9nPgo8L2c+Cjwvc3ZnPgo='>
+<p>In this example, the <em>Tensor: C</em> value is never observed, and so it can dropped entirely
+from our schedule, or generated and <em>written</em> to a null-store by the block expr.</p>
+<p>We are operating with a contract that if we provide the data in <code>A</code> and <code>B</code> to <code>X</code>;
+that it will correctly produce <code>C</code> and <code>D</code> for us; and that this operation is idempotent.</p>
+<p>Additionally, at this level it’s quite possible that the tensors are abstractions
+which could not fit on a single machine.</p>
+<h3 id="Sharded-Expressions">Sharded Expressions</h3>
+<p>We are interested in the ability to:</p>
+<ul>
+<li>shard these operations and values;</li>
+<li>execute a given sharded schedule;</li>
+<li>to compare the costs (in time and space) of different sharding choices;</li>
+<li>and prune expression trees which are not transitivity observed.</li>
+</ul>
+<img class="kroki" src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8IS0tIEdlbmVyYXRlZCBieSBncmFwaHZpeiB2ZXJzaW9uIDguMC40ICgyMDIzMDQyMi4yMjA3KQogLS0+CjwhLS0gVGl0bGU6IEcgUGFnZXM6IDEgLS0+Cjxzdmcgd2lkdGg9IjcyOXB0IiBoZWlnaHQ9IjQ1M3B0Igogdmlld0JveD0iMC4wMCAwLjAwIDcyOS4yOCA0NTMuMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgo8ZyBpZD0iZ3JhcGgwIiBjbGFzcz0iZ3JhcGgiIHRyYW5zZm9ybT0ic2NhbGUoMSAxKSByb3RhdGUoMCkgdHJhbnNsYXRlKDQgNDQ5KSI+Cjx0aXRsZT5HPC90aXRsZT4KPHBvbHlnb24gZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSItNCw0IC00LC00NDkgNzI1LjI4LC00NDkgNzI1LjI4LDQgLTQsNCIvPgo8ZyBpZD0iY2x1c3QxIiBjbGFzcz0iY2x1c3RlciI+Cjx0aXRsZT5jbHVzdGVyX2FlZzwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS1kYXNoYXJyYXk9IjEsNSIgcG9pbnRzPSIyMSwtMjczIDIxLC00MzcgNjMxLjUsLTQzNyA2MzEuNSwtMjczIDIxLC0yNzMiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzI2LjI1IiB5PSItNDE5LjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QWJzdHJhY3QgRXhwcmVzc2lvbiBHcmFwaDwvdGV4dD4KPC9nPgo8ZyBpZD0iY2x1c3QyIiBjbGFzcz0iY2x1c3RlciI+Cjx0aXRsZT5jbHVzdGVyX0M8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJsaWdodGdyYXkiIHN0cm9rZT0ibGlnaHRncmF5IiBwb2ludHM9IjI4My41LC0zMjcgMjgzLjUsLTQwNCAzNzAuNSwtNDA0IDM3MC41LC0zMjcgMjgzLjUsLTMyNyIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzMjciIHk9Ii0zODYuNyIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5QcnVuZWQ8L3RleHQ+CjwvZz4KPGcgaWQ9ImNsdXN0MyIgY2xhc3M9ImNsdXN0ZXIiPgo8dGl0bGU+Y2x1c3Rlcl9zZWc8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBzdHJva2UtZGFzaGFycmF5PSIxLDUiIHBvaW50cz0iOCwtOCA4LC0yNjUgNjQ1LC0yNjUgNjQ1LC04IDgsLTgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzI2LjUiIHk9Ii0yNDcuNyIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5TaGFyZGVkIEV4cHJlc3Npb24gR3JhcGg8L3RleHQ+CjwvZz4KPGcgaWQ9ImNsdXN0NCIgY2xhc3M9ImNsdXN0ZXIiPgo8dGl0bGU+Y2x1c3Rlcl9CPC90aXRsZT4KPHBvbHlnb24gZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxNiwtMTYgMTYsLTkzIDExNCwtOTMgMTE0LC0xNiAxNiwtMTYiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNjUiIHk9Ii03NS43IiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlRlbnNvcjogQjwvdGV4dD4KPC9nPgo8ZyBpZD0iY2x1c3Q1IiBjbGFzcz0iY2x1c3RlciI+Cjx0aXRsZT5jbHVzdGVyX0E8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjE2LC0xMDEgMTYsLTIzMiAxMTQsLTIzMiAxMTQsLTEwMSAxNiwtMTAxIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjY1IiB5PSItMjE0LjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBBPC90ZXh0Pgo8L2c+CjxnIGlkPSJjbHVzdDYiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfWDwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTQ5LC0xOSAxNDksLTIzMCAyNDMsLTIzMCAyNDMsLTE5IDE0OSwtMTkiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTk2IiB5PSItMjEyLjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QmxvY2tFeHByOiBYPC90ZXh0Pgo8L2c+CjxnIGlkPSJjbHVzdDciIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfRDwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMjc4LC02MCAyNzgsLTE5MSAzNzYsLTE5MSAzNzYsLTYwIDI3OCwtNjAiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzI3IiB5PSItMTczLjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBEPC90ZXh0Pgo8L2c+CjxnIGlkPSJjbHVzdDgiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfWTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDExLC0yMSA0MTEsLTIzMiA1MDUsLTIzMiA1MDUsLTIxIDQxMSwtMjEiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNDU4IiB5PSItMjE0LjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QmxvY2tFeHByOiBZPC90ZXh0Pgo8L2c+CjxnIGlkPSJjbHVzdDkiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfRTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNTQwLC04MSA1NDAsLTIxMiA2MzcsLTIxMiA2MzcsLTgxIDU0MCwtODEiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNTg4LjUiIHk9Ii0xOTQuNyIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEU8L3RleHQ+CjwvZz4KPCEtLSBEJiM0NTsmZ3Q7WCAtLT4KPGcgaWQ9ImVkZ2U0IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5EJiM0NTsmZ3Q7WDwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik0yOTAuNzUsLTMxMC4yQzI3OS4zMywtMzEzLjgzIDI2Ni4zNSwtMzE3Ljk2IDI1My43NywtMzIxLjk2Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjI1Mi44MSwtMzE4LjkxIDI0NC4zNCwtMzI1LjI3IDI1NC45MywtMzI1LjU4IDI1Mi44MSwtMzE4LjkxIi8+CjwvZz4KPCEtLSBDJiM0NTsmZ3Q7WCAtLT4KPGcgaWQ9ImVkZ2UzIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5DJiM0NTsmZ3Q7WDwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik0yOTEuMDksLTM0OS40OEMyNzkuNjYsLTM0OC4zMyAyNjYuNjUsLTM0Ny4wMiAyNTQuMDMsLTM0NS43NSIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIyNTQuMzksLTM0Mi4xNyAyNDQuMDksLTM0NC42NCAyNTMuNjksLTM0OS4xMyAyNTQuMzksLTM0Mi4xNyIvPgo8L2c+CjwhLS0gRSYjNDU7Jmd0O1kgLS0+CjxnIGlkPSJlZGdlNiIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+RSYjNDU7Jmd0O1k8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNNTUzLjA2LC0zMTcuMDJDNTQxLjU2LC0zMTguMzYgNTI4LjQzLC0zMTkuOSA1MTUuNjksLTMyMS4zOCIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI1MTUuNjYsLTMxNy45OCA1MDYuMTMsLTMyMi42MSA1MTYuNDcsLTMyNC45MyA1MTUuNjYsLTMxNy45OCIvPgo8L2c+CjwhLS0gWCYjNDU7Jmd0O0IgLS0+CjxnIGlkPSJlZGdlMSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+WCYjNDU7Jmd0O0I8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNMTQ4Ljc5LC0zMzEuMDVDMTM2LjczLC0zMjguNzEgMTIzLjczLC0zMjYuMTkgMTExLjY5LC0zMjMuODUiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTEyLjQ0LC0zMjAuMjQgMTAxLjk2LC0zMjEuNzcgMTExLjExLC0zMjcuMTEgMTEyLjQ0LC0zMjAuMjQiLz4KPC9nPgo8IS0tIFgmIzQ1OyZndDtBIC0tPgo8ZyBpZD0iZWRnZTIiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlgmIzQ1OyZndDtBPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTE0OC43OSwtMzUwLjM5QzEzNi44NCwtMzUzLjA4IDEyMy45NywtMzU1Ljk3IDExMi4wMiwtMzU4LjY1Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjExMS4zNSwtMzU1LjQ0IDEwMi4zNiwtMzYxLjA1IDExMi44OSwtMzYyLjI3IDExMS4zNSwtMzU1LjQ0Ii8+CjwvZz4KPCEtLSBZJiM0NTsmZ3Q7RCAtLT4KPGcgaWQ9ImVkZ2U1IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5ZJiM0NTsmZ3Q7RDwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik00MTAuNzksLTMxNy42MUMzOTguODQsLTMxNC45MiAzODUuOTcsLTMxMi4wMyAzNzQuMDIsLTMwOS4zNSIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzNzQuODksLTMwNS43MyAzNjQuMzYsLTMwNi45NSAzNzMuMzUsLTMxMi41NiAzNzQuODksLTMwNS43MyIvPgo8L2c+CjwhLS0gWDEmIzQ1OyZndDtYIC0tPgo8ZyBpZD0iZWRnZTE4IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5YMSYjNDU7Jmd0O1g8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIGQ9Ik0xOTYsLTE5Ny4xOEMxOTYsLTIyNS4zOCAxOTYsLTI1My41NyAxOTYsLTI4MS43NyIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxOTIuNSwtMjgxLjU4IDE5NiwtMjkxLjU4IDE5OS41LC0yODEuNTggMTkyLjUsLTI4MS41OCIvPgo8L2c+CjwhLS0gWDEmIzQ1OyZndDtCMSAtLT4KPGcgaWQ9ImVkZ2U4IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5YMSYjNDU7Jmd0O0IxPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTE1Ny42OSwtMTI1LjE2QzEzNy40MywtMTA2Ljc4IDExMi43OCwtODQuNDMgOTQuMTUsLTY3LjUzIi8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9Ijk2LjgxLC02NS4zMSA4Ny4wNSwtNjEuMTggOTIuMSwtNzAuNDkgOTYuODEsLTY1LjMxIi8+CjwvZz4KPCEtLSBYMSYjNDU7Jmd0O0ExIC0tPgo8ZyBpZD0iZWRnZTciIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlgxJiM0NTsmZ3Q7QTE8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNMTU3LjY5LC0xNjUuMzZDMTQ1LjAxLC0xNjcuNTMgMTMwLjYxLC0xNjkuOTggMTE3LjA0LC0xNzIuMyIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxMTYuNjUsLTE2OC45OCAxMDcuMzksLTE3NC4xMSAxMTcuODMsLTE3NS44OCAxMTYuNjUsLTE2OC45OCIvPgo8L2c+CjwhLS0gWDImIzQ1OyZndDtYIC0tPgo8ZyBpZD0iZWRnZTE3IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5YMiYjNDU7Jmd0O1g8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIGQ9Ik0yMzQuMTksLTg4Ljk0QzI0NC43LC05Ny42MyAyNTQuNzgsLTEwOC40NSAyNjAuNSwtMTIxIDI3OS42OCwtMTYzLjA1IDI3Mi4xOSwtMTgwLjI4IDI2MC41LC0yMjUgMjU1LjIzLC0yNDUuMTggMjQ1LjU0LC0yNjUuNTYgMjM1LjI0LC0yODMuNDUiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMjMxLjkzLC0yODEuMTggMjI5LjgyLC0yOTEuNTYgMjM3Ljk0LC0yODQuNzUgMjMxLjkzLC0yODEuMTgiLz4KPC9nPgo8IS0tIFgyJiM0NTsmZ3Q7QjEgLS0+CjxnIGlkPSJlZGdlMTEiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlgyJiM0NTsmZ3Q7QjE8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNMTU3LjY5LC01OC4zNUMxNDUuMDEsLTU2LjA5IDEzMC42MSwtNTMuNTIgMTE3LjA0LC01MS4xIi8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjExNy44NCwtNDcuNTEgMTA3LjM5LC00OS4yIDExNi42MiwtNTQuNCAxMTcuODQsLTQ3LjUxIi8+CjwvZz4KPCEtLSBYMiYjNDU7Jmd0O0EyIC0tPgo8ZyBpZD0iZWRnZTEwIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5YMiYjNDU7Jmd0O0EyPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTE1Ny42OSwtODIuOTNDMTQ0LjAyLC04OS41IDEyOC4zNywtOTcuMDIgMTEzLjkxLC0xMDMuOTgiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTEyLjYyLC0xMDEuMTkgMTA1LjEyLC0xMDguNjggMTE1LjY1LC0xMDcuNSAxMTIuNjIsLTEwMS4xOSIvPgo8L2c+CjwhLS0gRDEmIzQ1OyZndDtYMSAtLT4KPGcgaWQ9ImVkZ2U5IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5EMSYjNDU7Jmd0O1gxPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTI4NS41NCwtMTQ1Ljk2QzI3Mi41OSwtMTQ3Ljg3IDI1OC4xNCwtMTQ5Ljk5IDI0NC43MywtMTUxLjk3Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjI0NC42MywtMTQ4LjU5IDIzNS4yNSwtMTUzLjUxIDI0NS42NSwtMTU1LjUyIDI0NC42MywtMTQ4LjU5Ii8+CjwvZz4KPCEtLSBEMiYjNDU7Jmd0O1gyIC0tPgo8ZyBpZD0iZWRnZTEyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5EMiYjNDU7Jmd0O1gyPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTI4NS41NCwtNzkuNDFDMjcyLjU5LC03Ny4zMSAyNTguMTQsLTc0Ljk1IDI0NC43MywtNzIuNzciLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMjQ1LjY4LC02OS4yMiAyMzUuMjUsLTcxLjA2IDI0NC41NiwtNzYuMTMgMjQ1LjY4LC02OS4yMiIvPgo8L2c+CjwhLS0gWTEmIzQ1OyZndDtZIC0tPgo8ZyBpZD0iZWRnZTIwIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5ZMSYjNDU7Jmd0O1k8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIGQ9Ik00NTgsLTE5OS40OUM0NTgsLTIyMi45MiA0NTgsLTI0Ni4zNiA0NTgsLTI2OS43OSIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI0NTQuNSwtMjY5LjU2IDQ1OCwtMjc5LjU2IDQ2MS41LC0yNjkuNTYgNDU0LjUsLTI2OS41NiIvPgo8L2c+CjwhLS0gWTEmIzQ1OyZndDtEMSAtLT4KPGcgaWQ9ImVkZ2UxMyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+WTEmIzQ1OyZndDtEMTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik00MTkuNjksLTE1NC45M0M0MDcuMDEsLTE1Mi44NiAzOTIuNjEsLTE1MC41MiAzNzkuMDQsLTE0OC4zMSIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzNzkuODIsLTE0NC43MyAzNjkuMzksLTE0Ni41NyAzNzguNjksLTE1MS42NCAzNzkuODIsLTE0NC43MyIvPgo8L2c+CjwhLS0gRTEmIzQ1OyZndDtZMSAtLT4KPGcgaWQ9ImVkZ2UxNCIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+RTEmIzQ1OyZndDtZMTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik01NDcuNTUsLTE2MUM1MzQuNzcsLTE2MSA1MjAuNDksLTE2MSA1MDcuMTksLTE2MSIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI1MDcuMywtMTU3LjUgNDk3LjMsLTE2MSA1MDcuMywtMTY0LjUgNTA3LjMsLTE1Ny41Ii8+CjwvZz4KPCEtLSBZMiYjNDU7Jmd0O1kgLS0+CjxnIGlkPSJlZGdlMTkiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlkyJiM0NTsmZ3Q7WTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgZD0iTTQ5Ni4xOSwtOTAuOTRDNTA2LjcsLTk5LjYzIDUxNi43OCwtMTEwLjQ1IDUyMi41LC0xMjMgNTQxLjY4LC0xNjUuMDUgNTM1LjQ2LC0xODIuNjMgNTIyLjUsLTIyNyA1MTcuOTgsLTI0Mi40OCA1MTAuMjgsLTI1Ny44NSA1MDEuNzUsLTI3MS43NSIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI0OTguNDgsLTI2OS4zNSA0OTYuMDQsLTI3OS42NiA1MDQuMzgsLTI3My4xMyA0OTguNDgsLTI2OS4zNSIvPgo8L2c+CjwhLS0gWTImIzQ1OyZndDtEMiAtLT4KPGcgaWQ9ImVkZ2UxNSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+WTImIzQ1OyZndDtEMjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik00MTkuNjksLTcyLjVDNDA3LjAxLC03NC4zNiAzOTIuNjEsLTc2LjQ4IDM3OS4wNCwtNzguNDgiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMzc4Ljc3LC03NS4xMyAzNjkuMzksLTgwLjA1IDM3OS43OSwtODIuMDYgMzc4Ljc3LC03NS4xMyIvPgo8L2c+CjwhLS0gRTImIzQ1OyZndDtZMiAtLT4KPGcgaWQ9ImVkZ2UxNiIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+RTImIzQ1OyZndDtZMjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik01NDcuNTUsLTk0LjU2QzUzNC42NCwtOTAuNTUgNTIwLjIsLTg2LjA1IDUwNi43OSwtODEuODgiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNTA3Ljg5LC03OC4yNCA0OTcuMywtNzguNjEgNTA1LjgxLC04NC45MiA1MDcuODksLTc4LjI0Ii8+CjwvZz4KPCEtLSBvYnMmIzQ1OyZndDtFIC0tPgo8ZyBpZD0iZWRnZTIyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5vYnMmIzQ1OyZndDtFPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTY3Mi44NCwtMjI5LjM3QzY1Ni4xOCwtMjQ2LjA5IDYzMi4wNCwtMjcwLjMxIDYxNC4wMiwtMjg4LjM5Ii8+CjxlbGxpcHNlIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBjeD0iNjEwLjg2IiBjeT0iLTI5MS41NiIgcng9IjQiIHJ5PSI0Ii8+CjwvZz4KPCEtLSBvYnMmIzQ1OyZndDtFMiAtLT4KPGcgaWQ9ImVkZ2UyMSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+b2JzJiM0NTsmZ3Q7RTI8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNNjgwLjkzLC0xODQuNTNDNjcyLjgyLC0xNjguNDEgNjYwLjU2LC0xNDguMDQgNjQ1LC0xMzQgNjQ0LjY5LC0xMzMuNzIgNjQ0LjM4LC0xMzMuNDQgNjQ0LjA2LC0xMzMuMTciLz4KPGVsbGlwc2UgZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIGN4PSI2NDAuNTYiIGN5PSItMTMwLjQ3IiByeD0iNCIgcnk9IjQiLz4KPC9nPgo8IS0tIEIgLS0+CjxnIGlkPSJub2RlMSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QjwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZmYiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTAwLjUsLTMzMyAzMy41LC0zMzMgMjkuNSwtMzI5IDI5LjUsLTI5NyA5Ni41LC0yOTcgMTAwLjUsLTMwMSAxMDAuNSwtMzMzIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9Ijk2LjUsLTMyOSAyOS41LC0zMjkiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iOTYuNSwtMzI5IDk2LjUsLTI5NyIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI5Ni41LC0zMjkgMTAwLjUsLTMzMyIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI2NSIgeT0iLTMxMC4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlRlbnNvcjogQjwvdGV4dD4KPC9nPgo8IS0tIEEgLS0+CjxnIGlkPSJub2RlMiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZmYiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTAxLC0zODcgMzMsLTM4NyAyOSwtMzgzIDI5LC0zNTEgOTcsLTM1MSAxMDEsLTM1NSAxMDEsLTM4NyIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI5NywtMzgzIDI5LC0zODMiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iOTcsLTM4MyA5NywtMzUxIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9Ijk3LC0zODMgMTAxLC0zODciLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNjUiIHk9Ii0zNjQuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEE8L3RleHQ+CjwvZz4KPCEtLSBEIC0tPgo8ZyBpZD0ibm9kZTMiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkQ8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM2MywtMzE3IDI5NSwtMzE3IDI5MSwtMzEzIDI5MSwtMjgxIDM1OSwtMjgxIDM2MywtMjg1IDM2MywtMzE3Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM1OSwtMzEzIDI5MSwtMzEzIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM1OSwtMzEzIDM1OSwtMjgxIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM1OSwtMzEzIDM2MywtMzE3Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjMyNyIgeT0iLTI5NC4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlRlbnNvcjogRDwvdGV4dD4KPC9nPgo8IS0tIEMgLS0+CjxnIGlkPSJub2RlNCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QzwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZmYiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMzYyLjUsLTM3MSAyOTUuNSwtMzcxIDI5MS41LC0zNjcgMjkxLjUsLTMzNSAzNTguNSwtMzM1IDM2Mi41LC0zMzkgMzYyLjUsLTM3MSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzNTguNSwtMzY3IDI5MS41LC0zNjciLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMzU4LjUsLTM2NyAzNTguNSwtMzM1Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM1OC41LC0zNjcgMzYyLjUsLTM3MSIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzMjciIHk9Ii0zNDguMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEM8L3RleHQ+CjwvZz4KPCEtLSBFIC0tPgo8ZyBpZD0ibm9kZTUiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkU8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyMy41LC0zMzEgNTU3LjUsLTMzMSA1NTMuNSwtMzI3IDU1My41LC0yOTUgNjE5LjUsLTI5NSA2MjMuNSwtMjk5IDYyMy41LC0zMzEiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjE5LjUsLTMyNyA1NTMuNSwtMzI3Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYxOS41LC0zMjcgNjE5LjUsLTI5NSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2MTkuNSwtMzI3IDYyMy41LC0zMzEiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNTg4LjUiIHk9Ii0zMDguMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEU8L3RleHQ+CjwvZz4KPCEtLSBYIC0tPgo8ZyBpZD0ibm9kZTYiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlg8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBmZmQwIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjI0MywtMzg3IDE0OSwtMzg3IDE0OSwtMjkzIDI0MywtMjkzIDI0MywtMzg3Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjE2MSwtMzg3IDE0OSwtMzc1Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjE0OSwtMzA1IDE2MSwtMjkzIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIzMSwtMjkzIDI0MywtMzA1Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjI0MywtMzc1IDIzMSwtMzg3Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE5NiIgeT0iLTMzNS4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPkJsb2NrRXhwcjogWDwvdGV4dD4KPC9nPgo8IS0tIFkgLS0+CjxnIGlkPSJub2RlNyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+WTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGZmZDAiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNTA1LC0zNzUgNDExLC0zNzUgNDExLC0yODEgNTA1LC0yODEgNTA1LC0zNzUiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDIzLC0zNzUgNDExLC0zNjMiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDExLC0yOTMgNDIzLC0yODEiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDkzLC0yODEgNTA1LC0yOTMiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNTA1LC0zNjMgNDkzLC0zNzUiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNDU4IiB5PSItMzIzLjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QmxvY2tFeHByOiBZPC90ZXh0Pgo8L2c+CjwhLS0gQjEgLS0+CjxnIGlkPSJub2RlOCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QjE8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjEwNiwtNjAgMjgsLTYwIDI0LC01NiAyNCwtMjQgMTAyLC0yNCAxMDYsLTI4IDEwNiwtNjAiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTAyLC01NiAyNCwtNTYiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTAyLC01NiAxMDIsLTI0Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjEwMiwtNTYgMTA2LC02MCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI2NSIgeT0iLTM3LjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBCLjE8L3RleHQ+CjwvZz4KPCEtLSBBMSAtLT4KPGcgaWQ9Im5vZGU5IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5BMTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZmYiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTA2LC0xOTkgMjgsLTE5OSAyNCwtMTk1IDI0LC0xNjMgMTAyLC0xNjMgMTA2LC0xNjcgMTA2LC0xOTkiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTAyLC0xOTUgMjQsLTE5NSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxMDIsLTE5NSAxMDIsLTE2MyIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxMDIsLTE5NSAxMDYsLTE5OSIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI2NSIgeT0iLTE3Ni4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlRlbnNvcjogQS4xPC90ZXh0Pgo8L2c+CjwhLS0gQTIgLS0+CjxnIGlkPSJub2RlMTAiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkEyPC90aXRsZT4KPHBvbHlnb24gZmlsbD0iI2QwZDBmZiIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxMDYsLTE0NSAyOCwtMTQ1IDI0LC0xNDEgMjQsLTEwOSAxMDIsLTEwOSAxMDYsLTExMyAxMDYsLTE0NSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxMDIsLTE0MSAyNCwtMTQxIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjEwMiwtMTQxIDEwMiwtMTA5Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjEwMiwtMTQxIDEwNiwtMTQ1Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjY1IiB5PSItMTIyLjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBBLjI8L3RleHQ+CjwvZz4KPCEtLSBYMSAtLT4KPGcgaWQ9Im5vZGUxMSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+WDE8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBmZmQwIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIzNCwtMTk3IDE1OCwtMTk3IDE1OCwtMTIxIDIzNCwtMTIxIDIzNCwtMTk3Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjE3MCwtMTk3IDE1OCwtMTg1Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjE1OCwtMTMzIDE3MCwtMTIxIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIyMiwtMTIxIDIzNCwtMTMzIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIzNCwtMTg1IDIyMiwtMTk3Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE5NiIgeT0iLTE1NC4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlNoYXJkOiBYLjE8L3RleHQ+CjwvZz4KPCEtLSBYMiAtLT4KPGcgaWQ9Im5vZGUxMiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+WDI8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBmZmQwIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjIzNCwtMTAzIDE1OCwtMTAzIDE1OCwtMjcgMjM0LC0yNyAyMzQsLTEwMyIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxNzAsLTEwMyAxNTgsLTkxIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjE1OCwtMzkgMTcwLC0yNyIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIyMjIsLTI3IDIzNCwtMzkiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMjM0LC05MSAyMjIsLTEwMyIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxOTYiIHk9Ii02MC4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlNoYXJkOiBYLjI8L3RleHQ+CjwvZz4KPCEtLSBEMSAtLT4KPGcgaWQ9Im5vZGUxMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+RDE8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM2OCwtMTU4IDI5MCwtMTU4IDI4NiwtMTU0IDI4NiwtMTIyIDM2NCwtMTIyIDM2OCwtMTI2IDM2OCwtMTU4Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM2NCwtMTU0IDI4NiwtMTU0Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM2NCwtMTU0IDM2NCwtMTIyIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM2NCwtMTU0IDM2OCwtMTU4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjMyNyIgeT0iLTEzNS4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlRlbnNvcjogRC4xPC90ZXh0Pgo8L2c+CjwhLS0gRDIgLS0+CjxnIGlkPSJub2RlMTQiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkQyPC90aXRsZT4KPHBvbHlnb24gZmlsbD0iI2QwZDBmZiIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzNjgsLTEwNCAyOTAsLTEwNCAyODYsLTEwMCAyODYsLTY4IDM2NCwtNjggMzY4LC03MiAzNjgsLTEwNCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzNjQsLTEwMCAyODYsLTEwMCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzNjQsLTEwMCAzNjQsLTY4Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM2NCwtMTAwIDM2OCwtMTA0Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjMyNyIgeT0iLTgxLjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBELjI8L3RleHQ+CjwvZz4KPCEtLSBZMSAtLT4KPGcgaWQ9Im5vZGUxNSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+WTE8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBmZmQwIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQ5NiwtMTk5IDQyMCwtMTk5IDQyMCwtMTIzIDQ5NiwtMTIzIDQ5NiwtMTk5Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQzMiwtMTk5IDQyMCwtMTg3Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQyMCwtMTM1IDQzMiwtMTIzIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQ4NCwtMTIzIDQ5NiwtMTM1Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQ5NiwtMTg3IDQ4NCwtMTk5Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQ1OCIgeT0iLTE1Ni4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlNoYXJkOiBZLjE8L3RleHQ+CjwvZz4KPCEtLSBFMSAtLT4KPGcgaWQ9Im5vZGUxNiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+RTE8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyOSwtMTc5IDU1MiwtMTc5IDU0OCwtMTc1IDU0OCwtMTQzIDYyNSwtMTQzIDYyOSwtMTQ3IDYyOSwtMTc5Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyNSwtMTc1IDU0OCwtMTc1Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyNSwtMTc1IDYyNSwtMTQzIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyNSwtMTc1IDYyOSwtMTc5Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjU4OC41IiB5PSItMTU2LjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+VGVuc29yOiBFLjE8L3RleHQ+CjwvZz4KPCEtLSBZMiAtLT4KPGcgaWQ9Im5vZGUxNyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+WTI8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBmZmQwIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQ5NiwtMTA1IDQyMCwtMTA1IDQyMCwtMjkgNDk2LC0yOSA0OTYsLTEwNSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI0MzIsLTEwNSA0MjAsLTkzIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQyMCwtNDEgNDMyLC0yOSIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI0ODQsLTI5IDQ5NiwtNDEiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDk2LC05MyA0ODQsLTEwNSIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI0NTgiIHk9Ii02Mi4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlNoYXJkOiBZLjI8L3RleHQ+CjwvZz4KPCEtLSBFMiAtLT4KPGcgaWQ9Im5vZGUxOCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+RTI8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyOSwtMTI1IDU1MiwtMTI1IDU0OCwtMTIxIDU0OCwtODkgNjI1LC04OSA2MjksLTkzIDYyOSwtMTI1Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyNSwtMTIxIDU0OCwtMTIxIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyNSwtMTIxIDYyNSwtODkiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjI1LC0xMjEgNjI5LC0xMjUiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNTg4LjUiIHk9Ii0xMDIuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEUuMjwvdGV4dD4KPC9nPgo8IS0tIG9icyAtLT4KPGcgaWQ9Im5vZGUxOSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+b2JzPC90aXRsZT4KPGVsbGlwc2UgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgY3g9IjY5My4xNCIgY3k9Ii0yMTAiIHJ4PSIyNC4xNCIgcnk9IjI0LjE0Ii8+CjxlbGxpcHNlIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGN4PSI2OTMuMTQiIGN5PSItMjEwIiByeD0iMjguMTQiIHJ5PSIyOC4xNCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI2OTMuMTQiIHk9Ii0yMDUuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5vYnM8L3RleHQ+CjwvZz4KPC9nPgo8L3N2Zz4K'>
+<p>This continues the assertion that this is an equivalent and correct sharding;
+that each of the operations, if performed in dependency order, will produce the same
+result as the original expression.</p>
+<h3 id="Polyhedral-Type-Information">Polyhedral Type Information</h3>
+<p>Being able to say:</p>
+<ul>
+<li>Expression <code>X'</code> is a sharded version of expression <code>X</code></li>
+</ul>
+<p>Is independent of our ability to:</p>
+<ul>
+<li>Verify that <code>X'</code> is a sharded version of <code>X</code>; or</li>
+<li>Given <code>X</code>, generate shareded versions <code>X'</code> and <code>X''</code></li>
+</ul>
+<p>If we have an execution environment for <code>X'</code>; having the sharded version is sufficient
+for execution.</p>
+<ul>
+<li>Being able to describe the relative components in a tractable manner is the main project.</li>
+</ul>
+<p>The additional information, needed to verify and generate sharded versions, is
+the polyhedral type signature information attached to the expressions.</p>
+<p>This is discussed in great detail in <a href="/Tapestry">Tapestry</a>;
+the core ideas center around a characteristic shardable index space associated
+with each expression, and affine projection functions (with resulting fixed
+marginal steps) from that index space to the spaces of the inputs and outputs.</p>
+<p>Finding a concrete representation to describe the relationships between the
+abstract expression graphs, the polyhedral type information, and the sharded
+expression graphs is the next major block on this project,
+in a way which enables us to:</p>
+<ul>
+<li>Verify that the sharded graphs are correct;</li>
+<li>Generate sharded graphs from the abstract graphs;</li>
+<li>Generate abstract graphs from the sharded graphs;</li>
+<li>Apply a cost model to the sharded graphs;</li>
+<li>Write a stochastic optimizer to find good sharding choices.</li>
+</ul>
+<h4 id="The-cost-information">The cost information</h4>
+<p>As a consequence of the choice of index spaces and index projection functions for the
+<em>Tapestry</em> expression representations; we can show that the marginal data sharing
+costs for input and output have constant marginal costs along each dimension of
+the index space; e.g. the marginal cost change of including one additional step along a
+batch dimension is constant, though different, than taking one additional step along
+a channel dimension.</p>
+<p>As the block compute model assumes shardable blocks which are location agnostic in
+slice space; <em>Assuming</em> that the marginal compute/memory costs of blocks is linearly
+related to their inputs along the above dimensions; we can take as an abstrac cost model the
+notion of marginal resource cost per step along each dimension of the index space.</p>
+<p>Additionally, at this layer we don’t know what to <em>do</em> with those costs, that is a function
+of the cost model / scheduling simulator (how are parallel costs managed? are transmission/bandwidth
+costs elided when a tensor is being moved to the same machine it’s already on; etc.);
+so we can model costs as fixed marginal costs per step along each dimension of the index space;
+for each of an arbitrary number of inputs.</p>
+<p>Given an index space <code>I</code> with dimensions <code>batch, x, y, k</code>;</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>gpu</th>
+<th>ram</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>batch</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>x</td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td>y</td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td>k</td>
+<td>128</td>
+<td>64</td>
+</tr>
+</tbody>
+</table>
+<p>We also assume that the transmission of tensors is well modeled,
+and that the marginal costs associated with the tensors is borne
+entirely by the marginal data overlap and the transmissions costs.</p>
+<p>Additionally, multiple sharded expressions can share the same shape
+and cost information (as well as information about the operation being modeled).</p>
+<p>In this diagram, we’ve added the marginal costs, the index projection functions
+(<code>P<sub>a</sub>(idx)</code>), the abstract and concrete index, and tensor
+selection slices to the information present in the block expression:</p>
+<img class="kroki" src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8IS0tIEdlbmVyYXRlZCBieSBncmFwaHZpeiB2ZXJzaW9uIDguMC40ICgyMDIzMDQyMi4yMjA3KQogLS0+CjwhLS0gVGl0bGU6IEcgUGFnZXM6IDEgLS0+Cjxzdmcgd2lkdGg9IjgwOHB0IiBoZWlnaHQ9IjIwOXB0Igogdmlld0JveD0iMC4wMCAwLjAwIDgwOC41MCAyMDkuMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgo8ZyBpZD0iZ3JhcGgwIiBjbGFzcz0iZ3JhcGgiIHRyYW5zZm9ybT0ic2NhbGUoMSAxKSByb3RhdGUoMCkgdHJhbnNsYXRlKDQgMjA1KSI+Cjx0aXRsZT5HPC90aXRsZT4KPHBvbHlnb24gZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSItNCw0IC00LC0yMDUgODA0LjUsLTIwNSA4MDQuNSw0IC00LDQiLz4KPGcgaWQ9ImNsdXN0MSIgY2xhc3M9ImNsdXN0ZXIiPgo8dGl0bGU+Y2x1c3Rlcl9leHByPC90aXRsZT4KPHBvbHlnb24gZmlsbD0iI2QwZmZkMCIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxMDAsLTggMTAwLC0xOTMgNzAxLjUsLTE5MyA3MDEuNSwtOCAxMDAsLTgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNDAwLjc1IiB5PSItMTc1LjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QmxvY2tFeHByPC90ZXh0Pgo8L2c+CjxnIGlkPSJjbHVzdDIiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfc2lnbmF0dXJlPC90aXRsZT4KPHBvbHlnb24gZmlsbD0iI2ZmZmZkMCIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxOTcsLTE2IDE5NywtMTQ3IDYwNS41LC0xNDcgNjA1LjUsLTE2IDE5NywtMTYiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNDAxLjI1IiB5PSItMTI5LjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+U2lnbmF0dXJlPC90ZXh0Pgo8L2c+CjwhLS0gQiAtLT4KPGcgaWQ9Im5vZGUxIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5CPC90aXRsZT4KPHBvbHlnb24gZmlsbD0iI2QwZDBmZiIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI3MS41LC02MCA0LjUsLTYwIDAuNSwtNTYgMC41LC0yNCA2Ny41LC0yNCA3MS41LC0yOCA3MS41LC02MCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2Ny41LC01NiAwLjUsLTU2Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjY3LjUsLTU2IDY3LjUsLTI0Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjY3LjUsLTU2IDcxLjUsLTYwIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjM2IiB5PSItMzcuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEI8L3RleHQ+CjwvZz4KPCEtLSBBIC0tPgo8ZyBpZD0ibm9kZTIiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkE8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjcyLC0xMTQgNCwtMTE0IDAsLTExMCAwLC03OCA2OCwtNzggNzIsLTgyIDcyLC0xMTQiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjgsLTExMCAwLC0xMTAiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjgsLTExMCA2OCwtNzgiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjgsLTExMCA3MiwtMTE0Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjM2IiB5PSItOTEuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5UZW5zb3I6IEE8L3RleHQ+CjwvZz4KPCEtLSBDIC0tPgo8ZyBpZD0ibm9kZTMiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkM8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjgwMC41LC01MiA3MzMuNSwtNTIgNzI5LjUsLTQ4IDcyOS41LC0xNiA3OTYuNSwtMTYgODAwLjUsLTIwIDgwMC41LC01MiIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI3OTYuNSwtNDggNzI5LjUsLTQ4Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9Ijc5Ni41LC00OCA3OTYuNSwtMTYiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNzk2LjUsLTQ4IDgwMC41LC01MiIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI3NjUiIHk9Ii0yOS4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlRlbnNvcjogQzwvdGV4dD4KPC9nPgo8IS0tIENTZWwgLS0+CjxnIGlkPSJub2RlOCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+Q1NlbDwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZGQiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjkzLjUsLTUyIDYzNy41LC01MiA2MzMuNSwtNDggNjMzLjUsLTE2IDY4OS41LC0xNiA2OTMuNSwtMjAgNjkzLjUsLTUyIi8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjY4OS41LC00OCA2MzMuNSwtNDgiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjg5LjUsLTQ4IDY4OS41LC0xNiIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2ODkuNSwtNDggNjkzLjUsLTUyIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjY2My41IiB5PSItMjkuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5TbGljZTogQzwvdGV4dD4KPC9nPgo8IS0tIEMmIzQ1OyZndDtDU2VsIC0tPgo8ZyBpZD0iZWRnZTE1IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5DJiM0NTsmZ3Q7Q1NlbDwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik03MTguMzksLTM0QzcxMC4wNSwtMzQgNzAxLjU0LC0zNCA2OTMuODMsLTM0Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjcxOC4yLC0zNy41IDcyOC4yLC0zNCA3MTguMiwtMzAuNSA3MTguMiwtMzcuNSIvPgo8L2c+CjwhLS0gSW5kZXggLS0+CjxnIGlkPSJub2RlNCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+SW5kZXg8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSIjZDBkMGZmIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjY5MC41LC0xNjAgNjQwLjUsLTE2MCA2MzYuNSwtMTU2IDYzNi41LC0xMjQgNjg2LjUsLTEyNCA2OTAuNSwtMTI4IDY5MC41LC0xNjAiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjg2LjUsLTE1NiA2MzYuNSwtMTU2Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjY4Ni41LC0xNTYgNjg2LjUsLTEyNCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2ODYuNSwtMTU2IDY5MC41LC0xNjAiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNjYzLjUiIHk9Ii0xMzcuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5JbmRleDwvdGV4dD4KPC9nPgo8IS0tIEFic3RyYWN0SW5kZXggLS0+CjxnIGlkPSJub2RlOSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QWJzdHJhY3RJbmRleDwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDQ4LjI1LC02MCAzNTguMjUsLTYwIDM1NC4yNSwtNTYgMzU0LjI1LC0yNCA0NDQuMjUsLTI0IDQ0OC4yNSwtMjggNDQ4LjI1LC02MCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI0NDQuMjUsLTU2IDM1NC4yNSwtNTYiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDQ0LjI1LC01NiA0NDQuMjUsLTI0Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjQ0NC4yNSwtNTYgNDQ4LjI1LC02MCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI0MDEuMjUiIHk9Ii0zNy4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPkFic3RyYWN0SW5kZXg8L3RleHQ+CjwvZz4KPCEtLSBJbmRleCYjNDU7Jmd0O0Fic3RyYWN0SW5kZXggLS0+CjxnIGlkPSJlZGdlOSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+SW5kZXgmIzQ1OyZndDtBYnN0cmFjdEluZGV4PC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTYzNi4xMSwtMTMxLjg2QzU5NC42MywtMTE1LjkyIDUxMy4yMywtODQuNjQgNDU4LjI3LC02My41MyIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI0NTkuOTMsLTYwLjAzIDQ0OS4zNCwtNTkuNzEgNDU3LjQyLC02Ni41NiA0NTkuOTMsLTYwLjAzIi8+CjwvZz4KPCEtLSBDb3N0cyAtLT4KPGcgaWQ9Im5vZGU1IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5Db3N0czwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZGQiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjkwLjUsLTEwNiA2NDAuNSwtMTA2IDYzNi41LC0xMDIgNjM2LjUsLTcwIDY4Ni41LC03MCA2OTAuNSwtNzQgNjkwLjUsLTEwNiIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI2ODYuNSwtMTAyIDYzNi41LC0xMDIiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjg2LjUsLTEwMiA2ODYuNSwtNzAiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNjg2LjUsLTEwMiA2OTAuNSwtMTA2Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjY2My41IiB5PSItODMuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5Db3N0czwvdGV4dD4KPC9nPgo8IS0tIEFTZWwgLS0+CjxnIGlkPSJub2RlNiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QVNlbDwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9IiNkMGQwZGQiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTY5LC0xMTQgMTEyLC0xMTQgMTA4LC0xMTAgMTA4LC03OCAxNjUsLTc4IDE2OSwtODIgMTY5LC0xMTQiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTY1LC0xMTAgMTA4LC0xMTAiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTY1LC0xMTAgMTY1LC03OCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxNjUsLTExMCAxNjksLTExNCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxMzguNSIgeT0iLTkxLjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+U2xpY2U6IEE8L3RleHQ+CjwvZz4KPCEtLSBBU2VsJiM0NTsmZ3Q7QSAtLT4KPGcgaWQ9ImVkZ2UxMSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+QVNlbCYjNDU7Jmd0O0E8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNMTA3LjYyLC05NkM5OS44OSwtOTYgOTEuNCwtOTYgODMuMDUsLTk2Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjgzLjI2LC05Mi41IDczLjI2LC05NiA4My4yNiwtOTkuNSA4My4yNiwtOTIuNSIvPgo8L2c+CjwhLS0gQlNlbCAtLT4KPGcgaWQ9Im5vZGU3IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5CU2VsPC90aXRsZT4KPHBvbHlnb24gZmlsbD0iI2QwZDBkZCIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxNjguNSwtNjAgMTEyLjUsLTYwIDEwOC41LC01NiAxMDguNSwtMjQgMTY0LjUsLTI0IDE2OC41LC0yOCAxNjguNSwtNjAiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTY0LjUsLTU2IDEwOC41LC01NiIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxNjQuNSwtNTYgMTY0LjUsLTI0Ii8+Cjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjE2NC41LC01NiAxNjguNSwtNjAiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTM4LjUiIHk9Ii0zNy4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlNsaWNlOiBCPC90ZXh0Pgo8L2c+CjwhLS0gQlNlbCYjNDU7Jmd0O0IgLS0+CjxnIGlkPSJlZGdlMTMiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkJTZWwmIzQ1OyZndDtCPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTEwOC4xNiwtNDJDMTAwLjE4LC00MiA5MS4zMywtNDIgODIuNjgsLTQyIi8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjgyLjg4LC0zOC41IDcyLjg4LC00MiA4Mi44OCwtNDUuNSA4Mi44OCwtMzguNSIvPgo8L2c+CjwhLS0gUGMgLS0+CjxnIGlkPSJub2RlMTIiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlBjPC90aXRsZT4KPHBvbHlnb24gZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI1OTcuNSwtNjAgNTA5LjAxLC02MCA0ODYuMjUsLTI0IDU3NC43MywtMjQgNTk3LjUsLTYwIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iNTIyLjM3IiB5PSItMzguMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5QPC90ZXh0Pgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjUyOS4zNyIgeT0iLTM4LjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgYmFzZWxpbmUtc2hpZnQ9InN1YiIgZm9udC1zaXplPSIxNC4wMCI+YzwvdGV4dD4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSI1MzUuMzciIHk9Ii0zOC4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPihpZHgpPC90ZXh0Pgo8L2c+CjwhLS0gQ1NlbCYjNDU7Jmd0O1BjIC0tPgo8ZyBpZD0iZWRnZTE0IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5DU2VsJiM0NTsmZ3Q7UGM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNNjIyLjQ0LC0zNi42OEM2MTAuMjMsLTM3LjUgNTk2Ljc5LC0zOC4zOSA1ODQuNDgsLTM5LjIyIi8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyMi40OSwtNDAuMTIgNjMyLjIzLC0zNS45NiA2MjIuMDIsLTMzLjEzIDYyMi40OSwtNDAuMTIiLz4KPC9nPgo8IS0tIFBhIC0tPgo8ZyBpZD0ibm9kZTEwIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5QYTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMzE2LjI1LC0xMTQgMjI3Ljc2LC0xMTQgMjA1LC03OCAyOTMuNDksLTc4IDMxNi4yNSwtMTE0Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMjQxLjEyIiB5PSItOTIuMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5QPC90ZXh0Pgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjI0OC4xMiIgeT0iLTkyLjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgYmFzZWxpbmUtc2hpZnQ9InN1YiIgZm9udC1zaXplPSIxNC4wMCI+YTwvdGV4dD4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyNTQuMTIiIHk9Ii05Mi4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPihpZHgpPC90ZXh0Pgo8L2c+CjwhLS0gQWJzdHJhY3RJbmRleCYjNDU7Jmd0O1BhIC0tPgo8ZyBpZD0iZWRnZTEiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkFic3RyYWN0SW5kZXgmIzQ1OyZndDtQYTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik0zNTQuMDksLTU5Ljk4QzMzOC44NiwtNjUuOTEgMzIxLjk0LC03Mi41IDMwNi43OSwtNzguNDEiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMzA1LjY3LC03NS40OCAyOTcuNjIsLTgyLjM3IDMwOC4yMSwtODIgMzA1LjY3LC03NS40OCIvPgo8L2c+CjwhLS0gUGIgLS0+CjxnIGlkPSJub2RlMTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlBiPC90aXRsZT4KPHBvbHlnb24gZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIzMTYuMjUsLTYwIDIyNy43NiwtNjAgMjA1LC0yNCAyOTMuNDksLTI0IDMxNi4yNSwtNjAiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyNDEuMTIiIHk9Ii0zOC4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlA8L3RleHQ+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMjQ4LjEyIiB5PSItMzguMSIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBiYXNlbGluZS1zaGlmdD0ic3ViIiBmb250LXNpemU9IjE0LjAwIj5iPC90ZXh0Pgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjI1NC4xMiIgeT0iLTM4LjEiIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+KGlkeCk8L3RleHQ+CjwvZz4KPCEtLSBBYnN0cmFjdEluZGV4JiM0NTsmZ3Q7UGIgLS0+CjxnIGlkPSJlZGdlMiIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+QWJzdHJhY3RJbmRleCYjNDU7Jmd0O1BiPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTM1NC4wOSwtNDJDMzQxLjkxLC00MiAzMjguNjQsLTQyIDMxNi4wNywtNDIiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMzE2LjI0LC0zOC41IDMwNi4yNCwtNDIgMzE2LjI0LC00NS41IDMxNi4yNCwtMzguNSIvPgo8L2c+CjwhLS0gTWFyZ2luYWxDb3N0cyAtLT4KPGcgaWQ9Im5vZGUxMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+TWFyZ2luYWxDb3N0czwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDUwLjI1LC0xMTQgMzU2LjI1LC0xMTQgMzUyLjI1LC0xMTAgMzUyLjI1LC03OCA0NDYuMjUsLTc4IDQ1MC4yNSwtODIgNDUwLjI1LC0xMTQiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDQ2LjI1LC0xMTAgMzUyLjI1LC0xMTAiLz4KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDQ2LjI1LC0xMTAgNDQ2LjI1LC03OCIvPgo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI0NDYuMjUsLTExMCA0NTAuMjUsLTExNCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI0MDEuMjUiIHk9Ii05MS4xIiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPk1hcmdpbmFsQ29zdHM8L3RleHQ+CjwvZz4KPCEtLSBBYnN0cmFjdEluZGV4JiM0NTsmZ3Q7TWFyZ2luYWxDb3N0cyAtLT4KPGcgaWQ9ImVkZ2U1IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5BYnN0cmFjdEluZGV4JiM0NTsmZ3Q7TWFyZ2luYWxDb3N0czwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik00MDEuMjUsLTYwLjE0QzQwMS4yNSwtNjIuMzEgNDAxLjI1LC02NC40OCA0MDEuMjUsLTY2LjY1Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM5Ny43NSwtNjYuNTEgNDAxLjI1LC03Ni41MSA0MDQuNzUsLTY2LjUxIDM5Ny43NSwtNjYuNTEiLz4KPC9nPgo8IS0tIFBhJiM0NTsmZ3Q7QVNlbCAtLT4KPGcgaWQ9ImVkZ2UxMCIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+UGEmIzQ1OyZndDtBU2VsPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTIxNS45MiwtOTZDMjA0LjIyLC05NiAxOTEuNjQsLTk2IDE4MC4xMiwtOTYiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iMTgwLjQ3LC05Mi41IDE3MC40NywtOTYgMTgwLjQ3LC05OS41IDE4MC40NywtOTIuNSIvPgo8L2c+CjwhLS0gUGEmIzQ1OyZndDtNYXJnaW5hbENvc3RzIC0tPgo8ZyBpZD0iZWRnZTYiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlBhJiM0NTsmZ3Q7TWFyZ2luYWxDb3N0czwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik0zMDUuMjIsLTk2QzMxNi41NCwtOTYgMzI4LjkzLC05NiAzNDAuOTIsLTk2Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM0MC43NiwtOTkuNSAzNTAuNzYsLTk2IDM0MC43NiwtOTIuNSAzNDAuNzYsLTk5LjUiLz4KPC9nPgo8IS0tIFBiJiM0NTsmZ3Q7QlNlbCAtLT4KPGcgaWQ9ImVkZ2UxMiIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+UGImIzQ1OyZndDtCU2VsPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTIxNS45MiwtNDJDMjA0LjAyLC00MiAxOTEuMiwtNDIgMTc5LjUyLC00MiIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSIxNzkuNzQsLTM4LjUgMTY5Ljc0LC00MiAxNzkuNzQsLTQ1LjUgMTc5Ljc0LC0zOC41Ii8+CjwvZz4KPCEtLSBQYiYjNDU7Jmd0O01hcmdpbmFsQ29zdHMgLS0+CjxnIGlkPSJlZGdlNyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+UGImIzQ1OyZndDtNYXJnaW5hbENvc3RzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTMwOC43MywtNjAuMzVDMzE5LjY1LC02NC42IDMzMS4zOSwtNjkuMTggMzQyLjcsLTczLjU4Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjM0MS4zNCwtNzcuMiAzNTEuOTMsLTc3LjU3IDM0My44OCwtNzAuNjggMzQxLjM0LC03Ny4yIi8+CjwvZz4KPCEtLSBQYyYjNDU7Jmd0O0Fic3RyYWN0SW5kZXggLS0+CjxnIGlkPSJlZGdlMyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+UGMmIzQ1OyZndDtBYnN0cmFjdEluZGV4PC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgZD0iTTQ4Ni41NSwtNDJDNDczLjk1LC00MiA0NjAuNjYsLTQyIDQ0OC40NSwtNDIiLz4KPHBvbHlnb24gZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHBvaW50cz0iNDg2LjM5LC00NS41IDQ5Ni4zOSwtNDIgNDg2LjM5LC0zOC41IDQ4Ni4zOSwtNDUuNSIvPgo8L2c+CjwhLS0gTWFyZ2luYWxDb3N0cyYjNDU7Jmd0O0Nvc3RzIC0tPgo8ZyBpZD0iZWRnZTQiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPk1hcmdpbmFsQ29zdHMmIzQ1OyZndDtDb3N0czwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIGQ9Ik00NTAuMjcsLTk0LjUyQzUwMC43NSwtOTIuOTcgNTc5LjA4LC05MC41NiA2MjUuMTQsLTg5LjE1Ii8+Cjxwb2x5Z29uIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBwb2ludHM9IjYyNS4yMiwtOTIuNjIgNjM1LjExLC04OC44MSA2MjUuMDEsLTg1LjYyIDYyNS4yMiwtOTIuNjIiLz4KPC9nPgo8IS0tIE1hcmdpbmFsQ29zdHMmIzQ1OyZndDtQYyAtLT4KPGcgaWQ9ImVkZ2U4IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5NYXJnaW5hbENvc3RzJiM0NTsmZ3Q7UGM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBkPSJNNDU5LjY4LC03My42M0M0NzUuMzYsLTY3LjUyIDQ5MS44OCwtNjEuMDkgNTA1Ljg5LC01NS42MyIvPgo8cG9seWdvbiBmaWxsPSJibGFjayIgc3Ryb2tlPSJibGFjayIgcG9pbnRzPSI0NTguNTcsLTcwLjY5IDQ1MC41MywtNzcuNTggNDYxLjExLC03Ny4yMiA0NTguNTcsLTcwLjY5Ii8+CjwvZz4KPC9nPgo8L3N2Zz4K'>
+<p>This information is necessary to make any changes to the sharding of the expressions; though it
+is not necessary to schedule or execute a correct sharding as-is.</p>
+<p>Additionally, there’s annotation information we could include or derive, such as:</p>
+<ul>
+<li>the expected size of the input / output tensors
+<ul>
+<li>when married with a concrete execution schedule, this permits transmission bandwith/delay modeling.</li>
+</ul>
+</li>
+<li>the expected compute costs of the block
+<ul>
+<li>CPU/GPU delay</li>
+<li>Block memory usage</li>
+</ul>
+</li>
+</ul>
+<p>This information about blocks, describing the cost models, is needed in most places where the
+polyhedral type information is needed.</p>
+<h3 id="Encapsulation">Encapsulation</h3>
+<p>When picking graph ownership mechanics, we’re selecting between different encapsulation
+options to represent the relationship between abstract and sharded expression graphs,
+and the signatures which describe legal sharding and marginal costs.</p>
+<p>Choosing a concrete representation of the above relationships determines the traversal API for
+the compiler’s cost models, mutation proposers, and debuggers. This in turn affects the
+development and communication costs of the entire effort.</p>
+<h3 id="Previous-Work">Previous Work</h3>
+<p>I speculate that many of the previous efforts in this space have struggled under the requirement
+that they start with a concrete expression sharding, and work backwards attempting to
+derive an abstract graph and operator signatures for the associated expressions,
+and then to produce transformations which maintain the semantics of the original
+expressions.</p>
+<p>And this has been difficult, because many of the languages in question lack
+particularly strong shape signature information; most of the development
+effort seems to get soaked up in this code analysis phase.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/tapestry/" rel="tag"># tapestry</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/05/26/Working-in-ZSpace/" rel="prev" title="Working in ZSpace">
+                  <i class="fa fa-chevron-left"></i> Working in ZSpace
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Crutcher Dunnavant</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"crutcher-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="sitemap.xsl"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+
+    <url>
+        <loc>https://crutcher.github.io/2023/05/30/Representing-Tensor-Graphs/</loc>
+        <lastmod>2023-05-30T22:23:36.821Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2023/05/26/Working-in-ZSpace/</loc>
+        <lastmod>2023-05-26T21:55:55.788Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2023/01/11/Tapestry-Conditional-Expansion-and-Graph-Rewrite-Rules/</loc>
+        <lastmod>2023-05-26T20:59:06.641Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2023/01/04/Tapestry-Parallel-Stochastic-Optimization/</loc>
+        <lastmod>2023-05-26T20:59:06.641Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2023/01/16/Tapestry-Sharding-Convolution-Operators/</loc>
+        <lastmod>2023-05-26T20:59:06.641Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2023/01/02/Tapestry-The-Vision/</loc>
+        <lastmod>2023-05-26T20:59:06.641Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2022/12/17/Sharding-Linear-Operations-Over-Weight-Out-Dimensions/</loc>
+        <lastmod>2023-05-26T20:59:06.632Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/</loc>
+        <lastmod>2023-05-26T20:59:06.632Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2022/12/19/The-Tapestry-Plan/</loc>
+        <lastmod>2023-05-26T20:59:06.632Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2022/12/28/Tapestry-Sharding-Matmul-over-the-in-dimension/</loc>
+        <lastmod>2023-05-26T20:59:06.632Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/</loc>
+        <lastmod>2023-05-26T20:59:06.632Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/</loc>
+        <lastmod>2023-05-26T20:59:06.631Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2022/11/15/Starting-a-Blog/</loc>
+        <lastmod>2023-05-26T20:59:06.631Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2022/12/13/Index-Projection-Functions/</loc>
+        <lastmod>2023-05-26T20:59:06.631Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+</urlset>
+

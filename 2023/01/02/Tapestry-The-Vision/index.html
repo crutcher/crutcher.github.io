@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/amp16.png">
+  <link rel="mask-icon" href="/images/amp32.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"crutcher.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.16.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"disqus","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1}},"layzload":false,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="This post develops part of this document:  Tapestry: Shardable Tensor Expression Environments  The Tapestry Vision To explain the larger vision of Tapestry, we need to explore the uses cases of a larg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tapestry: The Vision">
+<meta property="og:url" content="https://crutcher.github.io/2023/01/02/Tapestry-The-Vision/index.html">
+<meta property="og:site_name" content="crutcher.github.io">
+<meta property="og:description" content="This post develops part of this document:  Tapestry: Shardable Tensor Expression Environments  The Tapestry Vision To explain the larger vision of Tapestry, we need to explore the uses cases of a larg">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.pastel.svg">
+<meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.io.svg">
+<meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.basic.load.svg">
+<meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.basic.apply.svg">
+<meta property="og:image" content="https://crutcher.github.io/Tapestry/tapestry.basic.save.svg">
+<meta property="article:published_time" content="2023-01-02T23:24:58.000Z">
+<meta property="article:modified_time" content="2023-05-26T20:59:06.641Z">
+<meta property="article:author" content="Crutcher Dunnavant">
+<meta property="article:tag" content="tapestry">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crutcher.github.io/Tapestry/tapestry.pastel.svg">
+
+
+<link rel="canonical" href="https://crutcher.github.io/2023/01/02/Tapestry-The-Vision/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://crutcher.github.io/2023/01/02/Tapestry-The-Vision/","path":"2023/01/02/Tapestry-The-Vision/","title":"Tapestry: The Vision"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Tapestry: The Vision | crutcher.github.io</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9EX3586LZ"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-R9EX3586LZ","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="crutcher.github.io" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">crutcher.github.io</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-atom"><a href="/atom.xml" rel="section"><i class="fab fa-atom fa-fw"></i>Atom</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-tapestry"><a href="/Tapestry/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>Tapestry</a></li><li class="menu-item menu-item-resume"><a href="/Resume/" rel="section"><i class="fa fa-solid fa-file fa-fw"></i>Resume</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">The Tapestry Vision</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Applications"><span class="nav-number">1.1.</span> <span class="nav-text">Applications</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Artificial-Intelligence-Machine-Learning"><span class="nav-number">1.1.1.</span> <span class="nav-text">Artificial Intelligence &#x2F; Machine Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Finite-Element-Simulations"><span class="nav-number">1.1.2.</span> <span class="nav-text">Finite Element Simulations</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Crutcher Dunnavant</p>
+  <div class="site-description" itemprop="description">hacking around big math</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crutcher" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crutcher" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://sigmoid.social/@crutcher" title="Mastodon → https:&#x2F;&#x2F;sigmoid.social&#x2F;@crutcher" rel="noopener me" target="_blank"><i class="fab fa-mastodon fa-fw"></i>Mastodon</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://discordapp.com/users/361021789268344842" title="Discord → https:&#x2F;&#x2F;discordapp.com&#x2F;users&#x2F;361021789268344842" rel="noopener me" target="_blank"><i class="fab fa-discord fa-fw"></i>Discord</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/crutcher-dunnavant-4841ba9/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;crutcher-dunnavant-4841ba9&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://crutcher.github.io/2023/01/02/Tapestry-The-Vision/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Crutcher Dunnavant">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="crutcher.github.io">
+      <meta itemprop="description" content="hacking around big math">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tapestry: The Vision | crutcher.github.io">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tapestry: The Vision
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-01-02 15:24:58" itemprop="dateCreated datePublished" datetime="2023-01-02T15:24:58-08:00">2023-01-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-05-26 13:59:06" itemprop="dateModified" datetime="2023-05-26T13:59:06-07:00">2023-05-26</time>
+    </span>
+
+  
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2023/01/02/Tapestry-The-Vision/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/01/02/Tapestry-The-Vision/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>This post develops part of this document:</p>
+<ul>
+<li><a href="/Tapestry">Tapestry: Shardable Tensor Expression Environments</a></li>
+</ul>
+<h1>The Tapestry Vision</h1>
+<p>To explain the larger vision of Tapestry, we need to explore the uses cases
+of a large system which does not yet exist, which we’ll also call A Tapestry.</p>
+<blockquote>
+<p>Note: The motivation for the synecdoche here is taken from SQL, where SQL is both
+the language and the environment, as their semantics are formal and shared.</p>
+</blockquote>
+<p>Grid-scale datacenters filled with GPU nodes are becoming commonplace;
+datacenters with 1000s of server-grade GPUs, commonly hosted on densely networked
+machines with 2-8 GPUs per machine. These machines have tremendous theoretical
+compute throughput, but existing programming environments for them require
+multiple layers of systems engineers and operations engineers to successfully
+exploit the theoretical potential.</p>
+<p>Common use involves compiling specialized application images for a given task
+to be run on these systems, allocating some subset of the available machines
+as machines for that task, pushing machine images to each machine allocated
+for that subset, and running a controller and worker instances built
+from the compiled application image. The entire workflow is inefficient
+and fragile, and encourages sizing datacenter usage to the max storage
+or compute needs that a task will need for its entire lifecycle.</p>
+<p>Suppose we instead had a uniform collection of interconnected nodes with unified management,
+holding both storage and compute resources. Interconnected service grids
+where point-to-point communication is abstracted into semantic routing
+are frequently called “meshes” and “fabrics”; to be specific here
+we’ll call this:</p>
+<ul>
+<li>a tensor fabric, or</li>
+<li>a tapestry environment</li>
+</ul>
+<img src="/Tapestry/tapestry.pastel.svg"/>
+<p>The individual nodes in this environment would be largely opaque to us; we
+would not send data or jobs to them individually, or push virtual machine images to them;
+they act in concert as a unified environment, and we work with them
+in terms of the total environment.</p>
+<p>One way of thinking of this is as a <em>very</em> large <code>numpy</code> or <code>torch</code> environment.</p>
+<p>Suppose we can perform a few operations in this environment:</p>
+<ul>
+<li>Allocate and manage named tensors in the environment.</li>
+<li>Copy portions of tensors into other tensors.</li>
+<li>Load and export external data into and from named tensors in the environment;
+for example from and to databases and network file sources.</li>
+</ul>
+<img src="/Tapestry/tapestry.io.svg"/>
+<p>This is a very basic environment; and for now, we’ve omitted a number of details.</p>
+<ul>
+<li>How is the data split between nodes?</li>
+<li>How is node recovery managed (do we have duplicate copies of the data)?</li>
+</ul>
+<p>Given only the ability to create storage, move data around, and move data
+into and out of the tapestry; we’ve defined an environment with scratch-space semantics.
+We could find a use for this environment; run data jobs which unpack their data
+and construct large tensor objects, followed by data jobs which re-pack that
+data differently.</p>
+<p>Now, suppose in addition to injecting data into our environment, we’d like to
+be able to inject functions which manipulate the data. The environment
+has many compute nodes, but they’re distributed; it stores a lot of data,
+but not in places or shards we know about.</p>
+<p>To be able to inject functions, we desire a way to describe semantic actions
+we wish to take on the data (“apply this function to that tensor, yielding a new tensor”):</p>
+<ul>
+<li>without specifying the details of the layout or scheduling,</li>
+<li>while getting close to theoretically resource optimal results.</li>
+</ul>
+<p>A high-level desired workflow would permit us to:</p>
+<ol>
+<li>Load tensor data into tapestry: <img src="/Tapestry/tapestry.basic.load.svg" width="300"/></li>
+<li>Inject and apply an operation, transforming existing tensors into new tensors:
+<img src="/Tapestry/tapestry.basic.apply.svg" width="300"/></li>
+<li>Export the result tensor data: <img src="/Tapestry/tapestry.basic.save.svg" width="300"/></li>
+</ol>
+<p>The details of the operation injection step are the crucial issue here;
+finding a family of operations which can be injected into such an environment
+and yield optimal resource (time and space) efficient results with minimal external
+knowledge about the tapestry layout.</p>
+<p>Many environments exist for flat-mapped collections, for data that is structured
+in lists, arrays, or key/value mapped dictionaries:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://spark.apache.org/">Apache Spark</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/dataflow">Google Dataflow</a></li>
+</ul>
+<p>These environments do not model tensor-indexed values, or have effective
+mechanisms for distributing dataflow and functional dependencies across
+polyhedrally typed operations; a new formalism is needed to effectively
+describe operator injection into distributed tensor environments.</p>
+<p>Tapestry is an effort to describe such a formalism, focusing on shardable by construction
+operation graph semantics.</p>
+<h2 id="Applications">Applications</h2>
+<p>A brief review of some applications of a tapestry environment.</p>
+<h3 id="Artificial-Intelligence-Machine-Learning">Artificial Intelligence / Machine Learning</h3>
+<p>Deep learning AI/ML applications describe models as stacks of tensor-valued weights,
+connected by a computation graph describing how tensor-valued data injected into
+the model evolves through a series of compute steps to produce the predictions
+of the model, or to compute changes to the models weights for learning.</p>
+<p>Existing systems are built on stacks of <code>numpy</code>-inspired APIs, with minimal
+optimization passes; an API which was not designed to restrict itself to shardable
+operations. As a result, existing systems struggle with operational engineering
+to achieve effective distribution and sharding, and leave a great deal of
+theoretical throughput unexploited.</p>
+<p>An optimizing tapestry environment could greatly speed AI/ML research, by removing
+the requirements for much of the task-specific operational scaling engineering;
+while simultaneously reducing the research costs, by optimizing the resulting
+operations graphs to more effectively utilize available resources.</p>
+<h3 id="Finite-Element-Simulations">Finite Element Simulations</h3>
+<p>Finite element simulations decompose a problem (weather, heat flow, stress) onto
+tensors describing a space to be simulated, valued in terms of the material
+properties at each point in the space (density, energy, pressure, material, heat, etc).</p>
+<p>Finite element simulations evolve by describing a kernel transition function,
+which predicts the next time value for a given point in space by applying a
+kernel transition function which examines only the tensor values of the
+local neighborhood of that point at the previous time value.</p>
+<p>This is equivalent to iteratively applying a kernel convolution to
+produce successive time step world tensors.</p>
+<p>An effective tapestry environment sufficient to host finite element simulations
+would permit accelerated research into anything built upon finite element simulations;
+which includes a great deal of modern engineering and physical sciences applications.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/tapestry/" rel="tag"># tapestry</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/12/28/Tapestry-Sharding-Matmul-over-the-in-dimension/" rel="prev" title="Tapestry: Sharding Matmul over the in dimension">
+                  <i class="fa fa-chevron-left"></i> Tapestry: Sharding Matmul over the in dimension
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/01/04/Tapestry-Parallel-Stochastic-Optimization/" rel="next" title="Tapestry: Parallel Stochastic Optimization">
+                  Tapestry: Parallel Stochastic Optimization <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Crutcher Dunnavant</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"crutcher-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

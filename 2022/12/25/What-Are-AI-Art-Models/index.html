@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/amp16.png">
+  <link rel="mask-icon" href="/images/amp32.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"crutcher.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.16.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"disqus","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1}},"layzload":false,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="There’s a great deal of conversation at the moment about AI Art Models; and there’s a fair amount of confusion and complex feelings about them. In online discussions, some friends have asked me to tak">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What Are AI Art Models?">
+<meta property="og:url" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/index.html">
+<meta property="og:site_name" content="crutcher.github.io">
+<meta property="og:description" content="There’s a great deal of conversation at the moment about AI Art Models; and there’s a fair amount of confusion and complex feelings about them. In online discussions, some friends have asked me to tak">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.diff.0-1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.diff.0-1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.wood.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.wood.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.wood.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.wood.flip.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.cube.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.wood.oil.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/noise.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/noise.ear.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/noise.ear.result.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/noise.ear.result.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<meta property="og:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<meta property="article:published_time" content="2022-12-25T19:26:25.000Z">
+<meta property="article:modified_time" content="2023-05-26T20:59:06.632Z">
+<meta property="article:author" content="Crutcher Dunnavant">
+<meta property="article:tag" content="explainer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+
+
+<link rel="canonical" href="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/","path":"2022/12/25/What-Are-AI-Art-Models/","title":"What Are AI Art Models?"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>What Are AI Art Models? | crutcher.github.io</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9EX3586LZ"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-R9EX3586LZ","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="crutcher.github.io" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">crutcher.github.io</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-atom"><a href="/atom.xml" rel="section"><i class="fab fa-atom fa-fw"></i>Atom</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-tapestry"><a href="/Tapestry/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>Tapestry</a></li><li class="menu-item menu-item-resume"><a href="/Resume/" rel="section"><i class="fa fa-solid fa-file fa-fw"></i>Resume</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">De-Noising Images</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">Magic Enhancement Buttons</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">Enhance My Cat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">Denoising Lots of Things</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">Description to Key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">Overlapping Diffusion Models</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">Making More Data</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">Generating New Images</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">9.</span> <span class="nav-text">Novel Combinations</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">10.</span> <span class="nav-text">How does this give us Art?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">11.</span> <span class="nav-text">Is this a copy of the training data?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">12.</span> <span class="nav-text">Is this just copying by obfuscation?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">13.</span> <span class="nav-text">Is it legal to train on copyrighted art?</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Crutcher Dunnavant</p>
+  <div class="site-description" itemprop="description">hacking around big math</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crutcher" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crutcher" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://sigmoid.social/@crutcher" title="Mastodon → https:&#x2F;&#x2F;sigmoid.social&#x2F;@crutcher" rel="noopener me" target="_blank"><i class="fab fa-mastodon fa-fw"></i>Mastodon</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://discordapp.com/users/361021789268344842" title="Discord → https:&#x2F;&#x2F;discordapp.com&#x2F;users&#x2F;361021789268344842" rel="noopener me" target="_blank"><i class="fab fa-discord fa-fw"></i>Discord</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/crutcher-dunnavant-4841ba9/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;crutcher-dunnavant-4841ba9&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Crutcher Dunnavant">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="crutcher.github.io">
+      <meta itemprop="description" content="hacking around big math">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="What Are AI Art Models? | crutcher.github.io">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          What Are AI Art Models?
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-12-25 11:26:25" itemprop="dateCreated datePublished" datetime="2022-12-25T11:26:25-08:00">2022-12-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-05-26 13:59:06" itemprop="dateModified" datetime="2023-05-26T13:59:06-07:00">2023-05-26</time>
+    </span>
+
+  
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2022/12/25/What-Are-AI-Art-Models/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/12/25/What-Are-AI-Art-Models/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>There’s a great deal of conversation at the moment about AI Art Models;
+and there’s a fair amount of confusion and complex feelings about them.
+In online discussions, some friends have asked me to take a stab at
+describing what they are, for people outside the ML community.</p>
+<p>This post aims to explain some of what’s going on from a very
+high view; outside the math, to give people more grounding
+in the ideas as to what’s happening right now.</p>
+<h1>De-Noising Images</h1>
+<p>All modern AI Art Models are built on a concept called “de-noising”,
+literally, “removing noise”. Denoising models have existed in various
+forms for a long time, but deep learning has made them powerful enough
+to be useful for generating new data.</p>
+<p>Let’s define some basic ideas; this is a picture of my cat, Eliza:</p>
+<img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<p>If I add some random noise to the picture, I might get this:</p>
+<img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<p>Seen side-by-side, it’s easy to see the noise:</p>
+<table>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    </tr>
+  </table>
+<p>The noise I added to mess up the image was random; but if I
+already <em>had</em> the messed up image, and wanted to ask what the
+difference between the noisy image and the <em>true</em> image was,
+I’d see something like this, which is clearly not random:</p>
+<table>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.diff.0-1.png" width="200"></td>
+    </tr>
+  </table>
+<p>The core idea of a denoising algorithm is, given some data,
+remove the data that looks like it’s noise, leaving the data
+that looks consistent with what we expect things <em>like this</em>
+to look like.</p>
+<p>So, given a picture like this:</p>
+<img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png">
+<p>Can I apply some magic <em>Enhance</em> button to <em>clean up</em> the image,
+and get a picture like this:</p>
+<img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png">
+<p>Or side-by-side, can I go from the left, to the right:</p>
+<table>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.diff.0-1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    </tr>
+  </table>
+<p>Simple, right? Just fix all the bits that <em>don’t look like a cat</em>.</p>
+<h1>Magic Enhancement Buttons</h1>
+<p>A magic <a target="_blank" rel="noopener" href="https://allthetropes.org/wiki/Enhance_Button">Enhance Button</a> has long
+been a trope in sci-fi police procedural dramas. It’s common to see a low resolution
+image, taken in bad lighting, reflected
+off of a surface, “cleaned up” by the data techs or AI to recover details
+(“the killer’s face!”, “the licences plate!”) that were difficult or impossible
+to see in the original image.</p>
+<p>And while some information is always present which isn’t easy to distinguish
+by the human eye; and some amount of information recovery is possible;
+there are limits, we can only recover information which is there.</p>
+<p>This is such a common and silly trope, that it has become a point of pride
+in some media and tech-savy fans to point it out when it occurs in fiction.</p>
+<p>But … what if we didn’t care if the recovered information was <em>accurate</em>?</p>
+<p>What if we only cared if the recovered information were <em>plausible</em>?</p>
+<h1>Enhance My Cat</h1>
+<p>If I wished to build software which could take a noisy image of my cat,
+Eliza, and clean it up, I could now do that.</p>
+<p>I’d start by taking a <em>lot</em> of pictures of my cat, <em>on the same carpet</em>,
+and messing them up to various degrees:</p>
+<table>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200"></td>
+    </tr>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png" width="200"></td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png" width="200"></td>
+    </tr>
+  </table>
+<p>And then I’d take the steps in this degeneration, say <em>Step K</em> and <em>Step K+1</em>,
+and I’d train a model to go from <em>Step K+1</em> to <em>Step K</em>.</p>
+<p>Teaching it to remove one step of noise from pictures of my cat:</p>
+<table>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    </tr>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200"></td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    </tr>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png" width="200"></td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200"></td>
+    </tr>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png" width="200"></td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.3.png" width="200"></td>
+    </tr>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png" width="200"></td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.4.png" width="200"></td>
+    </tr>
+  </table>
+<p>If I trained this with just one picture, I could build a model
+that would be very good at starting with random noise, and
+when applied iteratively, would make it look more and more
+like a picture of my cat:</p>
+<table>
+  <tr>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png" width="200"></td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    </tr>
+  </table>
+<p>And if I trained a model on <em>many</em> pictures of my cat
+against the same background, I could start with random
+noise and iteratively apply that algorithm to get
+an image which was <em>plausibly</em> like a picture of my cat
+against the same background.</p>
+<p>I’m leaving a lot out, like <em>How</em>?</p>
+<p>This is a big field of research, there’s a lot of math
+and statistics involved in working out how to imagine
+pictures of my cat.</p>
+<p>But what we’ve described so far is only good if
+every picture has the same kind of content, it’s
+limited because we’ve trained one statistical model
+to remove one kind of noise:</p>
+<ul>
+<li>Noise that doesn’t look like Eliza on a Carpet.</li>
+</ul>
+<h1>Denoising Lots of Things</h1>
+<p>If I want to be able to <em>enhance</em> / <em>denoise</em> pictures
+of lots of things other than pictures of my cat, Eliza;
+the simplest way would be to just <em>train a lot of different models</em>.</p>
+<p>Let’s name the current model:</p>
+<ul>
+<li>“Maine coon cat laying on a white and black salt and pepper rug.”</li>
+</ul>
+<p>Now, my model of my cat is certainly bigger than one picture, but it’s probably
+a lot smaller than all the pictures I used to train it; probably a <em>lot</em>
+smaller if I’ve used good math to do the job.</p>
+<p>If I want to be able to denoise other things, I could train other models, say:</p>
+<ul>
+<li>“Maine coon cat sitting on a white and black salt and pepper rug.”</li>
+<li>“Maine coon cat laying on wooden floor.”</li>
+<li>“Maine coon cat sitting on a wooden floor.”</li>
+<li>“Planes on a runway.”</li>
+<li>Etc.</li>
+</ul>
+<p>For a good few years, this is what people did. They built very specialized
+denoising models targeting exactly what they were working with.
+The models did a good job at enhancing those things with plausible
+hallucinated details; but failed spectacularly when unexpected details
+were mixed in.</p>
+<p>A number of commercial image editing and enhancement packages had, internally,
+large libraries of models they could use to fix up images; and they’d
+first run other models to tell them what they were looking at (“that’s a cat”)
+before selecting a model from the library to apply.</p>
+<p>But the size of these models, and the cost of training them, while individually
+small, is very large in aggregate. We can’t effectively create a separate
+model for every kind of image we ever might want to denoise, enhance, or just make up.</p>
+<p>So we need to find a way to compress them together.</p>
+<p>It would be nice if we could take a description of the kind of image
+we’re looking at, and turn it into some kind of key so that models can
+share information.</p>
+<p>It would be nice if these two models could share their <em>cat-related</em> information:</p>
+<ul>
+<li>“Maine coon cat laying on a white and black salt and pepper rug.”</li>
+<li>“Maine coon cat laying on wooden floor.”</li>
+</ul>
+<p>But how do we translate text into a key that models can use?</p>
+<h1>Description to Key</h1>
+<p>In 2013, along came something called <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Word2vec">word2vec</a>.</p>
+<p><em>word2vec</em> is a form of text-vectorization. It turned words (like “cat”) into
+a vector of numbers, that represented a point in a semantic embedding space.</p>
+<p>What was <em>interesting</em> about this was that the embedding space was learned
+in such a way that you could do rough “semantic math” on the results:</p>
+<ul>
+<li>“Queen” - “Female” + “Male” =~ “King”</li>
+</ul>
+<p>And that rough equivalency started to enable text manipulation (Natural Language Processing)
+models to get pretty powerful.</p>
+<p>Later, mechanisms to fuse series of words into vectors, which maintained
+some notion of their original ordering, were invented.</p>
+<p>So, today, we can perform embedding math similar to:</p>
+<ul>
+<li>“Maine coon cat laying on a white and black salt and pepper rug.”</li>
+<li>- (offset:7)“white and black salt and pepper rug”</li>
+<li>+ (offset:7)“wooden floor”</li>
+<li>=~ “Maine coon cat laying on wooden floor.”</li>
+</ul>
+<h1>Overlapping Diffusion Models</h1>
+<p>Now we can train a bigger model, much bigger than we would have trained for
+just one kind of thing:</p>
+<ul>
+<li>“Maine coon cat laying on a white and black salt and pepper rug.”</li>
+</ul>
+<p>But trained on many, many kinds of things. But in addition to training
+the model on the noisy image, and the slightly-less noisy image; we’ll
+also show it the embedded description context, as a key.</p>
+<table style="text-align: center;">
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200">
+        <br>
+      "Maine coon cat laying on a white and black salt and pepper rug."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+    </tr>
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.2.png" width="200">
+        <br>
+      "Maine coon cat laying on a white and black salt and pepper rug."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200"></td>
+    </tr>
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.noise.1.png" width="200">
+        <br>
+      "Maine coon cat laying on a wooden floor."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.png" width="200"></td>
+    </tr>
+  </table>
+<p>The embedded key lets the model decide which <em>parts</em> of the model
+to use to generate the image; and so parts which are shared <em>according to the key</em>
+between different images will be trained together and shared in the model.</p>
+<h1>Making More Data</h1>
+<p>Our models do better when we train them on more data; but we only have
+so much data, so … we make some up.</p>
+<p>There are a lot of entirely mechanical things we can do which (probably)
+don’t change the original description.</p>
+<p>A really common form of data-augmentation is flipping the original image:</p>
+<table style="text-align: center;">
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200">
+      <br>
+      "Maine coon cat laying on a white and black salt and pepper rug."
+      </td>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.png" width="200">
+      <br>
+      "Maine coon cat laying on a white and black salt and pepper rug."
+      </td>
+    </tr>
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.png" width="200">
+      <br>
+      "Maine coon cat laying on a wooden floor."
+      </td>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.flip.png" width="200">
+      <br>
+      "Maine coon cat laying on a wooden floor."
+      </td>
+    </tr>
+  </table>
+<p>But if we’ve got access to image processing tools, we can augment
+the data <em>and</em> the description:</p>
+<table style="text-align: center;">
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.flip.cube.png" width="200">
+      <br>
+      "Maine coon cat laying on a white and black salt and pepper rug. <b>Cubism.</b>"
+      </td>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.wood.oil.png" width="200">
+      <br>
+      "Maine coon cat laying on a white and black salt and pepper rug. <b>Oil painting.</b>"
+      </td>
+    </tr>
+  </table>
+<h1>Generating New Images</h1>
+<p>We can start by generating some random noise:
+<img src="/2022/12/25/What-Are-AI-Art-Models/noise.png" width="200"></p>
+<p>And giving the model a prompt:</p>
+<ul>
+<li>“Maine coon cat laying on a carpet.”</li>
+</ul>
+<p>Starting from random noise, the denoiser picks local features that are kinda
+plausible from the prompt, and begins moving the image towards something
+that has some of those features.</p>
+<p>As parts of the image come into focus, they are forced to make sense relative
+to their neighbors, and the features refine towards more plausible results.</p>
+<table style="text-align: center;">
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/noise.ear.png" width="200">
+        <br>
+      "Maine coon cat laying on a carpet."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/noise.ear.result.png" width="200"></td>
+   </tr>
+  <tr>
+    <td colspan="3">... many steps later ...</td>
+    </tr>
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/noise.ear.result.png" width="200">
+        <br>
+      "Maine coon cat laying on a carpet."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.5.png" width="200"></td>
+  <tr>
+    <td colspan="3">... many steps later ...</td>
+    </tr>
+  <tr>
+    <td>
+      <img src="/2022/12/25/What-Are-AI-Art-Models/eliza.noise.1.png" width="200">
+        <br>
+      "Maine coon cat laying on a carpet."
+      </td>
+    <td> <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.054ex;" xmlns="http://www.w3.org/2000/svg" width="2.262ex" height="1.242ex" role="img" focusable="false" viewBox="0 -525 1000 549"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="21D2" d="M580 514Q580 525 596 525Q601 525 604 525T609 525T613 524T615 523T617 520T619 517T622 512Q659 438 720 381T831 300T927 263Q944 258 944 250T935 239T898 228T840 204Q696 134 622 -12Q618 -21 615 -22T600 -24Q580 -24 580 -17Q580 -13 585 0Q620 69 671 123L681 133H70Q56 140 56 153Q56 168 72 173H725L735 181Q774 211 852 250Q851 251 834 259T789 283T735 319L725 327H72Q56 332 56 347Q56 360 70 367H681L671 377Q638 412 609 458T580 514Z"></path></g></g></g></svg></mjx-container> </td>
+    <td><img src="/2022/12/25/What-Are-AI-Art-Models/eliza.source.png" width="200"></td>
+   </tr>
+  </tr></table>
+<h1>Novel Combinations</h1>
+<p>Once we’ve got this big overlapping model, keyed on embedded descriptions;
+we can start asking it for things we <em>don’t</em> have pictures of:</p>
+<ul>
+<li>“Main coon cat laying on runway on Mars.”</li>
+</ul>
+<p>The question of “Does this Work?” is tied up in the math of how good
+a job we did on the math for the text embeddings; and how good a
+job we did on the math of how the model uses those embeddings to
+decide which parts of itself to use for a given problem.</p>
+<p>It’s all about sharing the <em>appropriate</em> things; and is a very
+active field of research. They year-over-year improvements in the
+basic math are, at this point, astounding; and we have no reason
+to currently believe that the surface has really been scratched
+on the math.</p>
+<ul>
+<li>Everyone expects this math to get <em>MUCH</em> better, quickly.</li>
+</ul>
+<h1>How does this give us Art?</h1>
+<p>All AI Art Models are using variations of this technology;
+and they’re trained upon art, and generated and augmented
+images.</p>
+<p>Many of them are also crowd-sourcing the up and down votes on the new images
+they produce, and using them to further augment and train the dataset for the
+models they train.</p>
+<p>The more images a model has been trained with, and the better the descriptions
+of those images, the better the results will tend to be.</p>
+<p>There are lots of mathy details, and lots of active research; but that’s the
+gist.</p>
+<h1>Is this a copy of the training data?</h1>
+<p>The very, very short answer is: No.</p>
+<p>Examining the data for open source AI Art Model (so we can look at the sizes of things)
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Stable_Diffusion">Stable Diffusion</a></p>
+<p>Some numbers there:</p>
+<ul>
+<li>trained on 2.3 billion 256x256 3-color 24 bit images</li>
+<li>trained on ~= 450 terrabytes</li>
+<li>model size: 4.2 gigabytes</li>
+<li>100000 / 1 ratio of training data to model size</li>
+<li>~= <b>2 bytes</b> of model data for every training image</li>
+</ul>
+<p>And this is ignoring the size of the text prompts in the training;
+and their representation in the model’s embedding spaces.</p>
+<p>Technically, mathematically, the model contains at most 2 bytes of information for every training image. Were we to
+claim it had copied the training data, we’d need to argue that we can compress a 256x256 image down to less than one
+pixel; to just 16 numbers; so it seems impossible to argue that the model has copied the data.
+What the model has done is learned how to describe things <em>like</em> each input image, in terms of and relative to other
+images it has seen, conditioned on the embedding contexts it was given.</p>
+<p>It’s pretty compelling to <em>me</em> to argue that the training data isn’t in the model;
+the models have learned what high level concepts imply; concepts like:</p>
+<ul>
+<li>Cat</li>
+<li>Oil Painting</li>
+<li>Picasso</li>
+</ul>
+<p>Now, some of those concepts are tightly coupled with the style and work
+of current artists and companies with a stake in IP law and financial
+survival, which raise other interesting and important questions:</p>
+<ul>
+<li>is it ok to learn from IP controlled information, even without copying it?
+<ul>
+<li>what are the limits on this?</li>
+<li>is this covered by existing law and contracts?</li>
+<li>do we need new law and contracts?</li>
+</ul>
+</li>
+<li>do we want to extend IP to cover style and inspiration?
+<ul>
+<li>can we do this in a way which doesn’t hurt artists more than it helps them?</li>
+</ul>
+</li>
+</ul>
+<h1>Is this just copying by obfuscation?</h1>
+<p>I want to call out a point here.
+The above argument (2 bytes per training example can’t be copying) is extremely compelling to me;
+and I’ve found it to be compelling to others with a formal background in information theory,
+we see it as wildly too small to be anything like a compression or copy of the source data.</p>
+<p>But it isn’t a compelling argument to many people without that background. The feedback
+I’ve received is that they’re concerned this is a form of shell game, copying by obfuscation.
+They’re moving the math around to hide the trick, is the argument.</p>
+<p>And I don’t know how to counter that argument, without saying “learn the math”;
+but it feels like a real crux of one of the issues here.</p>
+<p>In discussion with people, when it feels like some progress is being made on the question
+of, is this <em>copying</em> in some sense, an even more interesting objection arises, that I’ll paraphrase here:</p>
+<blockquote>
+<p><strong>The argument against robotic fair-use:</strong>
+<br>
+While this might not be copying, I object to calling this “learning” and I’m unhappy with
+the idea that this is ok.
+<br>
+Humans have a fair-use right to learn from material, that grants them moral rights to
+observe and consider things which supersede the rights of the creators of art to control
+the use of their material. The right to observe is protected above other rights.
+<br>
+Calling this “learning” implies that right; but the computer isn’t a person, and so can’t
+have that moral right. The information derived from observing art, even if it conclusively
+<em>isn’t</em> a copy, is still violating rights of the author of the training examples which
+take precedence because they are not being superseded by fair-use rights to observe.
+<br>
+Humans should have a legal right to look at things without compensation that robots should not have.</p>
+</blockquote>
+<p>I believe that there is a deep cultural divide on this argument, and it’s worth clarifying
+what the actual disagreement is when moving forward with AI training. I think some people
+accept this strongly as deeply and morally true, and some people reject it strongly
+as deeply and morally untrue; and bringing this question forward is more clarifying
+of that disagreement than an argument about the information content of a model.</p>
+<h1>Is it legal to train on copyrighted art?</h1>
+<p>This seems like a simple question, but we can probably break it down into a whole family:</p>
+<ul>
+<li>Should it be legal to train on copyrighted art?</li>
+<li>Is it legal to train on copyrighted art in jurisdiction X?
+<ul>
+<li>If no, is it legal to <em>look</em> at copyrighted art, as an artist?</li>
+<li>What is the difference?</li>
+</ul>
+</li>
+<li>Should artist be a protected financial job?</li>
+</ul>
+<p>But we can kick this back further:</p>
+<ul>
+<li>When AI is taught to do a job, what do we owe to the people who are losing work to that AI?</li>
+</ul>
+<p>I, and many other people, have strong opinions about these issues,
+but this isn’t a post about the law or the ethics of applying AI to existing industries.</p>
+<p>Expect a <em>lot</em> of lawsuits and new legislation in this space for the rest
+of ever; this question isn’t going away.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/explainer/" rel="tag"># explainer</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/12/19/The-Tapestry-Plan/" rel="prev" title="The Tapestry Plan">
+                  <i class="fa fa-chevron-left"></i> The Tapestry Plan
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/12/28/Tapestry-Sharding-Matmul-over-the-in-dimension/" rel="next" title="Tapestry: Sharding Matmul over the in dimension">
+                  Tapestry: Sharding Matmul over the in dimension <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Crutcher Dunnavant</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"crutcher-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

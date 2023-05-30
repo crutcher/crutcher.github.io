@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/amp16.png">
+  <link rel="mask-icon" href="/images/amp32.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"crutcher.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.16.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"disqus","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1}},"layzload":false,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Suppose you wish to define a proper type-forwarding decorator in python, which supports both the common default call pattern; and the argument override call pattern: 1234567@foodef some_method(x: int)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Type-Forwarding Python Decorators">
+<meta property="og:url" content="https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/index.html">
+<meta property="og:site_name" content="crutcher.github.io">
+<meta property="og:description" content="Suppose you wish to define a proper type-forwarding decorator in python, which supports both the common default call pattern; and the argument override call pattern: 1234567@foodef some_method(x: int)">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-28T04:28:26.000Z">
+<meta property="article:modified_time" content="2023-05-26T20:59:06.631Z">
+<meta property="article:author" content="Crutcher Dunnavant">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/","path":"2022/11/27/Type-Forwarding-Python-Decorators/","title":"Type-Forwarding Python Decorators"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Type-Forwarding Python Decorators | crutcher.github.io</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9EX3586LZ"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-R9EX3586LZ","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="crutcher.github.io" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">crutcher.github.io</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-atom"><a href="/atom.xml" rel="section"><i class="fab fa-atom fa-fw"></i>Atom</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-tapestry"><a href="/Tapestry/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>Tapestry</a></li><li class="menu-item menu-item-resume"><a href="/Resume/" rel="section"><i class="fa fa-solid fa-file fa-fw"></i>Resume</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Crutcher Dunnavant</p>
+  <div class="site-description" itemprop="description">hacking around big math</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crutcher" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crutcher" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://sigmoid.social/@crutcher" title="Mastodon → https:&#x2F;&#x2F;sigmoid.social&#x2F;@crutcher" rel="noopener me" target="_blank"><i class="fab fa-mastodon fa-fw"></i>Mastodon</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://discordapp.com/users/361021789268344842" title="Discord → https:&#x2F;&#x2F;discordapp.com&#x2F;users&#x2F;361021789268344842" rel="noopener me" target="_blank"><i class="fab fa-discord fa-fw"></i>Discord</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/crutcher-dunnavant-4841ba9/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;crutcher-dunnavant-4841ba9&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Crutcher Dunnavant">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="crutcher.github.io">
+      <meta itemprop="description" content="hacking around big math">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Type-Forwarding Python Decorators | crutcher.github.io">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Type-Forwarding Python Decorators
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-11-27 20:28:26" itemprop="dateCreated datePublished" datetime="2022-11-27T20:28:26-08:00">2022-11-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-05-26 13:59:06" itemprop="dateModified" datetime="2023-05-26T13:59:06-07:00">2023-05-26</time>
+    </span>
+
+  
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2022/11/27/Type-Forwarding-Python-Decorators/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/11/27/Type-Forwarding-Python-Decorators/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Suppose you wish to define a proper type-forwarding decorator in python, which
+supports both the common default call pattern; and the argument override call
+pattern:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@foo</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_method</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="meta">@foo(<span class="params">a=<span class="string">&quot;xyz&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_other_method</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>The mechanics of this at call time are relatively straightforward in python:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params"></span></span><br><span class="line"><span class="params">    fn = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    *,</span></span><br><span class="line"><span class="params">    a = <span class="string">&quot;xyz&quot;</span>,</span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decorator</span>(<span class="params">fn</span>):</span><br><span class="line">        <span class="built_in">setattr</span>(fn, <span class="string">&quot;__foo__&quot;</span>, a)</span><br><span class="line">        <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> fn <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> decorator(fn)</span><br><span class="line"></span><br><span class="line"><span class="meta">@foo</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_method</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="meta">@foo</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_other_method</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>We can ask <code>mypy</code> the type of the resultant decorated method:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mypy -c <span class="string">&#x27;import simple; reveal_type(simple.some_method)&#x27;</span></span><br><span class="line">&lt;string&gt;:1: note: Revealed <span class="built_in">type</span> is <span class="string">&quot;Any&quot;</span></span><br></pre></td></tr></table></figure>
+<p>But establishing appropriate types, such that the types of the decorated method
+are well-formed, is a challenge which requires use of <code>TypeVar</code> and the
+<code>@overload</code> mechanic, and a fair amount of boilerplate:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> (</span><br><span class="line">    <span class="type">Callable</span>,</span><br><span class="line">    <span class="type">Optional</span>,</span><br><span class="line">    overload,</span><br><span class="line">    TypeVar,</span><br><span class="line">    <span class="type">Union</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">C = TypeVar(<span class="string">&quot;C&quot;</span>, bound=<span class="type">Callable</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@overload</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params">fn: C</span>) -&gt; C:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="meta">@overload</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params"></span></span><br><span class="line"><span class="params">    *,</span></span><br><span class="line"><span class="params">    a: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="string">&quot;xyz&quot;</span>,</span></span><br><span class="line"><span class="params"></span>) -&gt; <span class="type">Callable</span>[[C], C]:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params"></span></span><br><span class="line"><span class="params">    fn: <span class="type">Optional</span>[C] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    *,</span></span><br><span class="line"><span class="params">    a: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="string">&quot;xyz&quot;</span>,</span></span><br><span class="line"><span class="params"></span>) -&gt; <span class="type">Union</span>[<span class="type">Callable</span>[[C], C], C]:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decorator</span>(<span class="params">fn: C</span>) -&gt; C:</span><br><span class="line">        <span class="built_in">setattr</span>(fn, <span class="string">&quot;__foo__&quot;</span>, a)</span><br><span class="line">        <span class="keyword">return</span> fn</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> fn <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> decorator(fn)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@foo</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo_example</span>(<span class="params">x: <span class="built_in">int</span>, *, y: <span class="built_in">int</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>(x * y)</span><br></pre></td></tr></table></figure>
+<p>We can ask <code>mypy</code> the type of the decorated value:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mypy -c <span class="string">&#x27;import example; reveal_type(example.foo_example)&#x27;</span></span><br><span class="line">&lt;string&gt;:1: note: Revealed <span class="built_in">type</span> is <span class="string">&quot;def (x: builtins.int, *, y: builtins.int) -&gt; builtins.float&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Of note is that most of the actual core of this is very simple, suppose we
+could say the following:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@typed_decorator</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">foo</span>(<span class="params">fn: C, *, a: <span class="built_in">str</span> = <span class="string">&quot;xyz&quot;</span></span>) -&gt; C:</span><br><span class="line">    <span class="built_in">setattr</span>(fn, <span class="string">&#x27;__foo__&#x27;</span>, a)</span><br><span class="line">    <span class="keyword">return</span> fn</span><br></pre></td></tr></table></figure>
+<p>What remains an open question to me, and I’ve tried many approaches, is if is
+possible to define <code>@typed_decorator</code> in <code>mypy</code>s current semantics.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/15/Starting-a-Blog/" rel="prev" title="Starting a Blog">
+                  <i class="fa fa-chevron-left"></i> Starting a Blog
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/12/12/Sharding-Tensor-Expressions/" rel="next" title="Sharding Tensor Expressions">
+                  Sharding Tensor Expressions <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Crutcher Dunnavant</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"crutcher-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
