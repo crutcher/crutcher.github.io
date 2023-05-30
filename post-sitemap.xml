@@ -5,7 +5,16 @@
 
     <url>
         <loc>https://crutcher.github.io/2023/05/30/Representing-Tensor-Graphs/</loc>
-        <lastmod>2023-05-30T22:23:36.821Z</lastmod>
+        <lastmod>2023-05-30T23:54:36.861Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
+        <loc>https://crutcher.github.io/2023/01/11/Tapestry-Conditional-Expansion-and-Graph-Rewrite-Rules/</loc>
+        <lastmod>2023-05-30T23:41:26.339Z</lastmod>
         <changefreq>always</changefreq>
         <priority>1</priority>
     
@@ -15,15 +24,6 @@
     <url>
         <loc>https://crutcher.github.io/2023/05/26/Working-in-ZSpace/</loc>
         <lastmod>2023-05-26T21:55:55.788Z</lastmod>
-        <changefreq>always</changefreq>
-        <priority>1</priority>
-    
-    
-    </url>
-
-    <url>
-        <loc>https://crutcher.github.io/2023/01/11/Tapestry-Conditional-Expansion-and-Graph-Rewrite-Rules/</loc>
-        <lastmod>2023-05-26T20:59:06.641Z</lastmod>
         <changefreq>always</changefreq>
         <priority>1</priority>
     
@@ -58,15 +58,6 @@
     </url>
 
     <url>
-        <loc>https://crutcher.github.io/2022/12/17/Sharding-Linear-Operations-Over-Weight-Out-Dimensions/</loc>
-        <lastmod>2023-05-26T20:59:06.632Z</lastmod>
-        <changefreq>always</changefreq>
-        <priority>1</priority>
-    
-    
-    </url>
-
-    <url>
         <loc>https://crutcher.github.io/2022/12/12/Sharding-Tensor-Expressions/</loc>
         <lastmod>2023-05-26T20:59:06.632Z</lastmod>
         <changefreq>always</changefreq>
@@ -76,7 +67,7 @@
     </url>
 
     <url>
-        <loc>https://crutcher.github.io/2022/12/19/The-Tapestry-Plan/</loc>
+        <loc>https://crutcher.github.io/2022/12/17/Sharding-Linear-Operations-Over-Weight-Out-Dimensions/</loc>
         <lastmod>2023-05-26T20:59:06.632Z</lastmod>
         <changefreq>always</changefreq>
         <priority>1</priority>
@@ -94,6 +85,15 @@
     </url>
 
     <url>
+        <loc>https://crutcher.github.io/2022/12/19/The-Tapestry-Plan/</loc>
+        <lastmod>2023-05-26T20:59:06.632Z</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1</priority>
+    
+    
+    </url>
+
+    <url>
         <loc>https://crutcher.github.io/2022/12/25/What-Are-AI-Art-Models/</loc>
         <lastmod>2023-05-26T20:59:06.632Z</lastmod>
         <changefreq>always</changefreq>
@@ -103,7 +103,7 @@
     </url>
 
     <url>
-        <loc>https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/</loc>
+        <loc>https://crutcher.github.io/2022/11/15/Starting-a-Blog/</loc>
         <lastmod>2023-05-26T20:59:06.631Z</lastmod>
         <changefreq>always</changefreq>
         <priority>1</priority>
@@ -112,7 +112,7 @@
     </url>
 
     <url>
-        <loc>https://crutcher.github.io/2022/11/15/Starting-a-Blog/</loc>
+        <loc>https://crutcher.github.io/2022/11/27/Type-Forwarding-Python-Decorators/</loc>
         <lastmod>2023-05-26T20:59:06.631Z</lastmod>
         <changefreq>always</changefreq>
         <priority>1</priority>
