@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/optimization/pareto.neighborhood.svg">
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/optimization/pareto.constraint.svg">
 <meta property="article:published_time" content="2022-12-16T18:32:05.000Z">
-<meta property="article:modified_time" content="2023-06-05T22:48:29.258Z">
+<meta property="article:modified_time" content="2023-06-05T22:54:09.305Z">
 <meta property="article:author" content="Crutcher Dunnavant">
 <meta property="article:tag" content="tensor expressions">
 <meta property="article:tag" content="tapestry">
@@ -247,7 +247,7 @@ mjx-container[display="true"] + br {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Note-For-Reviewers"><span class="nav-number">1.</span> <span class="nav-text">A Note For Reviewers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Draft-Stages"><span class="nav-number">1.1.</span> <span class="nav-text">Draft Stages</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-of-Contents"><span class="nav-number">2.1.</span> <span class="nav-text">Table of Contents</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Background-and-Related-Work"><span class="nav-number">3.</span> <span class="nav-text">Background and Related Work</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Vision"><span class="nav-number">3.1.</span> <span class="nav-text">The Vision</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Applications"><span class="nav-number">3.2.</span> <span class="nav-text">Applications</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Artificial-Intelligence-and-Machine-Learning"><span class="nav-number">3.2.1.</span> <span class="nav-text">Artificial Intelligence and Machine Learning</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Finite-Element-Simulations"><span class="nav-number">3.2.2.</span> <span class="nav-text">Finite Element Simulations</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Expression-Language-Definition"><span class="nav-number">4.</span> <span class="nav-text">Expression Language Definition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Expression-Evaluation-Theory-Derivation"><span class="nav-number">5.</span> <span class="nav-text">Expression Evaluation Theory Derivation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Piecewise-Tensors"><span class="nav-number">5.1.</span> <span class="nav-text">Piecewise Tensors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor-Layout-Pragmatics"><span class="nav-number">5.2.</span> <span class="nav-text">Tensor Layout Pragmatics</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Squeeze-Unsqueeze-and-Broadcast"><span class="nav-number">5.2.1.</span> <span class="nav-text">Squeeze, Unsqueeze, and Broadcast</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selector-Expressions-and-Tensor-Views"><span class="nav-number">5.3.</span> <span class="nav-text">Selector Expressions and Tensor Views</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Atomic-Selections"><span class="nav-number">5.3.1.</span> <span class="nav-text">Atomic Selections</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Generators"><span class="nav-number">5.3.2.</span> <span class="nav-text">Generators</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Random-Generators"><span class="nav-number">5.3.2.1.</span> <span class="nav-text">Random Generators</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Block-Operator-Expressions"><span class="nav-number">5.4.</span> <span class="nav-text">Block Operator Expressions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Restricting-to-Shardable-Operators"><span class="nav-number">5.5.</span> <span class="nav-text">Restricting to Shardable Operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Operator-Index-Counting"><span class="nav-number">5.6.</span> <span class="nav-text">Operator Index Counting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Index-Projection-Functions"><span class="nav-number">5.7.</span> <span class="nav-text">Index Projection Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linear-Strides-Over-a-Batch-Dimension"><span class="nav-number">5.7.1.</span> <span class="nav-text">Linear Strides Over a Batch Dimension</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sharding-Linear-over-the-out-dimension"><span class="nav-number">5.7.2.</span> <span class="nav-text">Sharding Linear over the out dimension</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sharding-Linear-and-Matmul-over-the-in-dimension"><span class="nav-number">5.8.</span> <span class="nav-text">Sharding Linear, and Matmul, over the in dimension</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sharding-Prod"><span class="nav-number">5.8.1.</span> <span class="nav-text">Sharding Prod</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reduction-Operations"><span class="nav-number">5.8.2.</span> <span class="nav-text">Reduction Operations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rewriting-Matmul"><span class="nav-number">5.8.3.</span> <span class="nav-text">Rewriting Matmul</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sharding-Linear-over-in"><span class="nav-number">5.8.4.</span> <span class="nav-text">Sharding Linear over in</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sharding-Convolution-Operators"><span class="nav-number">5.9.</span> <span class="nav-text">Sharding Convolution Operators</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sparse-Strided-Convolution-Operators"><span class="nav-number">5.9.1.</span> <span class="nav-text">Sparse Strided Convolution Operators</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Load-and-Sink-Operators"><span class="nav-number">5.10.</span> <span class="nav-text">Load and Sink Operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graph-Rewrite-Rules"><span class="nav-number">5.11.</span> <span class="nav-text">Graph Rewrite Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Local-Node-Expansion-Rewrite"><span class="nav-number">5.11.1.</span> <span class="nav-text">Local Node Expansion Rewrite</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Conditional-Rewrites"><span class="nav-number">5.11.1.1.</span> <span class="nav-text">Conditional Rewrites</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Ambiguous-Rewrites"><span class="nav-number">5.11.1.2.</span> <span class="nav-text">Ambiguous Rewrites</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Global-Pattern-Search-Rewrite"><span class="nav-number">5.11.2.</span> <span class="nav-text">Global Pattern Search Rewrite</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Returning-to-Linear"><span class="nav-number">5.11.3.</span> <span class="nav-text">Returning to Linear</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Linear-under-Local-Expansion"><span class="nav-number">5.11.3.1.</span> <span class="nav-text">Linear under Local Expansion</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Linear-under-Global-Rewrite"><span class="nav-number">5.11.3.2.</span> <span class="nav-text">Linear under Global Rewrite</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Graph-Fusion-Operators"><span class="nav-number">5.11.4.</span> <span class="nav-text">Graph Fusion Operators</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cost-Optimization"><span class="nav-number">6.</span> <span class="nav-text">Cost Optimization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Stochastic-Pareto-Frontier-Optimization"><span class="nav-number">6.1.</span> <span class="nav-text">Stochastic Pareto Frontier Optimization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graph-Mutator-Selection-Optimization"><span class="nav-number">6.2.</span> <span class="nav-text">Graph Mutator Selection Optimization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parallel-Optimization"><span class="nav-number">6.3.</span> <span class="nav-text">Parallel Optimization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation-Mechanics"><span class="nav-number">7.</span> <span class="nav-text">Implementation Mechanics</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Working-in-ZSpace"><span class="nav-number">7.1.</span> <span class="nav-text">Working in ZSpace</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Side-Note-Size-Z-0-and-Scalars"><span class="nav-number">7.1.1.</span> <span class="nav-text">Side Note: Size, Z^0, and Scalars</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Representing-Graphs"><span class="nav-number">7.2.</span> <span class="nav-text">Representing Graphs</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Simple-Expressions"><span class="nav-number">7.2.1.</span> <span class="nav-text">Simple Expressions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chained-Expressions"><span class="nav-number">7.2.2.</span> <span class="nav-text">Chained Expressions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sharded-Expressions"><span class="nav-number">7.2.3.</span> <span class="nav-text">Sharded Expressions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Polyhedral-Type-Information"><span class="nav-number">7.2.4.</span> <span class="nav-text">Polyhedral Type Information</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#The-Cost-Information"><span class="nav-number">7.2.5.</span> <span class="nav-text">The Cost Information</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Encapsulation"><span class="nav-number">7.2.6.</span> <span class="nav-text">Encapsulation</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Note-For-Reviewers"><span class="nav-number">1.</span> <span class="nav-text">A Note For Reviewers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Draft-Stages"><span class="nav-number">1.1.</span> <span class="nav-text">Draft Stages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-of-Contents"><span class="nav-number">1.2.</span> <span class="nav-text">Table of Contents</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Background-and-Related-Work"><span class="nav-number">3.</span> <span class="nav-text">Background and Related Work</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Vision"><span class="nav-number">3.1.</span> <span class="nav-text">The Vision</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Applications"><span class="nav-number">3.2.</span> <span class="nav-text">Applications</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Artificial-Intelligence-and-Machine-Learning"><span class="nav-number">3.2.1.</span> <span class="nav-text">Artificial Intelligence and Machine Learning</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Finite-Element-Simulations"><span class="nav-number">3.2.2.</span> <span class="nav-text">Finite Element Simulations</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Expression-Language-Definition"><span class="nav-number">4.</span> <span class="nav-text">Expression Language Definition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Expression-Evaluation-Theory-Derivation"><span class="nav-number">5.</span> <span class="nav-text">Expression Evaluation Theory Derivation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Piecewise-Tensors"><span class="nav-number">5.1.</span> <span class="nav-text">Piecewise Tensors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor-Layout-Pragmatics"><span class="nav-number">5.2.</span> <span class="nav-text">Tensor Layout Pragmatics</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Squeeze-Unsqueeze-and-Broadcast"><span class="nav-number">5.2.1.</span> <span class="nav-text">Squeeze, Unsqueeze, and Broadcast</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selector-Expressions-and-Tensor-Views"><span class="nav-number">5.3.</span> <span class="nav-text">Selector Expressions and Tensor Views</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Atomic-Selections"><span class="nav-number">5.3.1.</span> <span class="nav-text">Atomic Selections</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Generators"><span class="nav-number">5.3.2.</span> <span class="nav-text">Generators</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Random-Generators"><span class="nav-number">5.3.2.1.</span> <span class="nav-text">Random Generators</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Block-Operator-Expressions"><span class="nav-number">5.4.</span> <span class="nav-text">Block Operator Expressions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Restricting-to-Shardable-Operators"><span class="nav-number">5.5.</span> <span class="nav-text">Restricting to Shardable Operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Operator-Index-Counting"><span class="nav-number">5.6.</span> <span class="nav-text">Operator Index Counting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Index-Projection-Functions"><span class="nav-number">5.7.</span> <span class="nav-text">Index Projection Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linear-Strides-Over-a-Batch-Dimension"><span class="nav-number">5.7.1.</span> <span class="nav-text">Linear Strides Over a Batch Dimension</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sharding-Linear-over-the-out-dimension"><span class="nav-number">5.7.2.</span> <span class="nav-text">Sharding Linear over the out dimension</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sharding-Linear-and-Matmul-over-the-in-dimension"><span class="nav-number">5.8.</span> <span class="nav-text">Sharding Linear, and Matmul, over the in dimension</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sharding-Prod"><span class="nav-number">5.8.1.</span> <span class="nav-text">Sharding Prod</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reduction-Operations"><span class="nav-number">5.8.2.</span> <span class="nav-text">Reduction Operations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rewriting-Matmul"><span class="nav-number">5.8.3.</span> <span class="nav-text">Rewriting Matmul</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sharding-Linear-over-in"><span class="nav-number">5.8.4.</span> <span class="nav-text">Sharding Linear over in</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sharding-Convolution-Operators"><span class="nav-number">5.9.</span> <span class="nav-text">Sharding Convolution Operators</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sparse-Strided-Convolution-Operators"><span class="nav-number">5.9.1.</span> <span class="nav-text">Sparse Strided Convolution Operators</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Load-and-Sink-Operators"><span class="nav-number">5.10.</span> <span class="nav-text">Load and Sink Operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graph-Rewrite-Rules"><span class="nav-number">5.11.</span> <span class="nav-text">Graph Rewrite Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Local-Node-Expansion-Rewrite"><span class="nav-number">5.11.1.</span> <span class="nav-text">Local Node Expansion Rewrite</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Conditional-Rewrites"><span class="nav-number">5.11.1.1.</span> <span class="nav-text">Conditional Rewrites</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Ambiguous-Rewrites"><span class="nav-number">5.11.1.2.</span> <span class="nav-text">Ambiguous Rewrites</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Global-Pattern-Search-Rewrite"><span class="nav-number">5.11.2.</span> <span class="nav-text">Global Pattern Search Rewrite</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Returning-to-Linear"><span class="nav-number">5.11.3.</span> <span class="nav-text">Returning to Linear</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Linear-under-Local-Expansion"><span class="nav-number">5.11.3.1.</span> <span class="nav-text">Linear under Local Expansion</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Linear-under-Global-Rewrite"><span class="nav-number">5.11.3.2.</span> <span class="nav-text">Linear under Global Rewrite</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Graph-Fusion-Operators"><span class="nav-number">5.11.4.</span> <span class="nav-text">Graph Fusion Operators</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cost-Optimization"><span class="nav-number">6.</span> <span class="nav-text">Cost Optimization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Stochastic-Pareto-Frontier-Optimization"><span class="nav-number">6.1.</span> <span class="nav-text">Stochastic Pareto Frontier Optimization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graph-Mutator-Selection-Optimization"><span class="nav-number">6.2.</span> <span class="nav-text">Graph Mutator Selection Optimization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parallel-Optimization"><span class="nav-number">6.3.</span> <span class="nav-text">Parallel Optimization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation-Mechanics"><span class="nav-number">7.</span> <span class="nav-text">Implementation Mechanics</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Working-in-ZSpace"><span class="nav-number">7.1.</span> <span class="nav-text">Working in ZSpace</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Side-Note-Size-Z-0-and-Scalars"><span class="nav-number">7.1.1.</span> <span class="nav-text">Side Note: Size, Z^0, and Scalars</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Representing-Graphs"><span class="nav-number">7.2.</span> <span class="nav-text">Representing Graphs</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Simple-Expressions"><span class="nav-number">7.2.1.</span> <span class="nav-text">Simple Expressions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chained-Expressions"><span class="nav-number">7.2.2.</span> <span class="nav-text">Chained Expressions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sharded-Expressions"><span class="nav-number">7.2.3.</span> <span class="nav-text">Sharded Expressions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Polyhedral-Type-Information"><span class="nav-number">7.2.4.</span> <span class="nav-text">Polyhedral Type Information</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#The-Cost-Information"><span class="nav-number">7.2.5.</span> <span class="nav-text">The Cost Information</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Encapsulation"><span class="nav-number">7.2.6.</span> <span class="nav-text">Encapsulation</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -387,75 +387,10 @@ preview applications written in the block operation graph language.</p>
 (we can prove that it <em>can</em> be made fast); then make it easy to program for to
 get more help; then make it fast.</p>
 </blockquote>
-<h2 id="Introduction">Introduction</h2>
-<p>This whitepaper describes “Tapestry”, a concrete theory and system for implementing “distributed tensor expression
-evaluators”. In this context, “distributed” means targeting resources and execution on multiple computers
-simultaneously. A “tensor” is a multidimensional array, consisting of a single number, <code>2</code>, an array of numbers,
-<code>[3.5, 2.5]</code>, a matrix, <code>[[2, 3], [4, 5]]</code>, or a larger multidimensional array. “Expressions” are operations
-on one or more tensors, which produce new tensors. Evaluators are systems for running expressions and generating
-values.</p>
-<p>For example, the following expressions produce the corresponding results:</p>
-<table>
-<thead>
-<tr>
-<th>Expression</th>
-<th>Result</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1 + 2</td>
-<td>3</td>
-</tr>
-<tr>
-<td>[3, 4] + [1, 1]</td>
-<td>[4, 5]</td>
-</tr>
-<tr>
-<td>2 * [1, 0]</td>
-<td>[2, 0]</td>
-</tr>
-<tr>
-<td>abs([3, -4])</td>
-<td>[3, 4]</td>
-</tr>
-</tbody>
-</table>
-<p>An example of a higher dimensional tensor can be found in a batch of images. Suppose we have
-a tensor <code>X</code>, containing 10 million RGB images, each 256 x 256 pixels, each pixel containing
-3 values (the red, green, and blue values of RGB). It would be natural to represent
-this batch as a tensor, though we might choose to do so in different ways:</p>
-<ul>
-<li><code>[10_000_000, 256, 256, 3]</code> - as batch, height, width, and color channel.</li>
-<li><code>[10_000_000, 3, 256, 256]</code> - as batch, color channel, height, and width.</li>
-</ul>
-<p>Assuming a byte-valued tensor with values ranging from 0 to 255; this tensor would be 32 TB of data.
-Suppose we wished to convert the byte valued 0 - 255 <code>X</code> to a float16 (2 bytes) valued 0 - 1.0 <code>Y</code> tensor;
-Abstractly, this is as simple to describe as <code>Y := float(X) / 255.0</code>; but <code>Y</code> is 62 TB of data.
-Where do we put the input data? Where does the output data go? How do we manage the conversions?
-And how do we get there from <code>Y := float(X) / 255.0</code>?</p>
-<p>Tapestry allows us to describe mathematical operations that are relatively simple to author, but may describe very large
-amounts of data and operations. However, implementing these operations requires orchestrating many data transfers and
-batched operations, which can be difficult and inefficient.</p>
-<p>The cost of implementing large distributed mathematics dominates the costs of modern AI and computational modeling. This
-is true for applications such as fluid flow or weather simulation and protein modeling. Both the development costs of
-the programs and the resource costs of computers running inefficient implementations of large math evaluators contribute
-to this problem.</p>
-<p>By contrast, <code>SQL</code> expression evaluators allow the manipulation and querying of vast amounts of information distributed
-over databases that span hundreds of machines. <code>SQL</code> achieves this by establishing a strong formal declarative abstract
-language, where users can describe the operations they wish to perform in a language that hides the pragmatics, but does
-so in such a way that the <code>SQL</code> evaluation environments can effectively transform, optimize, and shard those
-descriptions into efficient underlying pragmatic schedules and execution plans.</p>
-<p>Tapestry is a proposal for such a formal declarative abstract language, covering expressions consuming and producing
-tensor values. The programming surface, the abstract formal language, which users would read, write, and interact with,
-is a relatively small surface, similar to <code>SQL</code>. However, the definitions of the semantics of the operators have been
-chosen to enable aggressive and <em>correct</em> (value preserving) optimization of these expressions into efficient
-distributed pragmatics.</p>
-<p>This whitepaper covers the abstract tapestry expression language, the derivation of the formal semantics of that
-language, and the concrete pragmatics of implementing an evaluator for that language.</p>
 <h3 id="Table-of-Contents">Table of Contents</h3>
 <!-- toc -->
 <ul>
+<li><a href="#Introduction">Introduction</a></li>
 <li><a href="#Background-and-Related-Work">Background and Related Work</a>
 <ul>
 <li><a href="#The-Vision">The Vision</a></li>
@@ -557,6 +492,72 @@ language, and the concrete pragmatics of implementing an evaluator for that lang
 </li>
 </ul>
 <!-- tocstop -->
+<h2 id="Introduction">Introduction</h2>
+<p>This whitepaper describes “Tapestry”, a concrete theory and system for implementing “distributed tensor expression
+evaluators”. In this context, “distributed” means targeting resources and execution on multiple computers
+simultaneously. A “tensor” is a multidimensional array, consisting of a single number, <code>2</code>, an array of numbers,
+<code>[3.5, 2.5]</code>, a matrix, <code>[[2, 3], [4, 5]]</code>, or a larger multidimensional array. “Expressions” are operations
+on one or more tensors, which produce new tensors. Evaluators are systems for running expressions and generating
+values.</p>
+<p>For example, the following expressions produce the corresponding results:</p>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 + 2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>[3, 4] + [1, 1]</td>
+<td>[4, 5]</td>
+</tr>
+<tr>
+<td>2 * [1, 0]</td>
+<td>[2, 0]</td>
+</tr>
+<tr>
+<td>abs([3, -4])</td>
+<td>[3, 4]</td>
+</tr>
+</tbody>
+</table>
+<p>An example of a higher dimensional tensor can be found in a batch of images. Suppose we have
+a tensor <code>X</code>, containing 10 million RGB images, each 256 x 256 pixels, each pixel containing
+3 values (the red, green, and blue values of RGB). It would be natural to represent
+this batch as a tensor, though we might choose to do so in different ways:</p>
+<ul>
+<li><code>[10_000_000, 256, 256, 3]</code> - as batch, height, width, and color channel.</li>
+<li><code>[10_000_000, 3, 256, 256]</code> - as batch, color channel, height, and width.</li>
+</ul>
+<p>Assuming a byte-valued tensor with values ranging from 0 to 255; this tensor would be 32 TB of data.
+Suppose we wished to convert the byte valued 0 - 255 <code>X</code> to a float16 (2 bytes) valued 0 - 1.0 <code>Y</code> tensor;
+Abstractly, this is as simple to describe as <code>Y := float(X) / 255.0</code>; but <code>Y</code> is 62 TB of data.
+Where do we put the input data? Where does the output data go? How do we manage the conversions?
+And how do we get there from <code>Y := float(X) / 255.0</code>?</p>
+<p>Tapestry allows us to describe mathematical operations that are relatively simple to author, but may describe very large
+amounts of data and operations. However, implementing these operations requires orchestrating many data transfers and
+batched operations, which can be difficult and inefficient.</p>
+<p>The cost of implementing large distributed mathematics dominates the costs of modern AI and computational modeling. This
+is true for applications such as fluid flow or weather simulation and protein modeling. Both the development costs of
+the programs and the resource costs of computers running inefficient implementations of large math evaluators contribute
+to this problem.</p>
+<p>By contrast, <code>SQL</code> expression evaluators allow the manipulation and querying of vast amounts of information distributed
+over databases that span hundreds of machines. <code>SQL</code> achieves this by establishing a strong formal declarative abstract
+language, where users can describe the operations they wish to perform in a language that hides the pragmatics, but does
+so in such a way that the <code>SQL</code> evaluation environments can effectively transform, optimize, and shard those
+descriptions into efficient underlying pragmatic schedules and execution plans.</p>
+<p>Tapestry is a proposal for such a formal declarative abstract language, covering expressions consuming and producing
+tensor values. The programming surface, the abstract formal language, which users would read, write, and interact with,
+is a relatively small surface, similar to <code>SQL</code>. However, the definitions of the semantics of the operators have been
+chosen to enable aggressive and <em>correct</em> (value preserving) optimization of these expressions into efficient
+distributed pragmatics.</p>
+<p>This whitepaper covers the abstract tapestry expression language, the derivation of the formal semantics of that
+language, and the concrete pragmatics of implementing an evaluator for that language.</p>
 <h2 id="Background-and-Related-Work">Background and Related Work</h2>
 <p>This document describes my ongoing research on the design and implementation of shardable tensor expression languages.
 It serves as a single entry point for the project, which will take some time to fully develop.</p>
