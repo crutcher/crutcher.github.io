@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/optimization/pareto.neighborhood.svg">
 <meta property="og:image" content="https://crutcher.github.io/Tapestry/optimization/pareto.constraint.svg">
 <meta property="article:published_time" content="2022-12-16T18:32:05.000Z">
-<meta property="article:modified_time" content="2023-06-19T00:48:07.833Z">
+<meta property="article:modified_time" content="2023-06-19T03:43:08.231Z">
 <meta property="article:author" content="Crutcher Dunnavant">
 <meta property="article:tag" content="tensor expressions">
 <meta property="article:tag" content="tapestry">
@@ -863,6 +863,7 @@ operators.</li>
 <li><em>Source Nodes</em> generating tensors <em>A1</em>, <em>A2</em>, and <em>B</em> from local memory (on different
 shard hosts);</li>
 <li>A <em>concat</em> <em>Selector Node</em> fusing <em>A1</em> and <em>A2</em> to produce <em>A</em>;</li>
+<li>An (unused) <em>Index Node</em>, and <em>Index Selector</em> describing the indexes of <em>A</em>;</li>
 <li>An <em>Add</em> <em>Block Operator</em> consuming <em>A</em> and <em>B</em> to produce <em>C</em>;</li>
 <li>A <em>Sink</em> operation writing <em>C</em> to a database;</li>
 <li><em>Signature Nodes</em> annotating <em>Add</em> and <em>Sink: C</em> with sharding information,
