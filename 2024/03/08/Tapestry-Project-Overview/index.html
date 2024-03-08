@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/amp32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/amp16.png">
+  <link rel="mask-icon" href="/images/amp32.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:300,300italic,400,400italic,700,700italic%7CFira+Sans:300,300italic,400,400italic,700,700italic%7CRoboto+Slab:300,300italic,400,400italic,700,700italic%7CFira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"crutcher.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"disqus","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1}},"layzload":false,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="This is post is an overview of the current state of my Tapestry Project Contents  Abstract Introduction Motivation Target Developer Experience Target Compiler Researcher Experience Loom Modular IR  Lo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tapestry Project Overview">
+<meta property="og:url" content="https://crutcher.github.io/2024/03/08/Tapestry-Project-Overview/index.html">
+<meta property="og:site_name" content="crutcher.github.io">
+<meta property="og:description" content="This is post is an overview of the current state of my Tapestry Project Contents  Abstract Introduction Motivation Target Developer Experience Target Compiler Researcher Experience Loom Modular IR  Lo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://crutcher.github.io/2024/03/08/Tapestry-Project-Overview/linear.relu.ortho.jpg">
+<meta property="og:image" content="https://crutcher.github.io/2024/03/08/Tapestry-Project-Overview/linear.relu.4x.ortho.jpg">
+<meta property="article:published_time" content="2024-03-08T08:01:34.000Z">
+<meta property="article:modified_time" content="2024-03-08T08:11:25.630Z">
+<meta property="article:author" content="Crutcher Dunnavant">
+<meta property="article:tag" content="tapestry">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crutcher.github.io/2024/03/08/Tapestry-Project-Overview/linear.relu.ortho.jpg">
+
+
+<link rel="canonical" href="https://crutcher.github.io/2024/03/08/Tapestry-Project-Overview/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://crutcher.github.io/2024/03/08/Tapestry-Project-Overview/","path":"2024/03/08/Tapestry-Project-Overview/","title":"Tapestry Project Overview"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Tapestry Project Overview | crutcher.github.io</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9EX3586LZ"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-R9EX3586LZ","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="crutcher.github.io" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">crutcher.github.io</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-atom"><a href="/atom.xml" rel="section"><i class="fab fa-atom fa-fw"></i>Atom</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-tapestry"><a href="/Tapestry/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>Tapestry</a></li><li class="menu-item menu-item-resume"><a href="/Resume/" rel="section"><i class="fa fa-solid fa-file fa-fw"></i>Resume</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Contents"><span class="nav-number">1.</span> <span class="nav-text">Contents</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number"></span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number"></span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motivation"><span class="nav-number"></span> <span class="nav-text">Motivation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Target-Developer-Experience"><span class="nav-number">1.</span> <span class="nav-text">Target Developer Experience</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Target-Compiler-Researcher-Experience"><span class="nav-number"></span> <span class="nav-text">Target Compiler Researcher Experience</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Loom-Modular-IR"><span class="nav-number"></span> <span class="nav-text">Loom Modular IR</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Example"><span class="nav-number">0.1.</span> <span class="nav-text">Example</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loom-Dialects"><span class="nav-number">1.</span> <span class="nav-text">Loom Dialects</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Validation-Reporting-Tooling"><span class="nav-number"></span> <span class="nav-text">Validation Reporting Tooling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Metakernels"><span class="nav-number"></span> <span class="nav-text">Metakernels</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-Rewrite-Rules"><span class="nav-number"></span> <span class="nav-text">Graph Rewrite Rules</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optimization"><span class="nav-number"></span> <span class="nav-text">Optimization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Target-Environments"><span class="nav-number"></span> <span class="nav-text">Target Environments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Needs"><span class="nav-number"></span> <span class="nav-text">Needs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#R-D-Support"><span class="nav-number">1.</span> <span class="nav-text">R&amp;D Support</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Project-Support"><span class="nav-number">2.</span> <span class="nav-text">Project Support</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Funding"><span class="nav-number">3.</span> <span class="nav-text">Funding</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Crutcher Dunnavant</p>
+  <div class="site-description" itemprop="description">hacking around big math</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crutcher" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crutcher" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://sigmoid.social/@crutcher" title="Mastodon → https:&#x2F;&#x2F;sigmoid.social&#x2F;@crutcher" rel="noopener me" target="_blank"><i class="fab fa-mastodon fa-fw"></i>Mastodon</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://discordapp.com/users/361021789268344842" title="Discord → https:&#x2F;&#x2F;discordapp.com&#x2F;users&#x2F;361021789268344842" rel="noopener me" target="_blank"><i class="fab fa-discord fa-fw"></i>Discord</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.linkedin.com/in/crutcher-dunnavant-4841ba9/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;crutcher-dunnavant-4841ba9&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://crutcher.github.io/2024/03/08/Tapestry-Project-Overview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Crutcher Dunnavant">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="crutcher.github.io">
+      <meta itemprop="description" content="hacking around big math">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tapestry Project Overview | crutcher.github.io">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tapestry Project Overview
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-03-08 00:01:34 / Modified: 00:11:25" itemprop="dateCreated datePublished" datetime="2024-03-08T00:01:34-08:00">2024-03-08</time>
+    </span>
+
+  
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2024/03/08/Tapestry-Project-Overview/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2024/03/08/Tapestry-Project-Overview/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>This is post is an overview of the current state of my
+<a target="_blank" rel="noopener" href="https://github.com/crutcher/tapestry">Tapestry Project</a></p>
+<h3 id="Contents">Contents</h3>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#motivation">Motivation</a></li>
+<li><a href="#target-developer-experience">Target Developer Experience</a></li>
+<li><a href="#target-compiler-researcher-experience">Target Compiler Researcher Experience</a></li>
+<li><a href="#loom-modular-ir">Loom Modular IR</a>
+<ul>
+<li><a href="#Loom-dialects">Loom Dialects</a></li>
+</ul>
+</li>
+<li><a href="#validation-reporting-tooling">Validation Reporting Tooling</a></li>
+<li><a href="#metakernels">Metakernels</a></li>
+<li><a href="#graph-rewrite-rules">Graph Rewrite Rules</a></li>
+<li><a href="#optimization">Optimization</a></li>
+<li><a href="#target-environments">Target Environments</a></li>
+<li><a href="#needs">Needs</a></li>
+</ul>
+<h2 id="Abstract">Abstract</h2>
+<p>The goal of the <strong>Tapestry Project</strong> is to provide a complete and developer-friendly aggressive
+toolchain for generating, visualizing, transforming, compiling, and optimizing AI and scientific
+computing applications which are optimized for a variety of target architectures.</p>
+<ul>
+<li><a href="#motivation">Motivation</a></li>
+</ul>
+<p>The existing GPU-accelerated tensor environments (such as <a target="_blank" rel="noopener" href="https://pytorch.org/">PyTorch</a>) are
+largely focused on providing a near drop-in equivalents for the <a target="_blank" rel="noopener" href="https://numpy.org/">Numpy Api</a>, and
+their focus on user-friendliness and compatibility with existing codebases has impeded R&amp;D efforts
+towards aggressive optimization of tensor applications.</p>
+<p>Existing tensor applications often have run costs in the 10k GPU-year range; and even small
+improvements in the efficiency of the above libraries translates into millions of dollars of savings
+in power and compute resources.</p>
+<p>A ground-up re-imagination of the development tensor algebra is possible on the back of the
+polyhedral model, and this opens the possibility of a new generation of tensor algebra which is
+optimized for aggressive re-write operations; replacing small efficiency gains with large
+double-digit percentage gains.</p>
+<ul>
+<li><a href="#target-developer-experience">Target Developer Experience</a></li>
+</ul>
+<p>The target developer experience should resemble modern SQL or
+<a target="_blank" rel="noopener" href="https://spark.apache.com">Apache Spark</a> / <a target="_blank" rel="noopener" href="https://beam.apache.org/">Apache Beam</a> development,
+where expressions can be built up using symbolic operations, and passed to either compilers or
+execution engines which can produce optimized code for a variety of target architectures.</p>
+<ul>
+<li><a href="#target-compiler-researcher-experience">Target Compiler Researcher Experience</a></li>
+</ul>
+<p>The target compiler researcher experience should permit developers and researches focused in tensor
+algebras, polyhedral models, compiler optimizations, and system engineering pragmatics (such as RDMA
+transfers, or GPU kernel programming) to work independently of each other, and to produce and share
+their work in a way which is compatible with the work of others.</p>
+<ul>
+<li><a href="#loom-modular-ir">Loom Modular IR</a></li>
+</ul>
+<p>The <strong>Tapestry Project</strong> is built upon a modular and extensible IR (intermediate representation)
+called <strong>loom</strong>, which permits strict targeted sub-dialects for each transform layer, with
+appropriate graph semantics constraints, visualizers, and debuggers. This further contributes to
+layer-isolation for development and research.</p>
+<p>By developing and exploiting the layers, symbolic execution graphs can be transformed into concrete
+polyhedral type operation graphs, and then sharded and optimized for different families of target
+execution environments.</p>
+<p>Directly competing with large existing compiler/language toolchains is an expensive task; and the
+primary goal of <strong>Tapestry</strong> is to develop tools at each stage which reduce the future costs of R&amp;D
+on <strong>Tapestry</strong>, in support of being able to build the strongest possible optimizer for the
+restricted <em>polyhedral type tensor block expression algebra</em> which <strong>Tapestry</strong> represents.</p>
+<ul>
+<li><a href="#needs">Needs</a></li>
+</ul>
+<p>We are recruiting project development resources, research and implementation contributors, and grant
+funding frameworks to further develop the project.</p>
+<h2 id="Introduction">Introduction</h2>
+<blockquote>
+<p>The goal of the <strong>Tapestry Project</strong> is to develop a complete and developer-friendly toolchain for
+generating, visualizing, transforming, compiling, and optimizing polyhedral type tensor block
+algebra expressions into optimized code for a variety of target architectures.</p>
+</blockquote>
+<p>That’s a mouthful, so let’s break it down.</p>
+<p>A <em>tensor algebra expression</em> is a mathematical expression that involves tensors, which are
+multidimensional arrays of numbers. For example, a matrix is a 2-dimensional tensor, and a vector is
+a 1-dimensional tensor. Tensor algebra is a generalization of matrix algebra, and is used in many
+scientific and engineering applications, such as artificial intelligence, quantum mechanics, fluid
+dynamics, and computer graphics.</p>
+<p>An expression in a tensor algebra derives its value from a series of functional operations performed
+on one or more tensors; and producing one or more tensors, for example, consider a basic matrix
+multiplication:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">A := &lt;Tensor of size (m, n)&gt;</span><br><span class="line">B := &lt;Tensor of size (n, p)&gt;</span><br><span class="line"></span><br><span class="line">C = MatMul(A, B)</span><br><span class="line"># C := &lt;Tensor of size (m, p)&gt;</span><br></pre></td></tr></table></figure>
+<p>In compiler optimization, it is often useful to produce re-write rules, which state that one general
+form of an expression can be transformed into another form that is at least equivalent, and
+preferably more efficient to calculate. For example, the above expression can be re-written as a
+composition of two operations (which in this case will probably not produce any benefit):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">A := &lt;Tensor of size (m, n)&gt;</span><br><span class="line">B := &lt;Tensor of size (n, p)&gt;</span><br><span class="line"></span><br><span class="line">Z = Prod(A, B)</span><br><span class="line"># Z := &lt;Tensor of size (m, n, p)&gt;</span><br><span class="line"></span><br><span class="line">C = RowSum(Z, axis=1)</span><br><span class="line"># C := &lt;Tensor of size (m, p)&gt;</span><br></pre></td></tr></table></figure>
+<p>Lacking further visibility into the internals of the operations, optimizers are limited to
+re-writing expressions based on these re-write rules; and on altering where and when operations are
+scheduled to run.</p>
+<p>If we observe that many tensor operations are <em>block</em> operations, in that they operate independently
+on subsets of their inputs in such a way that it is possible to split them into smaller operations
+and re-combine the results, we begin to see that there is a potential for optimization which looks
+inside the operations in its restructuring.</p>
+<p>The <em>polyhedral model</em> or <em><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Polytope_model">polytope model</a></em> provides
+a framework for describing <em>some</em> block operations in a way which permits direct reasoning about
+sub-sharding and recombination of the operations; without knowledge of the internals of the
+operation itself.</p>
+<p>The term <em>polyhedral type signature</em> has come to be used to describe the spatial type of an
+operation as it is described in the polyhedral model. This is a generalization of the term <em>block
+operation</em> to include the spatial type of the operation.</p>
+<p>By extending a tensor block algebra with polyhedral type signatures, we can describe expressions of
+block operations in a way that permits direct reasoning about sub-sharding and recombination of the
+component operations, in addition to the above graph re-writing and scheduling.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">A := &lt;Tensor of size (m, n)&gt;</span><br><span class="line">B := &lt;Tensor of size (n, p)&gt;</span><br><span class="line"></span><br><span class="line">C0 = MatMul(A, B[1:k])</span><br><span class="line"># C0 := &lt;Tensor of size (m, k)&gt;</span><br><span class="line"></span><br><span class="line">C1 = MatMul(A, B[k:])</span><br><span class="line"># C1 := &lt;Tensor of size (m, p - k)&gt;</span><br><span class="line"></span><br><span class="line">C = Concatenate([C0, C1], axis=1)</span><br><span class="line"># C := &lt;Tensor of size (m, p)&gt;</span><br></pre></td></tr></table></figure>
+<p>This is discussed in much greater detail in the
+<a href="PolyhedralTypesAndIndexProjection.md">Polyhedral Types and Index Projection</a> document.</p>
+<p>A <em>polyhedral type tensor block algebra</em> optimizer toolchain is directly analogous to the SQL model;
+where the SQL language permits the user to describe the <em>what</em> of a query in terms of <em>relational
+algebra</em>, and the SQL engine, by applying aggressive
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Query_optimization">query optimization</a> arrives at a
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Query_plan">query plan</a> which is equivalent to the original query,
+but is more efficient to execute.</p>
+<h2 id="Motivation">Motivation</h2>
+<p>The space of GPU-accelerated tensor environments is already dominated by a few well-known
+ecosystems; most notably <a target="_blank" rel="noopener" href="https://pytorch.org/">PyTorch</a>, <a target="_blank" rel="noopener" href="https://www.tensorflow.org/">TensorFlow</a>,
+and <a target="_blank" rel="noopener" href="https://jax.readthedocs.io/">Jax</a>.</p>
+<p>The semantics of these environments take strong motivation from the <a target="_blank" rel="noopener" href="https://numpy.org/">NumPy API</a>,
+which is a popular library for numerical computing in Python; and is itself a partial clone of
+<a target="_blank" rel="noopener" href="https://www.r-project.org/">R</a>, a popular language for statistical computing. These statistical
+libraries have deep roots in the statistical and artificial intelligence communities, and have been
+optimized for the ease of use of researchers, analysts, and developers working in statistics, signal
+processing, and artificial intelligence.</p>
+<p>As sharding and re-write safe semantics are complex mathematical properties, they are not present by
+default in expression algebras; the algebras must be carefully designed to support them, and must
+strictly exclude operations which are not compatible with these properties.</p>
+<p>The semantics of NumPy’s operations were not designed with sharding and aggressive re-write
+operations in mind; and while a large portion of the api surface is compatible with the necessary
+restrictions, a significant portion is not. Complicating the matter, the libraries are generally
+embedded in interpreted languages, and frequently intermixed with arbitrary code in those languages.</p>
+<p>In order to successfully extract a polyhedral type tensor block algebra expression from a PyTorch
+program; it is necessary to retro-fit signatures onto PyTorch, to write python code walking
+analysis, and to force that code to lie inside a complex semantic boundary which is difficult to
+explain to users. Despite this, due to the high machine costs of large tensor operations, a number
+of projects attempt to do just this; at larger and larger costs for smaller and smaller gains.</p>
+<p>A single training run of a large AI model can cost more than $100M; and the execution lifetime of a
+trained model can easily consume 10k GPU-years.</p>
+<p>A ground-up re-imagination of the development tensor algebra is possible on the back of the
+polyhedral model, and this opens the possibility of a new generation of tensor algebra which is
+optimized for aggressive re-write operations; replacing small efficiency gains with large
+double-digit percentage gains.</p>
+<p>The development cost is akin to bootstrapping any new optimizing compiler; and the primary goal of
+the <strong>Tapestry</strong> project is to develop tools at each stage which reduce the future costs of R&amp;D on
+<strong>Tapestry</strong>, in support of being able to build the strongest possible optimizer for the restricted
+<em>polyhedral type tensor block expression algebra</em> which <strong>Tapestry</strong> represents.</p>
+<p>The expectation is not a drop-in replacement for PyTorch, Jax, or NumPy; not an environment where
+Tensor operations freely intermix with arbitrary code; but something more akin to SQL or Apache
+Spark/Beam, where expressions are built up using symbolic operations, and passed to either compilers
+or execution engines which can produce optimized code for a variety of target architectures.</p>
+<p>If we take the machine budgets of existing AI companies at face value, where some companies have
+$1B/year machine budgets; finding a 10% improvement in the efficiency of the optimizer would be
+worth $100M/year to that company.</p>
+<p>PyTorch, TensorFlow, and Jax are all pursuing the top-end of this problem; seeking ways to improve
+the efficiency of code written using their runtime / semantics models, without changing the
+semantics of the code.</p>
+<p><strong>Tapestry</strong> is pursuing the bottom-end of this problem; seeking a better foundation for the
+development of tensor algebra expressions, with a target on never needing to develop
+program-understanding code scanners, or back port missing semantics to the tensor algebra.</p>
+<h3 id="Target-Developer-Experience">Target Developer Experience</h3>
+<p>The goal of the <strong>Tapestry</strong> project is to provide a complete and developer-friendly toolchain for
+generating, visualizing, transforming, compiling, and optimizing polyhedral type tensor block
+algebra expressions into optimized code for a variety of target architectures.</p>
+<p>The developer experience should resemble modern SQL development; or symbolic execution data flow
+languages such as <a target="_blank" rel="noopener" href="https://beam.apache.org/">Apache Beam</a> or
+<a target="_blank" rel="noopener" href="https://spark.apache.org/">Apache Spark</a>.</p>
+<p>Expressions can be built up using symbolic operations (which produce a description of the work,
+rather than immediately doing the work), and passed to either compilers or execution engines which
+can produce optimized code for a variety of target architectures.</p>
+<p>For example, the following symbolic expression:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Tensor input = ...;</span><br><span class="line">// dtype: float32</span><br><span class="line">// range:</span><br><span class="line">//   start: [-40, 20]</span><br><span class="line">//   end: [60, 32]</span><br><span class="line">//   shape: (100, 12)</span><br><span class="line"></span><br><span class="line">Tensor weights = ...;</span><br><span class="line">// dtype: float32</span><br><span class="line">// range:</span><br><span class="line">//   start: [0, 0]</span><br><span class="line">//   end: [12, 32]</span><br><span class="line">//   shape: [12, 32]</span><br><span class="line"></span><br><span class="line">Tensor bias = ...;</span><br><span class="line">// dtype: float32</span><br><span class="line">// range:</span><br><span class="line">//   start: [0]</span><br><span class="line">//   end: [32]</span><br><span class="line">//   shape: [32]</span><br><span class="line"></span><br><span class="line">Tnesor z = Linear(input, weights, bias);</span><br><span class="line"></span><br><span class="line">Tensor y = Relu(z);</span><br><span class="line"></span><br><span class="line">Tapestry.run(y);</span><br></pre></td></tr></table></figure>
+<p>Could be expanded and manipulated in various stages of transformation to expand and optimize the
+code in a variety of ways, and then passed to a compiler or execution engine to produce optimized
+code for a variety of target architectures:</p>
+<table style="border: 0">
+  <tr>
+    <td>
+      <div style="width: 100%; margin: auto">
+        <img alt="linear.relu" src="/2024/03/08/Tapestry-Project-Overview/linear.relu.ortho.jpg"/>
+      </div>
+    </td>
+    <td>
+      <div style="width: 100%; margin: auto">
+        <img alt="linear.relu.4x" src="/2024/03/08/Tapestry-Project-Overview/linear.relu.4x.ortho.jpg"/>
+      </div>
+    </td>
+  </tr>
+</table>
+<p>Additionally, the toolchain should provide a rich set of debugging and visualization tools for
+exploring the intermediate representations of the expressions, and for exploring the optimizations
+applied to the expressions.</p>
+<h2 id="Target-Compiler-Researcher-Experience">Target Compiler Researcher Experience</h2>
+<ul>
+<li>Good R&amp;D Tools =&gt; Cheap R&amp;D Cycles</li>
+<li>Cheap R&amp;D Cycles =&gt; More R&amp;D Cycles</li>
+<li>More R&amp;D Cycles =&gt; Greater Velocity</li>
+<li>Therefore,
+<ul>
+<li><strong>Good R&amp;D Tools =&gt; Greater Velocity</strong></li>
+</ul>
+</li>
+</ul>
+<p>A critical goal of the <strong>Tapestry</strong> project is to provide as much support to internal development
+and research teams as possible, to reduce the future costs of R&amp;D on <strong>Tapestry</strong>.</p>
+<p>The development cost of new graph re-write rules, new metakernels, and new target environments and
+cost models should be easy to write, easy to visualize, easy to validate, and easy to debug.</p>
+<p>To this extent, the validation reporting tooling, constraint validation system, and associated
+tooling for mechanically constructing and reporting complex errors, reporting them in structured
+data, and visualizing those errors in common formats, such as rendered as text for exception
+handlers, is a major part of the <strong>Tapestry</strong> project.</p>
+<h2 id="Loom-Modular-IR">Loom Modular IR</h2>
+<blockquote>
+<p><strong>IR is Destiny.</strong></p>
+</blockquote>
+<p>A compiler’s internal representation (commonly called the
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Intermediate_representation">intermediate representation</a>, as it
+exists between the source code which was parsed and the target code to be generated) determines most
+things about the complexity and capabilities of the compiler.</p>
+<p>Information which can be retrieved or verified easily in an <strong>IR</strong> can be used for analysis and
+manipulation with a little code; information which is fragile or difficult to retrieve or verify
+requires a lot of code to work with. And code which is difficult to work with is code which is
+difficult to maintain, and difficult to extend.</p>
+<p>In targeting a toolchain which spans from abstract tensor algebra expressions to optimized code for
+a variety of target architectures, the <strong>IR</strong> is the most important part of the toolchain; and the
+ability to extend and constrain the <strong>IR</strong> for different layers of that toolchain, and for different
+primitives appropriate to different target architectures, is the most important part of the <strong>IR</strong>.</p>
+<p>Tapestry is designed with a modular <strong>IR</strong> which permits the easy addition of new node types, node
+tags, and graph constraints. By selectively including a set of types and constraints, strictly
+defined sub-dialects can be created which are appropriate for different layers of the toolchain, and
+for different primitives appropriate to different target architectures.</p>
+<p>In this way, toolchain operations which transform from one layer to another can be written in a
+type-safe way which transform from one dialect to another; and targeted query, debugging, and
+visualization tools can be written which are appropriate for the layer of the toolchain being
+targeted.</p>
+<p>As the core representation, serialization, and scanning code are shared by all dialects, much of the
+verification and manipulation code can be shared as well; and the code which is not shared is
+written in a type-safe way which is appropriate for the layer of the toolchain being targeted.</p>
+<p>The <strong>Tapestry</strong> <strong>IR</strong> is called <strong>loom</strong>.</p>
+<p>A <strong>LoomGraph</strong> is a collection of nodes, paired with a <strong>LoomEnvironment</strong> defining constraints on
+what constitutes legal values and relationships for those nodes.</p>
+<p>A raw <strong>LoomGraph</strong> is a JSON document collection of nodes:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;UUID&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;nodes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;UUID&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;label&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;Label&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;Type&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;body&quot;</span><span class="punctuation">:</span> &lt;JSON&gt;<span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;tags&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;&lt;Type&gt;&quot;</span><span class="punctuation">:</span> &lt;JSON&gt;</span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    ...</span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>Each <strong>LoomNode</strong> has:</p>
+<ul>
+<li><code>id</code> - a unique UUID identifier</li>
+<li><code>label</code> - an optional, non-unique string label</li>
+<li><code>type</code> - a string type identifier</li>
+<li><code>body</code> - a <code>type</code>-dependent JSON structure</li>
+<li><code>tags</code> - a tag type keyed map of <code>&#123;&lt;type&gt;: &lt;JSON&gt;&#125;</code> of tag type dependent node extensions</li>
+</ul>
+<p>Each <strong>node type</strong> and <strong>tag type</strong> is expected to have a corresponding schema, defined and enforced
+by the <strong>LoomEnvironment</strong>; and is expected to be parsable by type-dependent node wrappers, which
+understand the data and can provide a type-safe api for manipulating the data.</p>
+<p>By defining additional types and constraints, we can compositionally construct language dialects
+with strict semantics, reusing types and constraints across several dialects.</p>
+<h4 id="Example">Example</h4>
+<p>Assuming two very simple types, a tensor and a simple operation with no sharding information, we
+could define types and graphs such that a desaturation operation is performed on a tensor of images:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;d290f1ee-6c54-4b01-90e6-d701748f0851&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;nodes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8e3f8f1e-6c54-4b01-90e6-0ae1a048f0851&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://&lt;schema-url&gt;#/types/Tensor&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;label&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Images&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;body&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;dtype&quot;</span><span class="punctuation">:</span> <span class="string">&quot;uint8&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;shape&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">100</span><span class="punctuation">,</span> <span class="number">256</span><span class="punctuation">,</span> <span class="number">256</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8e3f8f1e-6c54-4b01-90e6-0ae1a048f9000&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://&lt;schema-url&gt;#/types/Tensor&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;label&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Monochrome&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;body&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;dtype&quot;</span><span class="punctuation">:</span> <span class="string">&quot;uint8&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;shape&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">100</span><span class="punctuation">,</span> <span class="number">256</span><span class="punctuation">,</span> <span class="number">256</span><span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8e3f8f1e-6c54-4b01-90e6-0ae1a048faaaa&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://&lt;schema-url&gt;#/types/Operation&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;body&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;kernel&quot;</span><span class="punctuation">:</span> <span class="string">&quot;desaturate&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;inputs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;8e3f8f1e-6c54-4b01-90e6-0ae1a048f0851&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;outputs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;8e3f8f1e-6c54-4b01-90e6-0ae1a048f9000&quot;</span><span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>NOTE</strong>: The modern XML standards family provides a very strong environment for defining and
+validating complex data structures. The XML family is also very well-supported in many languages
+and platforms.</p>
+<p>However, the standards which provide the fully fleshed out versions of schemas and query language,
+the 2.0/3.0 family of XSD, XPath, XQuery, and XSLT, have only one conformant implementation
+family, which charges very high per-seat licensing fees for the use of the software.</p>
+<p>As such, it is not a viable target for an open-source project.</p>
+</blockquote>
+<h3 id="Loom-Dialects">Loom Dialects</h3>
+<p>The goal of loom dialects are to define strictly limited expression IRs for a targeted layers of the
+toolchain.</p>
+<p>In doing so, we can define:</p>
+<ul>
+<li>An <strong>Abstract Expression Dialect</strong> for describing applications of tensor algebra expressions,
+abstracted from the intermediate result shapes.</li>
+<li>An <strong>Operation Expression Dialect</strong> for describing concrete polyhedral type tensor algebra block
+expressions, decorated with polyhedral signatures and intermediate result shapes.</li>
+<li>An <strong>Application Expression Dialect</strong> for describing concrete block sharding of sub-operation
+applications, and their index locations in the polyhedral index space of their parent operation.</li>
+<li>Families of <strong>Target Environment Dialects</strong>, expanding the <strong>Application Expression Dialect</strong> with
+additional primitives and constraints to represent execution and memory placement and scheduling
+information for a variety of target environments.</li>
+</ul>
+<h2 id="Validation-Reporting-Tooling">Validation Reporting Tooling</h2>
+<p>As the a high level goal is to drive the cost of R&amp;D on <strong>Tapestry</strong> down, a core part of the
+<strong>Loom</strong> environment is the constraint validation system, and the associated tooling for
+mechanically constructing and reporting complex errors, reporting them in structured data, and
+visualizing those errors in common formats, such as rendered as text for exception handlers.</p>
+<p>Consider the following constraint error, detecting reference cycles in a graph:</p>
+<details>
+<summary>Click for Validation Builder</summary>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">validateConstraint</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@Nonnull</span> <span class="meta">@SuppressWarnings(&quot;unused&quot;)</span> LoomEnvironment env,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nonnull</span> LoomGraph graph,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nonnull</span> ValidationIssueCollector issueCollector</span></span><br><span class="line"><span class="params">)</span> &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> cycle : TraversalUtils.findOperationSimpleCycles(graph)) &#123;</span><br><span class="line">    <span class="type">var</span> <span class="variable">cycleDesc</span> <span class="operator">=</span> cycle</span><br><span class="line">          .stream()</span><br><span class="line">          .map(item -&gt; &#123;</span><br><span class="line">            <span class="type">var</span> <span class="variable">desc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">            desc.put(<span class="string">&quot;id&quot;</span>, item.getId());</span><br><span class="line">            desc.put(<span class="string">&quot;type&quot;</span>, item.getType());</span><br><span class="line">            <span class="keyword">if</span> (item.getLabel() != <span class="literal">null</span>) &#123;</span><br><span class="line">              desc.put(<span class="string">&quot;label&quot;</span>, item.getLabel());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> desc;</span><br><span class="line">          &#125;)</span><br><span class="line">          .toList();</span><br><span class="line"></span><br><span class="line">    issueCollector.addIssue(</span><br><span class="line">          ValidationIssue</span><br><span class="line">                  .builder()</span><br><span class="line">                  .type(LoomConstants.Errors.REFERENCE_CYCLE_ERROR)</span><br><span class="line">                  .summary(<span class="string">&quot;Reference Cycle detected&quot;</span>)</span><br><span class="line">                  .context(b -&gt; b.name(<span class="string">&quot;Cycle&quot;</span>).data(cycleDesc))</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</details>
+<details>
+<summary>Click for JSON Error</summary>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ReferenceCycle&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;summary&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Reference Cycle detected&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;contexts&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cycle&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;3eaa349d-818d-4084-8f71-aaecb2a674cb&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;label&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Add&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://tensortapestry.org/schemas/loom/2024-01/node_types.jsd#/nodes/Operation&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;58236994-20f1-4932-add5-3721f609c0aa&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;label&quot;</span><span class="punctuation">:</span> <span class="string">&quot;A&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://tensortapestry.org/schemas/loom/2024-01/node_types.jsd#/nodes/Tensor&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+</details>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">org.tensortapestry.common.validation.LoomValidationError: Validation failed with 1 issues:</span><br><span class="line"></span><br><span class="line">* Error [ReferenceCycle]: Reference Cycle detected</span><br><span class="line"></span><br><span class="line">  - Cycle::</span><br><span class="line"></span><br><span class="line">    |&gt; [ &#123;</span><br><span class="line">    |&gt;   &quot;id&quot; : &quot;d0e577e8-4e3b-450e-a89d-be06db502db6&quot;,</span><br><span class="line">    |&gt;   &quot;label&quot; : &quot;Add&quot;,</span><br><span class="line">    |&gt;   &quot;type&quot; : &quot;http://tensortapestry.org/schemas/loom/2024-01/node_types.jsd#/nodes/Operation&quot;</span><br><span class="line">    |&gt; &#125;, &#123;</span><br><span class="line">    |&gt;   &quot;id&quot; : &quot;14c9064e-b30a-4d09-84c6-e61d05ba107c&quot;,</span><br><span class="line">    |&gt;   &quot;label&quot; : &quot;A&quot;,</span><br><span class="line">    |&gt;   &quot;type&quot; : &quot;http://tensortapestry.org/schemas/loom/2024-01/node_types.jsd#/nodes/Tensor&quot;</span><br><span class="line">    |&gt; &#125; ]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	at org.tensortapestry.common.validation.ListValidationIssueCollector.check(ListValidationIssueCollector.java:47)</span><br><span class="line">	at org.tensortapestry.loom.graph.LoomEnvironment.validateGraph(LoomEnvironment.java:175)</span><br><span class="line">	at org.tensortapestry.loom.graph.LoomGraph.validate(LoomGraph.java:164)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="Metakernels">Metakernels</h2>
+<p>The code implementing an operation is generally referred to as the <strong>kernel</strong> for that operation.
+Given actual data for an operation, calling the <strong>kernel</strong> in an appropriate environment will
+validate the structure of that data (correct parameters and inputs passed, etc), and produce a
+result.</p>
+<p>To describe the behavior of a kernel we do not wish to execute, but to <strong>symbolically execute</strong>,
+processing not data, but symbolic descriptions of data, we need a program which will consume the
+symbolic representation of the inputs and parameters, validate that they are well formed versus the
+<strong>kernel</strong>’s expectations, and produce a symbolic representation of the expected outputs of the
+<strong>kernel</strong>.</p>
+<p>In <strong>Tapestry</strong> we call this program a <strong>metakernel</strong>, at it is executed on the symbolic level,
+rather than the data level.</p>
+<p><strong>Tapestry</strong> requires that for each kernel we wish to represent in a symbolic execution graph, we
+have a corresponding <strong>metakernel</strong> which can be applied to symbolic representations of inputs to
+describe the kernel’s behavior. Additionally, this <strong>metakernel</strong> must attach a <strong>polyhedral type
+signature</strong> to the symbolic representation of the output, which describes the spatial type of the
+output in terms of the polyhedral model, to enable re-write and re-sharding operations.</p>
+<p>As we need a <strong>metakernel</strong> for each external <strong>kernel</strong> in a target execution environment, and as
+we expect third party libraries and developer applications to frequently provide their own
+<strong>kernels</strong>, we need a way to describe <strong>metakernels</strong> in a way which is easy to write, easy to
+validate, and easy to share.</p>
+<p>Were we required to write a compliant <strong>metakernel</strong> for each target <strong>kernel</strong> <em>for each
+<strong>Tapestry</strong> compiler environment</em>, the cost of R&amp;D on <strong>Tapestry</strong> would be very high, and the cost
+of R&amp;D on <strong>Tapestry</strong> for third party developers would be even higher.</p>
+<p>A major goal of <strong>Tapestry</strong> is to reduce this cost by developing a portable template environment in
+which portable <strong>template metakernels</strong> can be written, validated, and shared.</p>
+<p>Consider the following draft-proposal for a <strong>template metakernel</strong> for a matrix multiplication,
+which is a common operation in tensor algebra.</p>
+<p>In this proposal, we match a shape expression language on the inputs (<code>X</code> and <code>W</code>), such that we
+extract batch dimensions from the input (<code>X</code>), and constrain <code>$b</code> to match between the <code>X</code> and <code>W</code>
+inputs. Then polyhedral type signatures are attached to the inputs and outputs in terms of their
+matched shapes; and a common polyhedral index is used to describe the spatial extent of the
+operation, and the mapping to the output.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">matmul:</span></span><br><span class="line">  <span class="attr">index:</span> <span class="string">&quot;[$shape..., $a, $c]&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">constraints:</span></span><br><span class="line">    <span class="attr">dtype:</span></span><br><span class="line">      <span class="attr">enum:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">int32</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">int64</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">float32</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">float64</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">complex64</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">complex128</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">inputs:</span></span><br><span class="line">    <span class="attr">X:</span></span><br><span class="line">      <span class="attr">shape:</span> <span class="string">&quot;[$shape..., $a, $b]&quot;</span></span><br><span class="line">      <span class="attr">dtype:</span> <span class="string">&quot;$dtype&quot;</span></span><br><span class="line"></span><br><span class="line">      <span class="comment"># this is shorthand for:</span></span><br><span class="line">      <span class="comment"># ipf:</span></span><br><span class="line">      <span class="comment">#   map: &quot;[..., 1, 0]&quot;</span></span><br><span class="line">      <span class="comment">#   shape: &quot;[..., 1, $b]&quot;</span></span><br><span class="line">      <span class="comment">#</span></span><br><span class="line">      <span class="comment"># which is shorthand for:</span></span><br><span class="line">      <span class="comment"># ipf:</span></span><br><span class="line">      <span class="comment">#   map: &quot;[ones($index.size - 2)..., 1, 0]&quot;</span></span><br><span class="line">      <span class="comment">#   shape: &quot;[ones($index.size - 2)..., 1, $b]&quot;</span></span><br><span class="line">      <span class="comment">#</span></span><br><span class="line">      <span class="comment"># Where the map unpacks to a diagonal matrix</span></span><br><span class="line">      <span class="comment"># with 1s on the prefix dimensions.</span></span><br><span class="line">      <span class="attr">ipf:</span> <span class="string">&quot;[..., 1, 0] :&gt; [..., 1, $b]&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">W:</span></span><br><span class="line">      <span class="attr">shape:</span> <span class="string">&quot;[$b, $c]&quot;</span></span><br><span class="line">      <span class="attr">dtype:</span> <span class="string">&quot;$dtype&quot;</span></span><br><span class="line">      <span class="attr">ipf:</span> <span class="string">&quot;[..., 0, 1] :&gt; [..., $b, 1]&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">outputs:</span></span><br><span class="line">    <span class="attr">result:</span></span><br><span class="line">      <span class="comment"># shape defaults to: &quot;[$.index...]&quot;</span></span><br><span class="line">      <span class="comment"># ipf defaults to: &quot;[...] &gt;: [...]&quot;</span></span><br><span class="line">      <span class="attr">dtype:</span> <span class="string">&quot;$dtype&quot;</span></span><br></pre></td></tr></table></figure>
+<p>The work on <strong>template metakernels</strong> is ongoing, and is expected to be a major part of the
+<strong>Tapestry</strong> project.</p>
+<h2 id="Graph-Rewrite-Rules">Graph Rewrite Rules</h2>
+<p>Graph re-write rules are a common tool in compiler optimization, and are used to describe how one
+general form of an expression can be transformed into another form that is at least equivalent, and
+preferably more efficient to calculate. In <strong>Tapestry</strong>, graph re-write rules are used to describe
+how one sub-graph expression can be transformed into another equivalent form.</p>
+<p>The intention is to heavily leverage the <a href="#metakernels">Metakernels</a> template language to describe
+the behavior of the re-write rules, and to use the same language to describe the behavior of the
+<strong>metakernels</strong> which are being re-written.</p>
+<p>This work is ongoing, and is expected to be a major part of the <strong>Tapestry</strong> project.</p>
+<h2 id="Optimization">Optimization</h2>
+<p>Given a family of semantics preserving re-write and sharding rules, all that is needed in order to
+produce an initial optimizer is a way to assign value to variations in the graph.</p>
+<p>For each given <a href="#target-environments">Target Environment</a>, we can develop a target cost model which
+assigns a vector of labeled costs (wall-clock time, machine count, memory usage, idle resource
+count) to a graph expression instances.</p>
+<p>Plural cost models are perfect fits for Pareto optimization environments; and Pareto optimization
+environments are <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Embarrassingly_parallel">embarrassingly parallel</a>,
+in that we can horizontally add as many additional worker threads or machines as we like, for linear
+speedups in the optimization search process.</p>
+<p>As it is common to encounter AI models which see 10k GPU-year run costs, and as it is common to
+encounter AI models which are run in production environments with 1000s of machines, the potential
+impact of even small improvements in the efficiency of the optimizer is quite large.</p>
+<p>As the optimizer can be run in parallel, large optimization search spaces can be examined by tasking
+many search machines, proportional to the expected value of improvements for the given target
+application.</p>
+<p>Over time, research can improve the efficiency of the optimizer, and the quality of the cost models,
+and the quality of the re-write and sharding rules, and the quality of the metakernels. But even
+initial versions of the optimizer can be expected to produce significant improvements in the
+efficiency of the target applications; if sufficient resources are allocated to the optimizer search
+process.</p>
+<h2 id="Target-Environments">Target Environments</h2>
+<p>Each new target environment will likely a new <strong>loom</strong> dialect, adding primitives and constraints
+describing placement and scheduling of operations in the target environment.</p>
+<p>Each new target environment will likely also require a new symbolic cost model, which assigns a
+vector of labeled costs (wall-clock time, machine count, memory usage, idle resource count) to a
+graph expression instance in the target environment’s loom dialect.</p>
+<p>There is a possibility of sharing many common <strong>kernel</strong> (and their associated <strong>metakernels</strong>)
+across target environments, and the <strong>Tapestry</strong> project is expected to develop tooling to support
+this.</p>
+<h2 id="Needs">Needs</h2>
+<p><strong>Tapestry</strong> is at a recruiting / growth stage in the project, and we are looking for the following
+types of support:</p>
+<h3 id="R-D-Support">R&amp;D Support</h3>
+<p>We are looking for additional technical and research contributors to help develop the project from
+initial
+research stage to a fully functional optimizer targeting PyTorch and Jax backends.</p>
+<h3 id="Project-Support">Project Support</h3>
+<p>We are looking for project management and development resources to help organize the project and
+recruit
+additional contributors.</p>
+<h3 id="Funding">Funding</h3>
+<p>We are looking for grant funding frameworks to further develop the project.</p>
+<p>Historically, languages and compilers have not been successful outside of open source / free
+software models. <strong>Subscription</strong> compilers do exist, but as performance options when open reference
+compilers also exist for an environment. Developers have been historically unwilling to tie their
+work to a proprietary language or compiler.</p>
+<p>Finding a funding model which is compatible with the open source / free software model for the base
+environment is a major goal of the project.</p>
+<p>There are development models where the base environment is open source / free software, and support
+services are offered to companies which wish to prioritize their extension and development needs for
+the environment.</p>
+<p>There are also models where the base environment is open source / free software, and products are
+developed which commercially exploit the environment under the same funding structure.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/tapestry/" rel="tag"># tapestry</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/07/18/Dense-IR-Graphs-with-Extension-Attributes/" rel="prev" title="Dense IR Graphs with Extension Attributes">
+                  <i class="fa fa-chevron-left"></i> Dense IR Graphs with Extension Attributes
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Crutcher Dunnavant</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"crutcher-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
