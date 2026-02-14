@@ -4,38 +4,15 @@ title: CV
 permalink: /cv/
 ---
 
-I'm crutcher, I make stuff.
-
 My name is Crutcher Dunnavant.
 
-I'm an HPC engineer and computer scientist, My career has been focused on the intersection
+I'm an HPC engineer and computer scientist; My career has been focused on the intersection
 of formal language design, high performance computing, distributed systems engineering,
 and machine learning.
 I've worked for Red Hat, Google, Meta, 3Scan, McDonald's (in AI), OpenAI, and Atmo.
 
 
-**Crutcher Dunnavant**  
-San Francisco, CA  
-(205)-887-2552  
-[crutcher+resume@gmail.com](mailto:crutcher+resume@gmail.com)  
-LinkedIn: [https://www.linkedin.com/in/crutcher-dunnavant-4841ba9](https://www.linkedin.com/in/crutcher-dunnavant-4841ba9)  
-GitHub: [https://github.com/crutcher](https://github.com/crutcher)
-
-### Overview
-
-I’m a Principal/Staff level AI Engineer, Systems Engineer, and Distributed Systems Engineer.
-
-I have extensive background in high-performance tensor applications at the system engineering, framework, api, and algebraic levels. I have contributed significantly to public tensor frameworks, I have engineered large-footprint HPC tensor frameworks from scratch, and have built, tuned, and debugged a number of image and volume processing AI systems.
-
-I have extensive background in distributed batch algorithms, distributed queue systems, and transaction theory. I have designed and engineered multiple large scale high throughput real time transaction systems.
-
-I have worked as a Linux Operating Systems engineer for Red Hat; and have done extensive low-level systems engineering, including contributions to kernel code.
-
-I have over a decade of experience as tech lead, and over five years as engineering director; and I am comfortable directing work, and holding budgetary planning authority for long horizon projects. My primary interest is developing effective solutions for distributed HPC tensor expression engineering.
-
-I have specialized interests in volumetric scientific computing; imaging, volume simulation, etc.
-
-### Recent Work
+### Independent Rust AI Research
 
 #### Image Processing / Models for Rust/Burn
 
@@ -119,7 +96,7 @@ I played a critical role in migrating content ads to the Borg distributed cluste
 
 ### Red Hat
 
-I worked as one of \~8 core OS Developers on Red Hat Linux. My responsibilities included:
+I worked as a core OS Developer on Red Hat Linux. My responsibilities included:
 
 * Packaging, debugging, and coordinating upstream work for about 60 distribution RPM packages.
 * Working on OS configuration automation for remote management.
@@ -130,8 +107,4 @@ I worked as one of \~8 core OS Developers on Red Hat Linux. My responsibilities 
 * B.S. Computer Science, University of Alabama, 2002
 * M.S. Computer Science, University of Alabama, 2004
 * Work towards PhD, University of Alabama, Aug 2004 \- June 2005
-
-## Technical Skills
-
-Python, Java, C, C++, TypeScript, Lexers/Parsers, Rust, Perl, PHP, XML, XSLT, CSS, GWT (Google Web Toolkit), Bash, Shell, RPM, MapReduce, Paxos, DynamoDB, Linux Kernel, Bigtable, Message Queues, CCR (Continuity of Care Records), Distributed Systems, Threads, Async Programming, Haskell, M4, Deep Statistical Learning, Pareto Optimization, Sum Product Networks, Ensemble Classifiers, Formal Language Design, DSL (domain specific language) design, RPM (Redhat Package Manager), API Design, API Evolution, MapReduce, PyTorch, Tensorflow, CUDA Kernels, AI, Beam Search
 

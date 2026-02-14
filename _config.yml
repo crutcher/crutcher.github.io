@@ -32,12 +32,23 @@ github_username:  crutcher
 
 # Build settings
 theme: minima
+
+permalink: /:year/:month/:day/:title/
+
+header_pages:
+  - projects/projects.md
+  - cv.md
+
 plugins:
   - jekyll-feed
   - jekyll-optional-front-matter
   - jekyll-paginate
   - jekyll-titles-from-headings
   - jekyll-relative-links
+
+sass:
+  # shutup the transition warnings.
+  quiet_deps: true
 
 # https://github.com/benbalter/jekyll-optional-front-matter
 optional_front_matter:
