@@ -24,7 +24,7 @@ baseurl: ""
 url: "https://crutcher.github.io"
 
 title: crutcher.github.io
-# email: crutcher+web@gmail.com
+email: crutcher+web@gmail.com
 description: >
   It's Just One Ocean.
 twitter_username: crutcherd
@@ -36,6 +36,7 @@ theme: minima
 permalink: /:year/:month/:day/:title/
 
 header_pages:
+  - roadmaps/roadmaps.md
   - projects/projects.md
   - cv.md
 
