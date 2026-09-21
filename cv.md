@@ -6,22 +6,29 @@ permalink: /cv/
 
 My name is Crutcher Dunnavant.
 
-I'm an HPC engineer and computer scientist; My career has been focused on the intersection
-of formal language design, high performance computing, distributed systems engineering,
-and machine learning.
-I've worked for Red Hat, Google, Meta, 3Scan, McDonald's (in AI), OpenAI, and Atmo.
+I'm a computer scientist and distributed systems engineer, focusing in HPC tensor applications.
+
+I have an extensive background in artificial intelligence, formal language design, high performance computing,
+distributed system engineering, large scale dataflow processing, and real time asynchronous high-usage servers.
+
+I've worked for Google, Red Hat, Meta, 3Scan, McDonald's (in AI), OpenAI, and Atmo.
 
 
 ### Independent Rust AI Research
 
 #### Image Processing / Models for Rust/Burn
 
-I have been incrementally porting the underlying machinery needed to support modern SOTA image models in the [https://burn.dev](https://burn.dev) Rust AI framework. This constitutes two bodies of work:
+I have been putting extensive work into last-mile utility support for aligning the Rust GPU-Tensor framework
+[burn](https:://burn.dev) towards the needs of high-performance SOTA models, and scientific computing.
 
-* Extensions to Burn to support image models:  
-  [https://github.com/tracel-ai/burn/pulls?q=is%3Apr+author%3Acrutcher+is%3Aclosed](https://github.com/tracel-ai/burn/pulls?q=is%3Apr+author%3Acrutcher+is%3Aclosed)
-* Ports of image libraries to Rust/Burn:
-    * [https://github.com/crutcher/bimm](https://github.com/crutcher/bimm)
+* Core `burn` contributor:
+  * [>100 Merged PRs](https://github.com/tracel-ai/burn/pulls?q=is%3Apr+state%3Aclosed+author%3Acrutcher)
+  * [Top 5 Contributor](https://github.com/tracel-ai/burn/graphs/contributors?from=2%2F8%2F2025&to=9%2F19%2F2026)
+* Author of `bunsen` third-party common-lib:
+  * [bunsen](https://github.com/zspacelabs/bunsen)
+  * [resnet](https://github.com/zspacelabs/bunsen/tree/main/examples/resnet_finetune)
+  * [whisper implementation](https://github.com/zspacelabs/bunsen/tree/main/examples/whisper-cli)
+  * [conway simulation](https://github.com/zspacelabs/bunsen/tree/main/examples/conway)
 
 #### Distributed Tensor Expression Theory
 
