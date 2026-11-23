@@ -4,114 +4,105 @@ title: CV/Resume
 permalink: /cv/
 ---
 
-My name is Crutcher Dunnavant.
+# Crutcher Dunnavant
 
-I'm a computer scientist and distributed systems engineer, focusing in HPC tensor applications.
+- [Long Resume](cv/CrutcherDunnavant.resume.long.pdf)
+- [Short Resume](cv/CrutcherDunnavant.resume.short.pdf)
 
-I have an extensive background in artificial intelligence, formal language design, high performance computing,
-distributed system engineering, large scale dataflow processing, and real time asynchronous high-usage servers.
+Nov 5, 2026 · @Crutcher
 
-I've worked for Google, Red Hat, Meta, 3Scan, McDonald's (in AI), OpenAI, and Atmo.
+**Principal Engineer — ML Infrastructure & Distributed Systems**
 
+San Francisco, CA · (205) 887-2552 · crutcher+resume@gmail.com · [github.com/crutcher](https://github.com/crutcher) · [linkedin.com/in/crutcher-dunnavant-4841ba9](https://www.linkedin.com/in/crutcher-dunnavant-4841ba9) · [crutcher.github.io](https://crutcher.github.io)
 
-### Independent Rust AI Research
+## Summary
 
-#### Image Processing / Models for Rust/Burn
+Systems engineer who designs and leads the infrastructure rebuilds companies get acquired on. Three startups — 3Scan, Apprente, and Atmo — sold on top of data, model, and production platforms I architected and led; before that, ten years at Google including design and technical leadership of CiTC, the distributed development filesystem behind the monorepo. Currently a top-5 contributor to the Burn Rust GPU tensor framework and maintainer of `bunsen`, the batteries-included model library for Burn (pretrained language, speech, and vision models on \~60 modular blocks). Two decades across HPC tensor systems, AI training stacks, real-time transaction systems, and large-scale dataflow, including 10+ years as tech lead and 5+ as engineering director with budget authority; doctoral-trained in distributed algorithms and type theory.
 
-I have been putting extensive work into last-mile utility support for aligning the Rust GPU-Tensor framework
-[burn](https:://burn.dev) towards the needs of high-performance SOTA models, and scientific computing.
+## Selected impact
 
-* Core `burn` contributor:
-  * [>100 Merged PRs](https://github.com/tracel-ai/burn/pulls?q=is%3Apr+state%3Aclosed+author%3Acrutcher)
-  * [Top 5 Contributor](https://github.com/tracel-ai/burn/graphs/contributors?from=2%2F8%2F2025&to=9%2F19%2F2026)
-* Author of `bunsen` third-party common-lib:
-  * [bunsen](https://github.com/zspacelabs/bunsen)
-  * [resnet](https://github.com/zspacelabs/bunsen/tree/main/examples/resnet_finetune)
-  * [whisper implementation](https://github.com/zspacelabs/bunsen/tree/main/examples/whisper-cli)
-  * [conway simulation](https://github.com/zspacelabs/bunsen/tree/main/examples/conway)
+- **Turned a demo into the product McDonald's acquired.** Led 8 engineers rebuilding Apprente's AI drive-through operator from prototype into a Kubernetes queue-stream production system with telemetry, CI/CD, and release machinery; acquired by McDonald's, Sep 2019.
+- **Made terabyte-scale microscopy tractable.** Designed and led 3Scan's cloud storage and compute platform for 40 TB 4D tensors, running 170 TB pipelines in \~20 minutes (2018); the data platform 3Scan carried into its merger with Strateos.
+- **Rebuilt Atmo's entire AI stack and shipped it to governments.** Re-architected the model, data, and training stacks and designed the global→regional transformer coupling model behind production forecasts for several national customers, including the Philippines; Atmo was acquired by Vaisala for $70M plus up to $60M earn-out (announced Jun 2026).
+- **Designed the filesystem Google develops on.** Designer, tech lead, and principal engineer of CiTC, serving millions of globally available workspaces and underpinning build-farm and code-review tooling (ACM CACM, 2016).
+- **Top-5 contributor to Burn**, the Rust GPU tensor framework: 100+ merged PRs including GPU kernels, optimizer composition, and backend operations; author and maintainer of bunsen, its batteries-included model library: pretrained language, speech, and vision models over a framework of \~60 modular blocks.
 
-#### Distributed Tensor Expression Theory
+## Experience
 
-Since the 3Scan work in massive distributed tensor storage and processing; I’ve put years of effort into fleshing out the underlying machinery and math to support distributed tensor expression optimization.
+### Independent Rust / AI Research · Feb 2025 – present
 
-* [https://github.com/crutcher/tapestry/tree/main/docs](https://github.com/crutcher/tapestry/tree/main/docs)
+*Open-source infrastructure for the Burn Rust GPU tensor ecosystem, and ongoing research on distributed tensor expression optimization.*
 
-## Work History
+**Built and maintain the community standard library for Burn, while ranking among Burn's top-5 contributors.**
 
-### Atmo \- Principal Engineer
+- **[bunsen](https://github.com/zspacelabs/bunsen) — author and maintainer.** Batteries-included model library for Burn: an extensible core foundation, with extensions providing built-in loading and inference for pretrained models across language (Qwen, Gemma, NanoChat), speech — ASR (Parakeet, Voxtral, Whisper, Qwen3-ASR, Sortformer), TTS (Qwen3-TTS, Zonos3), VAD (Silero) — decision models (Laya), and image classification (ResNet, Swin V2), with tokenization via my wordchipper crate; built on a framework of \~60 modular combinator blocks, with runtime shape contracts and columnar dataloaders
+- **[Burn](https://github.com/tracel-ai/burn) — core contributor.** 100+ merged PRs, top-5 contributor on burn.dev (Feb 2025 – Sep 2026): wrote and maintain the CubeCL GPU `unfold` kernel; `unfold` and `repeat_interleave` across the ndarray and candle backends; `GroupOptimizerAdaptor` for composite optimizers (Muon + AdamW on separate parameter groups) and `LrSchedulerMap`; nanochat port at f16
+- **[Tapestry](https://github.com/crutcher/tapestry) — ongoing research.** A polyhedral calculus for distributed tensor expressions: affine index-projection signatures give mechanical sharding derivations under a strict-equivalence contract, continuing the 3Scan distributed-tensor work. Research stage; not yet externally usable
 
-Atmo is a short-range regional AI weather forecasting company, focusing on bootstrapping global low-resolution forecasts (such as NOAA’s GFS) over the next 72 hours into high-resolution local regional forecasts, at significantly higher accuracy than interpolation.
+### Atmo — Principal Engineer · 2024 – 2025
 
-I worked as Principal Engineer, focusing on AI research and scale. My responsibilities included:
+*Regional AI weather forecasting: global low-resolution forecasts (NOAA GFS) → high-resolution 72-hour local forecasts; TIME Best Inventions 2024. Acquired by Vaisala, Jun 2026 ([release](https://www.vaisala.com/en/stock-exchange-releases/2026-06/inside-information-vaisala-acquires-ai-weather-company-atmo-inc-lead-transformation-meteorology)).*
 
-* Designing the AI coupling model to bridge Swim-Transformer volumetric temporal causal transforms at different scales (the global boundary clipping region, and the local high-res region).
-* Rebuilding our full AI model stack; making heavy use of unit testing and contract programming.
-* Restructuring the full data load and transformation stack.
-* Rebuilding the full training stack.
-* Designing and extending the Metric and Loss surfaces.
-* Tuning production models for several governments; including the Philippines.
+**Rebuilt the full AI stack and shipped production forecasts to national governments.**
 
-I also picked up a number of side projects, including rebuilding our web map interface for a high-profile (but NDA shielded) contract when our FE Dev left the company, and we were constrained (by heavy use of virtual machines by our clients) to provide a non-GPU accelerated version of the web frontend.
+- Designed the AI coupling model: Swin-style volumetric temporal-causal transformers linking the global boundary region to the local high-resolution domain
+- Re-architected the model stack (unit-tested, contract-programmed), the data load/transform stack, and the training stack end to end; designed and extended the metric and loss surfaces
+- Tuned and delivered production models for several governments, including the Philippines
+- Rebuilt the web map frontend for an NDA-covered contract after the FE engineer left, in a non-GPU rendering path so it ran inside clients' VMs
 
-### OpenAI \- Research Acceleration
+### OpenAI — Research Acceleration · 2023
 
-I worked at OpenAI in the Research Acceleration group. My work focused on reduction of technical debt, adding unit tests and code stabilization, unifying shared libraries, and working to de-risk the serious branch proliferation the company was operating on (research was, at that time, 7 months diverged from the main branch in many projects).
+**Cut research-branch divergence and unblocked RDMA for PyTorch.**
 
-I also wrote new bindings for NVIDIA’s **libverbs** RDMA library stack; by building a C/C++/nanobind/python library stack. This was developed to permit OpenAI to work around limitations in existing RDMA libs for pytorch.
+- Wrote new C/C++/nanobind/Python bindings for NVIDIA libverbs RDMA, working around limits in existing PyTorch RDMA libraries
+- Reduced research-branch divergence from main (then \~7 months in many projects) by unifying shared libraries and stabilizing core code
 
-### Meta \- AI, Various
+### Meta — AI, several roles · 2021 – 2022
 
-I worked at Meta in several roles, during the pandemic ScaleUp/ScaleDown/Layoff cycle. Various responsibilities included:
+**Rebuilt the first-pass fast-scorer serving Facebook and Instagram.**
 
-* Auto-Tuning AI Model Stack
-* Rebuilding the primary first-pass fast-scorer (used across FB and Instagram) for the next-gen AI training stack, and addressing numerous architecture bugs in that training stack.
-* Working on the RayBan Glasses video “interest” optimization model for summary clips.
-* Working on the next-gen LLM chat model in flight at the time.
-* Working in the PyTorch group.
+- Rebuilt the primary first-pass ranking fast-scorer for the next-gen AI training stack serving ranking across Facebook and Instagram, and fixed numerous architecture bugs in that stack
+- Auto-tuning of the AI model stack; Ray-Ban Glasses video-interest model for summary clips; next-gen LLM chat model; PyTorch group
 
-### Apprente / McDonald’s Tech Labs \- Infrastructure Director
+### Apprente / McDonald's Tech Labs — Infrastructure Director & Principal · 2018 – 2020
 
-I worked for an AI startup called Apprente, restructuring their demo AI into something we could scale and support; which was then sold to McDonald’s as an AI Drive Through Operator. I worked as the Infrastructure Director and Principal, with 8 reports overseeing the redesign of the AI into a kubernetes queue stream from sound collection, through phoneme models, action models, and the action state machine, along with the debugging tooling for distributed queue events; the telemetry collection framework and backend stats analysis, the build env and build / CI pipeline, and the packaging stack and release machinery.
+*Voice-AI startup; acquired by McDonald's as its AI drive-through operator ([TechCrunch, 2019-09-10](https://techcrunch.com/2019/09/10/mcdonalds-acquires-apprente/)).*
 
-See: [https://techcrunch.com/2019/09/10/mcdonalds-acquires-apprente/](https://techcrunch.com/2019/09/10/mcdonalds-acquires-apprente/)
+**Turned a demo AI into the production system McDonald's acquired.**
 
-### 3Scan \- Infrastructure Lead
+- Led 8 engineers redesigning the system as a Kubernetes queue stream: sound capture → phoneme models → action models → action state machine
+- Built the telemetry collection framework, backend stats analysis, and distributed-queue event debugging tooling
+- Owned build environment, CI pipeline, packaging, and release machinery
 
-I worked for a medical research development startup, 3Scan, which built a robotic microtome microscope. This device would produce terabytes of data for each tissue sample. I lead the design and implementation of the cloud storage and processing framework for uploading, storing, random access, and running tensor convolution operations over 40TB 4D tensors which were produced by that robotic tissue slicer. We were able to run 170TB pipelines in \~20 minutes, in 2018\. 3Scan merged to become Strateos.
+### 3Scan — Infrastructure Lead · 2016 – 2018
 
-### Google
+*Robotic microtome microscopy producing terabytes per tissue sample; merged into Strateos.*
 
-I had a ten-year tenure at Google, during which I held four major roles.
+**Made terabyte-scale 4D tensor microscopy data storable, addressable, and computable.**
 
-#### Google: AI Research
+- Designed and led the cloud storage and processing framework for upload, storage, random access, and tensor convolution over 40 TB 4D tensors
+- Ran 170 TB pipelines in \~20 minutes (2018)
+- Seeded the distributed tensor expression theory later developed as Tapestry
 
-My final position at Google was working as a researcher in Moshe Look’s Knowledge Graph anomaly detector auto-trainer; as part of Kurzweil’s AI research group. This system trained thousands of KG topic models, each bootstrapped via uncertainty curve mining, and evolved as Sum/Product network instances in a distributed Pareto optimization space; which we implemented all of.
+### Google — Software Engineer, four roles · 2005 – 2015
 
-An interesting side-project was my development of a C++ “number-like” extension library, still in heavy use today at Google as “FineNum”. This stored in a single 64 bit float; but was a log-space number replacement, making heavy use of C++ operator overloading and cast operators to permit log-space algorithms to be written as their normal-space algorithmic equivalents; for numerical stability in the accumulation of many partial factors.
+**AI Research (Kurzweil group).** Researcher on the Knowledge Graph anomaly-detector auto-trainer: thousands of topic models bootstrapped by uncertainty-curve mining and evolved as Sum/Product networks in a distributed Pareto space. Authored FineNum, a log-space C++ numeric library still in heavy use.
 
-#### Google: CiTC
+**CiTC (Clients in the Cloud) — designer, tech lead, principal engineer.** Designed the distributed development filesystem for Google's monorepo: millions of globally available workspaces; the substrate for desktop/web development, remote build-farm tooling, and code review (ACM CACM 2016, "Why Google Stores Billions of Lines of Code in a Single Repository").
 
-I then worked as the designer, technical lead, and principal engineer on the CITC distributed development filesystem, a system that supports all of Google's server/infrastructure development workflows and holds millions of globally available workspaces. This system facilitates both desktop and web development, remote build farm tooling, and forms the basis for code review tooling. Part of my work is discussed in this ACM article: [https://cacm.acm.org/magazines/2016/7/204032-why-google-stores-billions-of-lines-of-code-in-a-single-repository/fulltext](https://cacm.acm.org/magazines/2016/7/204032-why-google-stores-billions-of-lines-of-code-in-a-single-repository/fulltext)
+**Google Health.** Backend/data semantics for health-record interchange (Continuity of Care Document standards); represented Google Health at standards conferences.
 
-#### Google: Health Records
+**Content Ads Production/Scaling.** Key engineer in migrating content ads to Borg; built core scaling rules, telemetry reporting, and a production test-cascade framework.
 
-Backend/data semantics engineer for Google Health; focusing on integration and implementation of various health records interchange formats with our database storage. Did primary work on the Continuity of Care interchange document standards, and attended several conferences as Google Health’s rep on these documents.
+### Red Hat — Core OS Developer · 2000 – 2001
 
-#### Google: Content Ads Production / Scaling
-
-I played a critical role in migrating content ads to the Borg distributed cluster scheduler, a new technology at the time that later inspired Kubernetes. My responsibilities included building much of the core infrastructure scaling rules, developing sophisticated reporting systems for telemetry data, and creating a production test cascade framework to probe data center software configurations.
-
-### Red Hat
-
-I worked as a core OS Developer on Red Hat Linux. My responsibilities included:
-
-* Packaging, debugging, and coordinating upstream work for about 60 distribution RPM packages.
-* Working on OS configuration automation for remote management.
-* Fielding support bugs, and tracing them through the package stack to identify, repair, coordinate upstream fixes, and push package updates.
+One of \~8 core OS developers on Red Hat Linux: packaged and maintained \~60 RPM packages with upstream coordination; built OS configuration automation for remote management.
 
 ## Education
 
-* B.S. Computer Science, University of Alabama, 2002
-* M.S. Computer Science, University of Alabama, 2004
-* Work towards PhD, University of Alabama, Aug 2004 \- June 2005
+- M.S. Computer Science, University of Alabama, 2004; doctoral work (ABD), 2004–2005
+- B.S. Computer Science, University of Alabama, 2002
 
+## Skills
+
+**Languages:** Rust, Python, C++, C, Java, TypeScript, Haskell · **ML systems:** PyTorch internals, Burn, TensorFlow, CUDA kernels, RDMA, training-stack and loss/metric design, transformers · **Distributed systems:** Kubernetes, Borg, MapReduce, Paxos, Bigtable, queue-stream and real-time transaction architectures, distributed filesystems, terabyte-scale tensor storage · **Systems:** Linux kernel contributions, RPM, low-level OS and networking · **Theory:** distributed algorithms, transaction theory, type theory, polyhedral/affine index analysis, formal language and DSL design
